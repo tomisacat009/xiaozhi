@@ -34,7 +34,7 @@ describe("expanded content routes", () => {
     expect(
       screen.getByRole("heading", { name: "运动与图像", level: 1 }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("迁移中").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("已可体验").length).toBeGreaterThan(0);
   });
 
   it("renders a migrating unit page without requiring mdx content", async () => {

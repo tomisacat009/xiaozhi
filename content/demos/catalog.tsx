@@ -42,6 +42,21 @@ function makeSeries(
   return { id, label, color, points };
 }
 
+function createBoard(
+  title: string,
+  items: Array<{
+    id: string;
+    title: string;
+    summary: string;
+    accent?: string;
+  }>,
+) {
+  return createElement(ConceptBoard, {
+    title,
+    items,
+  });
+}
+
 const linearDemo: NumericDemo = {
   id: "linear",
   title: "一次函数变化",
@@ -856,6 +871,168 @@ const setOperationsDemo: MixedDemo = {
   },
 };
 
+const transformReviewDemo: NumericDemo = {
+  id: "transform-review",
+  title: "函数平移与伸缩总复习",
+  description: "把平移和伸缩放到同一张图里，统一理解“先里后外”的观察顺序。",
+  defaultParams: { shiftX: 0, shiftY: 0, scaleY: 1 },
+  presets: [
+    { id: "base", label: "原函数", params: { shiftX: 0, shiftY: 0, scaleY: 1 } },
+    { id: "move", label: "右移上移", params: { shiftX: 2, shiftY: 1, scaleY: 1 } },
+    { id: "stretch", label: "纵向拉伸", params: { shiftX: 0, shiftY: 0, scaleY: 2 } },
+  ],
+  controls: {
+    shiftX: { label: "左右平移", min: -3, max: 3, step: 0.2 },
+    shiftY: { label: "上下平移", min: -3, max: 3, step: 0.2 },
+    scaleY: { label: "纵向伸缩", min: 0.5, max: 3, step: 0.1 },
+  },
+  explanation({ shiftX, shiftY, scaleY }) {
+    return [
+      `当前顶点从原点平移到 (${round(shiftX)}, ${round(shiftY)})。`,
+      scaleY > 1 ? "纵向系数更大，图像更瘦更陡。" : "纵向系数较小，图像更舒展。",
+      "观察顺序建议先看平移，再看伸缩。",
+    ];
+  },
+  renderStage({ shiftX, shiftY, scaleY }) {
+    const base = sampleCurve((x) => x * x, { xMin: -4, xMax: 4 }, 0.05);
+    const transformed = sampleCurve(
+      (x) => scaleY * (x - shiftX) * (x - shiftX) + shiftY,
+      { xMin: -4, xMax: 4 },
+      0.05,
+    );
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "函数变换图像",
+      bounds: { xMin: -4, xMax: 4, yMin: -3, yMax: 10 },
+      series: [
+        { ...makeSeries("base", "原函数", "#94a3b8", base), strokeDasharray: "6 6" },
+        makeSeries("transformed", "变换后", "#ea580c", transformed),
+      ],
+    });
+  },
+};
+
+const sequencesBasicDemo: NumericDemo = {
+  id: "sequences-basic",
+  title: "等差与等比数列生成过程",
+  description: "用前几项的生成结果，直观看出线性增长和倍数增长的差别。",
+  defaultParams: { a1: 1, d: 2, q: 2, count: 6 },
+  presets: [
+    { id: "base", label: "基础对比", params: { a1: 1, d: 2, q: 2, count: 6 } },
+    { id: "slow", label: "缓慢增长", params: { a1: 2, d: 1, q: 1.2, count: 6 } },
+    { id: "decay", label: "等比衰减", params: { a1: 8, d: -1, q: 0.6, count: 6 } },
+  ],
+  controls: {
+    a1: { label: "首项", min: 1, max: 8, step: 1 },
+    d: { label: "公差", min: -3, max: 4, step: 1 },
+    q: { label: "公比", min: 0.5, max: 3, step: 0.1 },
+    count: { label: "项数", min: 4, max: 10, step: 1 },
+  },
+  explanation({ a1, d, q, count }) {
+    const lastArithmetic = a1 + (count - 1) * d;
+    const lastGeometric = a1 * q ** (count - 1);
+
+    return [
+      `第 ${count} 项的等差结果约为 ${round(lastArithmetic)}。`,
+      `第 ${count} 项的等比结果约为 ${round(lastGeometric)}。`,
+      q > 1 ? "等比数列会越来越体现倍数差。" : "当公比小于 1 时，等比数列会逐步衰减。",
+    ];
+  },
+  renderStage({ a1, d, q, count }) {
+    const arithmetic = Array.from({ length: count }, (_, index) => ({
+      x: index + 1,
+      y: a1 + index * d,
+    }));
+    const geometric = Array.from({ length: count }, (_, index) => ({
+      x: index + 1,
+      y: a1 * q ** index,
+    }));
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "等差与等比数列对比",
+      bounds: { xMin: 1, xMax: Math.max(10, count), yMin: -5, yMax: 25 },
+      series: [
+        makeSeries("arithmetic", "等差数列", "#2563eb", arithmetic),
+        makeSeries("geometric", "等比数列", "#ea580c", geometric),
+      ],
+    });
+  },
+};
+
+const sequenceRecursiveDemo: NumericDemo = {
+  id: "sequence-recursive",
+  title: "递推数列生成过程",
+  description: "把“后一项由前一项推出来”的过程直接展开，让学生形成生成感。",
+  defaultParams: { a1: 2, factor: 1.2, offset: 1, count: 6 },
+  presets: [
+    { id: "grow", label: "稳步增长", params: { a1: 2, factor: 1.2, offset: 1, count: 6 } },
+    { id: "stable", label: "缓慢变化", params: { a1: 4, factor: 0.8, offset: 1, count: 6 } },
+  ],
+  controls: {
+    a1: { label: "首项 a1", min: 1, max: 8, step: 1 },
+    factor: { label: "递推系数", min: 0.4, max: 1.8, step: 0.1 },
+    offset: { label: "增量", min: -2, max: 3, step: 0.5 },
+    count: { label: "项数", min: 4, max: 10, step: 1 },
+  },
+  explanation({ a1, factor, offset, count }) {
+    const terms = [a1];
+    for (let i = 1; i < count; i += 1) terms.push(factor * terms[i - 1] + offset);
+
+    return [
+      `当前最后一项约为 ${round(terms[terms.length - 1])}。`,
+      factor > 1 ? "系数大于 1 时，前一项的影响会被放大。" : "系数小于 1 时，前一项的影响会逐步收缩。",
+      "递推题最重要的是盯住“上一项怎样影响下一项”。",
+    ];
+  },
+  renderStage({ a1, factor, offset, count }) {
+    const terms = [a1];
+    for (let i = 1; i < count; i += 1) terms.push(factor * terms[i - 1] + offset);
+    const points = terms.map((value, index) => ({ x: index + 1, y: value }));
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "递推数列图像",
+      bounds: { xMin: 1, xMax: Math.max(10, count), yMin: -5, yMax: 30 },
+      series: [makeSeries("recursive", "递推结果", "#0f766e", points)],
+    });
+  },
+};
+
+const circleStandardDemo: NumericDemo = {
+  id: "circle-standard",
+  title: "圆的标准方程",
+  description: "通过圆心和平移、半径变化，把标准方程和图像一一对应起来。",
+  defaultParams: { h: 0, k: 0, r: 3 },
+  presets: [
+    { id: "base", label: "标准圆", params: { h: 0, k: 0, r: 3 } },
+    { id: "move", label: "圆心平移", params: { h: 2, k: 1, r: 2.5 } },
+  ],
+  controls: {
+    h: { label: "圆心 x", min: -3, max: 3, step: 0.2 },
+    k: { label: "圆心 y", min: -3, max: 3, step: 0.2 },
+    r: { label: "半径 r", min: 1, max: 5, step: 0.1 },
+  },
+  explanation({ h, k, r }) {
+    return [
+      `圆心是 (${round(h)}, ${round(k)})。`,
+      `半径是 ${round(r)}。`,
+      "标准方程里，圆心决定位置，半径决定大小。",
+    ];
+  },
+  renderStage({ h, k, r }) {
+    const points = Array.from({ length: 161 }, (_, index) => {
+      const angle = (index / 160) * Math.PI * 2;
+      return { x: h + r * Math.cos(angle), y: k + r * Math.sin(angle) };
+    });
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "圆的标准方程图像",
+      bounds: { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
+      series: [makeSeries("circle", "(x-h)^2 + (y-k)^2 = r^2", "#2563eb", points)],
+      markers: [{ id: "center", x: h, y: k, label: "圆心" }],
+    });
+  },
+};
+
 const uniformMotionDemo: NumericDemo = {
   id: "physics-uniform-motion",
   title: "匀速直线运动",
@@ -1092,6 +1269,615 @@ const workEnergyDemo: NumericDemo = {
   },
 };
 
+const uniformChaseDemo: NumericDemo = {
+  id: "physics-uniform-chase",
+  title: "两车匀速追及",
+  description: "把两辆车的位置曲线放在一起，看追及发生在什么时候。",
+  defaultParams: { lead: 10, vA: 4, vB: 6, t: 3 },
+  presets: [
+    { id: "catch", label: "可以追上", params: { lead: 10, vA: 4, vB: 6, t: 3 } },
+    { id: "hard", label: "更难追上", params: { lead: 14, vA: 5, vB: 6, t: 3 } },
+  ],
+  controls: {
+    lead: { label: "初始距离", min: 4, max: 20, step: 1 },
+    vA: { label: "前车速度", min: 2, max: 8, step: 0.2 },
+    vB: { label: "后车速度", min: 2, max: 10, step: 0.2 },
+    t: { label: "观察时刻", min: 0, max: 8, step: 0.2 },
+  },
+  explanation({ lead, vA, vB, t }) {
+    const posA = lead + vA * t;
+    const posB = vB * t;
+    const meetTime = vB > vA ? lead / (vB - vA) : Infinity;
+    return [
+      `当前前车位置约为 ${round(posA)}，后车位置约为 ${round(posB)}。`,
+      Number.isFinite(meetTime) ? `理论追及时刻约为 ${round(meetTime)}。` : "后车速度不更大时，本模型下追不上。",
+      "追及题最关键的是盯“相对速度”而不是只看两个速度本身。",
+    ];
+  },
+  renderStage({ lead, vA, vB, t }) {
+    const carA = sampleCurve((time) => lead + vA * time, { xMin: 0, xMax: 8 }, 0.1);
+    const carB = sampleCurve((time) => vB * time, { xMin: 0, xMax: 8 }, 0.1);
+    return createElement(CartesianPlot, {
+      ariaLabel: "匀速追及图像",
+      bounds: { xMin: 0, xMax: 8, yMin: 0, yMax: 60 },
+      series: [
+        makeSeries("a", "前车", "#2563eb", carA),
+        makeSeries("b", "后车", "#ea580c", carB),
+      ],
+      markers: [
+        { id: "ta", x: t, y: lead + vA * t, label: "A" },
+        { id: "tb", x: t, y: vB * t, label: "B", color: "#ea580c" },
+      ],
+    });
+  },
+};
+
+const mixedChaseDemo: NumericDemo = {
+  id: "physics-mixed-chase",
+  title: "匀速与匀变速追及",
+  description: "把一条直线和一条弯曲位置图放在一起，看追及为什么会多出临界时刻。",
+  defaultParams: { lead: 12, vA: 4, v0B: 1, aB: 1.2, t: 4 },
+  presets: [
+    { id: "grow", label: "后车逐渐追上", params: { lead: 12, vA: 4, v0B: 1, aB: 1.2, t: 4 } },
+    { id: "slow", label: "加速度偏小", params: { lead: 12, vA: 4, v0B: 1.5, aB: 0.6, t: 4 } },
+  ],
+  controls: {
+    lead: { label: "初始距离", min: 6, max: 20, step: 1 },
+    vA: { label: "前车速度", min: 2, max: 8, step: 0.2 },
+    v0B: { label: "后车初速", min: 0, max: 6, step: 0.2 },
+    aB: { label: "后车加速度", min: 0.2, max: 2.5, step: 0.1 },
+    t: { label: "观察时刻", min: 0, max: 8, step: 0.2 },
+  },
+  explanation({ lead, vA, v0B, aB, t }) {
+    const posA = lead + vA * t;
+    const posB = v0B * t + 0.5 * aB * t * t;
+    return [
+      `当前前车位置约为 ${round(posA)}，后车位置约为 ${round(posB)}。`,
+      "后车位置曲线会弯起来，因为它的速度还在继续变化。",
+      "这类追及题往往要先找“什么时候追上”，再看是否满足最值或临界条件。",
+    ];
+  },
+  renderStage({ lead, vA, v0B, aB, t }) {
+    const carA = sampleCurve((time) => lead + vA * time, { xMin: 0, xMax: 8 }, 0.1);
+    const carB = sampleCurve((time) => v0B * time + 0.5 * aB * time * time, { xMin: 0, xMax: 8 }, 0.1);
+    return createElement(CartesianPlot, {
+      ariaLabel: "匀速与匀变速追及图像",
+      bounds: { xMin: 0, xMax: 8, yMin: 0, yMax: 70 },
+      series: [
+        makeSeries("a", "前车", "#2563eb", carA),
+        makeSeries("b", "后车", "#ea580c", carB),
+      ],
+      markers: [
+        { id: "ta", x: t, y: lead + vA * t, label: "A" },
+        { id: "tb", x: t, y: v0B * t + 0.5 * aB * t * t, label: "B", color: "#ea580c" },
+      ],
+    });
+  },
+};
+
+const freeFallDemo: NumericDemo = {
+  id: "physics-free-fall",
+  title: "自由落体",
+  description: "把速度和高度的变化拉回同一个过程，帮助学生看懂“同样是加速下落”。",
+  defaultParams: { h0: 20, g: 10, t: 1.5 },
+  presets: [
+    { id: "base", label: "基础自由落体", params: { h0: 20, g: 10, t: 1.5 } },
+    { id: "high", label: "更高起点", params: { h0: 35, g: 9.8, t: 2 } },
+  ],
+  controls: {
+    h0: { label: "初始高度", min: 10, max: 40, step: 1 },
+    g: { label: "重力加速度", min: 6, max: 12, step: 0.1 },
+    t: { label: "观察时刻", min: 0, max: 3, step: 0.1 },
+  },
+  explanation({ h0, g, t }) {
+    const h = h0 - 0.5 * g * t * t;
+    const v = g * t;
+    return [
+      `当前高度约为 ${round(Math.max(h, 0))}，速度约为 ${round(v)}。`,
+      "自由落体不是“速度固定地下落”，而是速度一直在增加。",
+      "它可以看成初速度为 0 的匀变速直线运动。",
+    ];
+  },
+  renderStage({ h0, g, t }) {
+    const fall = sampleCurve((time) => h0 - 0.5 * g * time * time, { xMin: 0, xMax: Math.sqrt((2 * h0) / g) }, 0.05);
+    return createElement(CartesianPlot, {
+      ariaLabel: "自由落体图像",
+      bounds: { xMin: 0, xMax: 3, yMin: 0, yMax: Math.max(40, h0 + 5) },
+      series: [makeSeries("fall", "高度-时间", "#0f766e", fall)],
+      markers: [{ id: "current", x: t, y: Math.max(h0 - 0.5 * g * t * t, 0), label: "当前点" }],
+    });
+  },
+};
+
+const motionGraphsDemo: MixedDemo = {
+  id: "physics-motion-graphs",
+  title: "运动图像综合判读",
+  description: "先问图像横纵轴各代表什么，再谈斜率、面积和运动状态。",
+  defaultParams: { graph: "st" },
+  presets: [
+    { id: "st", label: "位移-时间图", params: { graph: "st" } },
+    { id: "vt", label: "速度-时间图", params: { graph: "vt" } },
+  ],
+  controls: {
+    graph: {
+      kind: "select",
+      label: "图像类型",
+      options: [
+        { label: "位移-时间图", value: "st" },
+        { label: "速度-时间图", value: "vt" },
+      ],
+    },
+  },
+  explanation({ graph }) {
+    return graph === "st"
+      ? ["s-t 图里斜率代表速度。", "图像本身不是轨迹，而是位置随时间怎样变。"] 
+      : ["v-t 图里斜率代表加速度。", "v-t 图下面的面积代表位移。"];
+  },
+  renderStage({ graph }) {
+    return createBoard("运动图像判读板", graph === "st"
+      ? [
+          { id: "axis", title: "坐标含义", summary: "横轴时间，纵轴位移。", accent: "#93c5fd" },
+          { id: "slope", title: "斜率", summary: "斜率 = 速度。", accent: "#fdba74" },
+          { id: "pitfall", title: "易错点", summary: "不要把图线形状误看成真实轨迹。", accent: "#86efac" },
+        ]
+      : [
+          { id: "axis", title: "坐标含义", summary: "横轴时间，纵轴速度。", accent: "#93c5fd" },
+          { id: "slope", title: "斜率", summary: "斜率 = 加速度。", accent: "#fdba74" },
+          { id: "area", title: "面积", summary: "图像下面的面积 = 位移。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const forceBalanceDemo: MixedDemo = {
+  id: "physics-force-balance",
+  title: "共点力平衡",
+  description: "把受力图和“合力为零”的判断放在同一个结构里。",
+  defaultParams: { focus: "resultant" },
+  presets: [
+    { id: "resultant", label: "合力为零", params: { focus: "resultant" } },
+    { id: "state", label: "运动状态", params: { focus: "state" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "合力为零", value: "resultant" },
+        { label: "运动状态", value: "state" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return focus === "resultant"
+      ? ["平衡最核心的条件是合力为零。", "这并不等于“没有力”，而是各力相互抵消。"] 
+      : ["平衡状态下可以静止，也可以做匀速直线运动。", "关键看速度是否在改变。"];
+  },
+  renderStage({ focus }) {
+    return createBoard("平衡判断板", focus === "resultant"
+      ? [
+          { id: "forces", title: "受力情况", summary: "可能有多个力同时存在。", accent: "#93c5fd" },
+          { id: "resultant", title: "合力", summary: "所有力矢量和为零。", accent: "#fdba74" },
+          { id: "meaning", title: "含义", summary: "运动状态不改变。", accent: "#86efac" },
+        ]
+      : [
+          { id: "static", title: "静止平衡", summary: "速度为 0 且不变。", accent: "#93c5fd" },
+          { id: "uniform", title: "动态平衡", summary: "速度不为 0 但保持不变。", accent: "#fdba74" },
+          { id: "trap", title: "易错点", summary: "别把“速度不为零”误判成一定不平衡。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const frictionDemo: MixedDemo = {
+  id: "physics-friction",
+  title: "摩擦力与临界状态",
+  description: "先分清静摩擦与滑动摩擦，再理解“刚要动”的临界意义。",
+  defaultParams: { mode: "static" },
+  presets: [
+    { id: "static", label: "静摩擦", params: { mode: "static" } },
+    { id: "sliding", label: "滑动摩擦", params: { mode: "sliding" } },
+  ],
+  controls: {
+    mode: {
+      kind: "select",
+      label: "摩擦类型",
+      options: [
+        { label: "静摩擦", value: "static" },
+        { label: "滑动摩擦", value: "sliding" },
+      ],
+    },
+  },
+  explanation({ mode }) {
+    return mode === "static"
+      ? ["静摩擦会随外力调节，在最大静摩擦前不一定等于 μN。", "临界状态是“刚要动”而还没动。"] 
+      : ["滑动摩擦出现在已经发生相对滑动后。", "这时大小通常按 μN 处理。"];
+  },
+  renderStage({ mode }) {
+    return createBoard("摩擦力判断板", mode === "static"
+      ? [
+          { id: "state", title: "状态", summary: "物体还没相对滑动。", accent: "#93c5fd" },
+          { id: "size", title: "大小", summary: "会随外力变化，直到最大静摩擦。", accent: "#fdba74" },
+          { id: "critical", title: "临界", summary: "刚要动时最值得单独分析。", accent: "#86efac" },
+        ]
+      : [
+          { id: "state", title: "状态", summary: "已经发生相对滑动。", accent: "#93c5fd" },
+          { id: "size", title: "大小", summary: "常按 μN 求解。", accent: "#fdba74" },
+          { id: "direction", title: "方向", summary: "总是阻碍相对运动方向。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const inclineMotionDemo: MixedDemo = {
+  id: "physics-incline-motion",
+  title: "斜面受力与运动",
+  description: "把重力分解、支持力和摩擦力放回斜面坐标里，减少乱分解。",
+  defaultParams: { focus: "decompose" },
+  presets: [
+    { id: "decompose", label: "重力分解", params: { focus: "decompose" } },
+    { id: "motion", label: "沿斜面运动", params: { focus: "motion" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "重力分解", value: "decompose" },
+        { label: "沿斜面运动", value: "motion" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return focus === "decompose"
+      ? ["最稳的分解方式是沿斜面和垂直斜面。", "这样支持力和运动方程都会更清楚。"] 
+      : ["沿斜面方向决定加速度，垂直斜面方向常用来求支持力。", "两条方向不要混在一起列式。"];
+  },
+  renderStage({ focus }) {
+    return createBoard("斜面分析板", focus === "decompose"
+      ? [
+          { id: "axis", title: "坐标选择", summary: "沿斜面 / 垂直斜面。", accent: "#93c5fd" },
+          { id: "gravity", title: "重力分解", summary: "分成沿斜面分力和垂直分力。", accent: "#fdba74" },
+          { id: "benefit", title: "好处", summary: "支持力和运动分析更直观。", accent: "#86efac" },
+        ]
+      : [
+          { id: "along", title: "沿斜面", summary: "决定是否上滑、下滑和加速度大小。", accent: "#93c5fd" },
+          { id: "normal", title: "垂直斜面", summary: "常用于求支持力。", accent: "#fdba74" },
+          { id: "trap", title: "易错点", summary: "别把分力方向写反。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const connectedBodiesDemo: MixedDemo = {
+  id: "physics-connected-bodies",
+  title: "连接体受力与整体隔离",
+  description: "整体法和隔离法切换，是连接体题最关键的思维步骤。",
+  defaultParams: { method: "whole" },
+  presets: [
+    { id: "whole", label: "整体法", params: { method: "whole" } },
+    { id: "separate", label: "隔离法", params: { method: "separate" } },
+  ],
+  controls: {
+    method: {
+      kind: "select",
+      label: "分析方法",
+      options: [
+        { label: "整体法", value: "whole" },
+        { label: "隔离法", value: "separate" },
+      ],
+    },
+  },
+  explanation({ method }) {
+    return method === "whole"
+      ? ["整体法先把内部拉力、支持力等内力先隐藏。", "适合先求共同加速度。"] 
+      : ["隔离法在已知整体结果后，适合回头求绳力或接触力。", "顺序常是先整体、再隔离。"];
+  },
+  renderStage({ method }) {
+    return createBoard("连接体分析板", method === "whole"
+      ? [
+          { id: "object", title: "对象", summary: "把多个物体视为一个整体。", accent: "#93c5fd" },
+          { id: "benefit", title: "好处", summary: "内力不必先算。", accent: "#fdba74" },
+          { id: "use", title: "适合求", summary: "整体加速度。", accent: "#86efac" },
+        ]
+      : [
+          { id: "object", title: "对象", summary: "把某一个物体单独拿出来。", accent: "#93c5fd" },
+          { id: "benefit", title: "好处", summary: "能求绳力、支持力等内部量。", accent: "#fdba74" },
+          { id: "use", title: "适合求", summary: "局部相互作用力。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const overweightWeightlessnessDemo: MixedDemo = {
+  id: "physics-overweight-weightlessness",
+  title: "超重与失重",
+  description: "把支持力变化和加速度方向连起来，看清“感觉变重/变轻”的来源。",
+  defaultParams: { state: "overweight" },
+  presets: [
+    { id: "overweight", label: "超重", params: { state: "overweight" } },
+    { id: "weightless", label: "失重", params: { state: "weightless" } },
+  ],
+  controls: {
+    state: {
+      kind: "select",
+      label: "状态",
+      options: [
+        { label: "超重", value: "overweight" },
+        { label: "失重", value: "weightless" },
+      ],
+    },
+  },
+  explanation({ state }) {
+    return state === "overweight"
+      ? ["超重时支持力大于重力。", "常见于加速度方向向上。"] 
+      : ["失重时支持力小于重力，完全失重时支持力为零。", "常见于加速度方向向下。"];
+  },
+  renderStage({ state }) {
+    return createBoard("超重失重判断板", state === "overweight"
+      ? [
+          { id: "force", title: "支持力", summary: "大于重力。", accent: "#93c5fd" },
+          { id: "acc", title: "加速度方向", summary: "通常向上。", accent: "#fdba74" },
+          { id: "feeling", title: "体验", summary: "感觉更重。", accent: "#86efac" },
+        ]
+      : [
+          { id: "force", title: "支持力", summary: "小于重力，极端时可为零。", accent: "#93c5fd" },
+          { id: "acc", title: "加速度方向", summary: "通常向下。", accent: "#fdba74" },
+          { id: "feeling", title: "体验", summary: "感觉更轻或无重感。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const workPowerDemo: NumericDemo = {
+  id: "physics-work-power",
+  title: "功与功率",
+  description: "把做功多少和做功快慢分开看，减少把功和功率混在一起。",
+  defaultParams: { force: 10, distance: 5, time: 2 },
+  presets: [
+    { id: "base", label: "基础情形", params: { force: 10, distance: 5, time: 2 } },
+    { id: "fast", label: "更快完成", params: { force: 10, distance: 5, time: 1 } },
+  ],
+  controls: {
+    force: { label: "力 F", min: 2, max: 20, step: 1 },
+    distance: { label: "位移 s", min: 1, max: 10, step: 0.5 },
+    time: { label: "时间 t", min: 0.5, max: 6, step: 0.5 },
+  },
+  explanation({ force, distance, time }) {
+    const work = force * distance;
+    const power = work / time;
+    return [
+      `当前做功约为 ${round(work)}。`,
+      `当前平均功率约为 ${round(power)}。`,
+      "功是“总量”，功率是“做得有多快”。",
+    ];
+  },
+  renderStage({ force, distance, time }) {
+    const work = force * distance;
+    const power = work / time;
+    return createBoard("功与功率关系板", [
+      { id: "work", title: `功 W = ${round(work)}`, summary: "反映总共转移了多少能量。", accent: "#93c5fd" },
+      { id: "time", title: `时间 t = ${round(time)}`, summary: "决定完成这些功用了多久。", accent: "#fdba74" },
+      { id: "power", title: `功率 P = ${round(power)}`, summary: "反映做功快慢。", accent: "#86efac" },
+    ]);
+  },
+};
+
+const kineticEnergyDemo: NumericDemo = {
+  id: "physics-kinetic-energy",
+  title: "动能定理",
+  description: "把合外力做功和速度变化直接连起来，看懂为什么它能跨过程求解。",
+  defaultParams: { mass: 2, v0: 2, work: 12 },
+  presets: [
+    { id: "gain", label: "做正功", params: { mass: 2, v0: 2, work: 12 } },
+    { id: "loss", label: "做负功", params: { mass: 2, v0: 4, work: -6 } },
+  ],
+  controls: {
+    mass: { label: "质量 m", min: 1, max: 5, step: 0.5 },
+    v0: { label: "初速度", min: 0, max: 6, step: 0.5 },
+    work: { label: "合外力做功", min: -10, max: 20, step: 1 },
+  },
+  explanation({ mass, v0, work }) {
+    const ek0 = 0.5 * mass * v0 * v0;
+    const ek1 = ek0 + work;
+    return [
+      `初始动能约为 ${round(ek0)}，末动能约为 ${round(ek1)}。`,
+      work >= 0 ? "做正功会增加动能。" : "做负功会减少动能。",
+      "动能定理最适合跨越中间复杂受力过程。",
+    ];
+  },
+  renderStage({ mass, v0, work }) {
+    const ek0 = 0.5 * mass * v0 * v0;
+    const ek1 = ek0 + work;
+    return createBoard("动能定理板", [
+      { id: "start", title: `初动能 ${round(ek0)}`, summary: "由质量和初速度决定。", accent: "#93c5fd" },
+      { id: "work", title: `合外力做功 ${round(work)}`, summary: "它决定动能改变量。", accent: "#fdba74" },
+      { id: "end", title: `末动能 ${round(ek1)}`, summary: "结果由“原来有多少 + 做功多少”得到。", accent: "#86efac" },
+    ]);
+  },
+};
+
+const mechanicalEnergyDemo: MixedDemo = {
+  id: "physics-mechanical-energy",
+  title: "机械能守恒",
+  description: "把动能和势能之间的转化看成“内部换账”，而不是能量凭空增减。",
+  defaultParams: { scene: "freefall" },
+  presets: [
+    { id: "freefall", label: "自由下落", params: { scene: "freefall" } },
+    { id: "swing", label: "摆动/滑动", params: { scene: "swing" } },
+  ],
+  controls: {
+    scene: {
+      kind: "select",
+      label: "观察场景",
+      options: [
+        { label: "自由下落", value: "freefall" },
+        { label: "摆动/滑动", value: "swing" },
+      ],
+    },
+  },
+  explanation({ scene }) {
+    return scene === "freefall"
+      ? ["下降时重力势能减小，动能增大。", "如果只有重力做功，机械能总量保持不变。"] 
+      : ["上升与下降本质上仍是动能和势能互相转化。", "关键先确认有没有非保守力做功。"];
+  },
+  renderStage({ scene }) {
+    return createBoard("机械能守恒板", scene === "freefall"
+      ? [
+          { id: "potential", title: "重力势能", summary: "高度下降时减小。", accent: "#93c5fd" },
+          { id: "kinetic", title: "动能", summary: "速度增大时增加。", accent: "#fdba74" },
+          { id: "total", title: "机械能总量", summary: "若仅重力做功则保持不变。", accent: "#86efac" },
+        ]
+      : [
+          { id: "check", title: "先检查", summary: "是否只有保守力做功。", accent: "#93c5fd" },
+          { id: "convert", title: "再判断", summary: "动能与势能如何互相转换。", accent: "#fdba74" },
+          { id: "trap", title: "易错点", summary: "有摩擦时通常不能直接套守恒。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const seriesParallelDemo: MixedDemo = {
+  id: "physics-series-parallel",
+  title: "串联与并联电路",
+  description: "把电流路径和分配规律分开看，先抓结构再记结论。",
+  defaultParams: { circuit: "series" },
+  presets: [
+    { id: "series", label: "串联", params: { circuit: "series" } },
+    { id: "parallel", label: "并联", params: { circuit: "parallel" } },
+  ],
+  controls: {
+    circuit: {
+      kind: "select",
+      label: "电路结构",
+      options: [
+        { label: "串联", value: "series" },
+        { label: "并联", value: "parallel" },
+      ],
+    },
+  },
+  explanation({ circuit }) {
+    return circuit === "series"
+      ? ["串联只有一条电流路径。", "各处电流相等，总电压等于各部分电压之和。"] 
+      : ["并联有多条支路。", "各支路电压相等，总电流等于各支路电流之和。"];
+  },
+  renderStage({ circuit }) {
+    return createBoard("串并联判断板", circuit === "series"
+      ? [
+          { id: "path", title: "路径", summary: "只有一条。", accent: "#93c5fd" },
+          { id: "current", title: "电流规律", summary: "处处相等。", accent: "#fdba74" },
+          { id: "voltage", title: "电压规律", summary: "总电压分配到各元件。", accent: "#86efac" },
+        ]
+      : [
+          { id: "path", title: "路径", summary: "多条支路。", accent: "#93c5fd" },
+          { id: "voltage", title: "电压规律", summary: "各支路电压相等。", accent: "#fdba74" },
+          { id: "current", title: "电流规律", summary: "总电流由各支路电流相加。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const ohmsLawDemo: NumericDemo = {
+  id: "physics-ohms-law",
+  title: "欧姆定律与伏安关系",
+  description: "把电压、电流和电阻的比例关系拉直，让图像和公式互相对应。",
+  defaultParams: { resistance: 4, voltage: 8 },
+  presets: [
+    { id: "base", label: "基础关系", params: { resistance: 4, voltage: 8 } },
+    { id: "largeR", label: "更大电阻", params: { resistance: 8, voltage: 8 } },
+  ],
+  controls: {
+    resistance: { label: "电阻 R", min: 1, max: 12, step: 0.5 },
+    voltage: { label: "电压 U", min: 1, max: 24, step: 1 },
+  },
+  explanation({ resistance, voltage }) {
+    const current = voltage / resistance;
+    return [
+      `当前电流 I = U / R ≈ ${round(current)}。`,
+      "电压固定时，电阻变大，电流会变小。",
+      "欧姆定律最适合先建立比例感，再回到计算。",
+    ];
+  },
+  renderStage({ resistance }) {
+    const line = sampleCurve((u) => u / resistance, { xMin: 0, xMax: 24 }, 0.5);
+    return createElement(CartesianPlot, {
+      ariaLabel: "欧姆定律图像",
+      bounds: { xMin: 0, xMax: 24, yMin: 0, yMax: 10 },
+      series: [makeSeries("ohm", "I-U 关系", "#2563eb", line)],
+    });
+  },
+};
+
+const vibrationDemo: MixedDemo = {
+  id: "physics-vibration",
+  title: "简谐振动的周期与图像",
+  description: "把一个周期里经历的位置变化说清楚，再谈图像与周期。",
+  defaultParams: { focus: "period" },
+  presets: [
+    { id: "period", label: "周期", params: { focus: "period" } },
+    { id: "phase", label: "相位", params: { focus: "phase" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "周期", value: "period" },
+        { label: "相位", value: "phase" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return focus === "period"
+      ? ["周期表示完成一次完整往返所需的时间。", "周期变了，整条波形会变松或变紧。"] 
+      : ["相位帮助判断两个时刻或两个点是否同步。", "振动和波动里都要逐渐建立相位感。"];
+  },
+  renderStage({ focus }) {
+    return createBoard("振动观察板", focus === "period"
+      ? [
+          { id: "cycle", title: "周期 T", summary: "一次完整重复所需时间。", accent: "#93c5fd" },
+          { id: "graph", title: "图像表现", summary: "一个周期对应一段完整波形。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "先数“回到原状态”需要多久。", accent: "#86efac" },
+        ]
+      : [
+          { id: "same", title: "同相", summary: "状态变化一致。", accent: "#93c5fd" },
+          { id: "diff", title: "相位差", summary: "表示两个状态的时间或空间错位。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "先比较是否在同向通过平衡位置。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const wavePropagationDemo: MixedDemo = {
+  id: "physics-wave-propagation",
+  title: "波的传播与相位感知",
+  description: "把“质点振动”和“波形前进”分开理解，避免把介质整体移动想错。",
+  defaultParams: { focus: "propagation" },
+  presets: [
+    { id: "propagation", label: "传播", params: { focus: "propagation" } },
+    { id: "phase", label: "相位差", params: { focus: "phase" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "传播", value: "propagation" },
+        { label: "相位差", value: "phase" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return focus === "propagation"
+      ? ["向前传播的是扰动和能量，不是介质整体搬走。", "每个质点只在原地附近振动。"] 
+      : ["相位差帮助比较不同位置质点此刻的振动状态。", "它是理解波动题的核心抓手之一。"];
+  },
+  renderStage({ focus }) {
+    return createBoard("波动理解板", focus === "propagation"
+      ? [
+          { id: "energy", title: "传播对象", summary: "扰动与能量。", accent: "#93c5fd" },
+          { id: "medium", title: "介质质点", summary: "各自在原地附近振动。", accent: "#fdba74" },
+          { id: "trap", title: "易错点", summary: "别误以为介质整体向前移动。", accent: "#86efac" },
+        ]
+      : [
+          { id: "same", title: "同相点", summary: "振动状态相同。", accent: "#93c5fd" },
+          { id: "shift", title: "相位差", summary: "不同位置的状态错位。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "先看是否同向通过平衡位置。", accent: "#86efac" },
+        ]);
+  },
+};
+
 const chemistryMoleDemo: NumericDemo = {
   id: "chemistry-mole",
   title: "物质的量关系网",
@@ -1172,6 +1958,261 @@ const chemistryMaterialClassificationDemo: MixedDemo = {
       title: "物质分类树",
       items,
     });
+  },
+};
+
+const chemistryDispersionDemo: MixedDemo = {
+  id: "chemistry-dispersion-colloid",
+  title: "分散系与胶体",
+  description: "把溶液、胶体、浊液按粒子尺度和现象差异放回同一张关系图里。",
+  defaultParams: { system: "colloid" },
+  presets: [
+    { id: "solution", label: "溶液", params: { system: "solution" } },
+    { id: "colloid", label: "胶体", params: { system: "colloid" } },
+    { id: "suspension", label: "浊液", params: { system: "suspension" } },
+  ],
+  controls: {
+    system: {
+      kind: "select",
+      label: "分散系类型",
+      options: [
+        { label: "溶液", value: "solution" },
+        { label: "胶体", value: "colloid" },
+        { label: "浊液", value: "suspension" },
+      ],
+    },
+  },
+  explanation({ system }) {
+    const map: Record<string, string[]> = {
+      solution: ["粒子很小，体系均一稳定。", "最先抓“看起来很均一”。"],
+      colloid: ["胶体最常见的识别特征是丁达尔效应。", "它介于溶液和浊液之间。"],
+      suspension: ["粒子更大，静置后容易分层或沉降。", "这类体系最不稳定。"],
+    };
+    return map[String(system)];
+  },
+  renderStage({ system }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      solution: [
+        { id: "size", title: "粒子尺度", summary: "最小。", accent: "#93c5fd" },
+        { id: "look", title: "外观", summary: "均一透明。", accent: "#fdba74" },
+        { id: "effect", title: "现象", summary: "无明显丁达尔效应。", accent: "#86efac" },
+      ],
+      colloid: [
+        { id: "size", title: "粒子尺度", summary: "介于溶液与浊液之间。", accent: "#93c5fd" },
+        { id: "look", title: "外观", summary: "较均一但不是分子级。", accent: "#fdba74" },
+        { id: "effect", title: "现象", summary: "常有丁达尔效应。", accent: "#86efac" },
+      ],
+      suspension: [
+        { id: "size", title: "粒子尺度", summary: "最大。", accent: "#93c5fd" },
+        { id: "look", title: "外观", summary: "不均一、易分层。", accent: "#fdba74" },
+        { id: "effect", title: "现象", summary: "静置后常沉降。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("分散系比较板", items[String(system)]);
+  },
+};
+
+const chemistrySodiumDemo: MixedDemo = {
+  id: "chemistry-sodium",
+  title: "钠及其化合物",
+  description: "把钠单质、氧化物和常见盐类的转化链路放在一起记忆。",
+  defaultParams: { stage: "metal" },
+  presets: [
+    { id: "metal", label: "钠单质", params: { stage: "metal" } },
+    { id: "oxide", label: "氧化物", params: { stage: "oxide" } },
+    { id: "salt", label: "盐类", params: { stage: "salt" } },
+  ],
+  controls: {
+    stage: {
+      kind: "select",
+      label: "观察节点",
+      options: [
+        { label: "钠单质", value: "metal" },
+        { label: "氧化物", value: "oxide" },
+        { label: "盐类", value: "salt" },
+      ],
+    },
+  },
+  explanation({ stage }) {
+    const map: Record<string, string[]> = {
+      metal: ["钠单质活泼，常和水、氧气等快速反应。", "记忆时要先抓“活泼性很强”。"],
+      oxide: ["钠的氧化物与过氧化物最容易混。", "要特别注意产物和颜色差异。"],
+      salt: ["最终常回到碳酸钠、碳酸氢钠等常见盐。", "转化题里要看清反应条件。"],
+    };
+    return map[String(stage)];
+  },
+  renderStage({ stage }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      metal: [
+        { id: "trait", title: "性质", summary: "很活泼。", accent: "#93c5fd" },
+        { id: "reaction", title: "典型反应", summary: "与水、氧气反应显著。", accent: "#fdba74" },
+        { id: "tip", title: "学习抓手", summary: "先抓活泼性，再串产物。", accent: "#86efac" },
+      ],
+      oxide: [
+        { id: "na2o", title: "氧化钠", summary: "较基础的氧化物。", accent: "#93c5fd" },
+        { id: "na2o2", title: "过氧化钠", summary: "性质和用途都更特殊。", accent: "#fdba74" },
+        { id: "tip", title: "易错点", summary: "别把两者反应条件和现象混掉。", accent: "#86efac" },
+      ],
+      salt: [
+        { id: "na2co3", title: "碳酸钠", summary: "典型盐类。", accent: "#93c5fd" },
+        { id: "nahco3", title: "碳酸氢钠", summary: "常与碳酸钠对比。", accent: "#fdba74" },
+        { id: "tip", title: "学习抓手", summary: "把用途、热稳定性和反应现象一起记。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("钠元素转化板", items[String(stage)]);
+  },
+};
+
+const chemistryChlorineDemo: MixedDemo = {
+  id: "chemistry-chlorine",
+  title: "氯及其化合物",
+  description: "把氯气、盐酸、次氯酸和漂白相关物质放到同一张链路图里。",
+  defaultParams: { node: "chlorine" },
+  presets: [
+    { id: "chlorine", label: "氯气", params: { node: "chlorine" } },
+    { id: "acid", label: "盐酸/次氯酸", params: { node: "acid" } },
+    { id: "bleach", label: "漂白体系", params: { node: "bleach" } },
+  ],
+  controls: {
+    node: {
+      kind: "select",
+      label: "观察节点",
+      options: [
+        { label: "氯气", value: "chlorine" },
+        { label: "盐酸/次氯酸", value: "acid" },
+        { label: "漂白体系", value: "bleach" },
+      ],
+    },
+  },
+  explanation({ node }) {
+    const map: Record<string, string[]> = {
+      chlorine: ["氯气有毒且氧化性较强。", "先抓活泼性和应用场景。"],
+      acid: ["盐酸和次氯酸的性质差异要分开记。", "尤其注意谁更强酸、谁更具漂白性。"],
+      bleach: ["漂白粉、次氯酸盐体系最适合放回整体链路记忆。", "别只背一个名字。"],
+    };
+    return map[String(node)];
+  },
+  renderStage({ node }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      chlorine: [
+        { id: "trait", title: "核心性质", summary: "有毒、强氧化性。", accent: "#93c5fd" },
+        { id: "reaction", title: "典型反应", summary: "与金属、氢气、水等反应。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先看电子得失和用途。", accent: "#86efac" },
+      ],
+      acid: [
+        { id: "hcl", title: "盐酸", summary: "强酸，常见电离体系。", accent: "#93c5fd" },
+        { id: "hclo", title: "次氯酸", summary: "弱酸但有漂白杀菌性。", accent: "#fdba74" },
+        { id: "tip", title: "易错点", summary: "别把酸性强弱和氧化漂白作用混为一谈。", accent: "#86efac" },
+      ],
+      bleach: [
+        { id: "system", title: "体系", summary: "氯气制漂白粉、次氯酸盐。", accent: "#93c5fd" },
+        { id: "essence", title: "本质", summary: "关键常回到次氯酸或次氯酸根。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "把消毒、漂白、储存条件放一起记。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("氯元素链路板", items[String(node)]);
+  },
+};
+
+const chemistryIronDemo: MixedDemo = {
+  id: "chemistry-iron",
+  title: "铁及其化合物",
+  description: "围绕 Fe、Fe2+、Fe3+ 三个层级，建立铁元素反应链的主线。",
+  defaultParams: { ion: "fe2" },
+  presets: [
+    { id: "metal", label: "Fe", params: { ion: "metal" } },
+    { id: "fe2", label: "Fe2+", params: { ion: "fe2" } },
+    { id: "fe3", label: "Fe3+", params: { ion: "fe3" } },
+  ],
+  controls: {
+    ion: {
+      kind: "select",
+      label: "观察节点",
+      options: [
+        { label: "Fe", value: "metal" },
+        { label: "Fe2+", value: "fe2" },
+        { label: "Fe3+", value: "fe3" },
+      ],
+    },
+  },
+  explanation({ ion }) {
+    const map: Record<string, string[]> = {
+      metal: ["单质铁常作为电子提供者。", "先抓金属活动性和被氧化方向。"],
+      fe2: ["Fe2+ 往往处在中间态，易被氧化成 Fe3+。", "是很多转化题的核心桥梁。"],
+      fe3: ["Fe3+ 氧化性更明显。", "要特别留意颜色和检验现象。"],
+    };
+    return map[String(ion)];
+  },
+  renderStage({ ion }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      metal: [
+        { id: "role", title: "角色", summary: "电子提供者。", accent: "#93c5fd" },
+        { id: "path", title: "转化", summary: "常先转成 Fe2+。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先看被氧化还是参与置换。", accent: "#86efac" },
+      ],
+      fe2: [
+        { id: "state", title: "中间层级", summary: "介于 Fe 与 Fe3+ 之间。", accent: "#93c5fd" },
+        { id: "path", title: "变化方向", summary: "易继续被氧化成 Fe3+。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "它是链路中的过渡桥。", accent: "#86efac" },
+      ],
+      fe3: [
+        { id: "trait", title: "特点", summary: "氧化性更强。", accent: "#93c5fd" },
+        { id: "path", title: "变化方向", summary: "可被还原回 Fe2+。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "把颜色和检验现象一起记。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("铁元素转化板", items[String(ion)]);
+  },
+};
+
+const chemistryLabDevicesDemo: MixedDemo = {
+  id: "chemistry-lab-devices",
+  title: "化学实验基础与装置",
+  description: "把装置用途、操作顺序和安全注意拆成稳定的实验流程。",
+  defaultParams: { device: "heating" },
+  presets: [
+    { id: "heating", label: "加热装置", params: { device: "heating" } },
+    { id: "gas", label: "气体收集", params: { device: "gas" } },
+    { id: "filtration", label: "过滤洗涤", params: { device: "filtration" } },
+  ],
+  controls: {
+    device: {
+      kind: "select",
+      label: "实验场景",
+      options: [
+        { label: "加热装置", value: "heating" },
+        { label: "气体收集", value: "gas" },
+        { label: "过滤洗涤", value: "filtration" },
+      ],
+    },
+  },
+  explanation({ device }) {
+    const map: Record<string, string[]> = {
+      heating: ["加热类实验最先抓装置受热顺序和试管口方向。", "安全细节经常就是得分点。"],
+      gas: ["气体收集先看密度，再看是否溶于水。", "方法选择比背名称更重要。"],
+      filtration: ["过滤洗涤要把操作步骤和目的对应起来。", "玻璃棒、漏斗和液面位置最容易丢分。"],
+    };
+    return map[String(device)];
+  },
+  renderStage({ device }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      heating: [
+        { id: "device", title: "装置", summary: "酒精灯、试管、铁架台等。", accent: "#93c5fd" },
+        { id: "focus", title: "重点", summary: "均匀受热、试管口略向下。", accent: "#fdba74" },
+        { id: "safety", title: "安全", summary: "防止液体倒流和暴沸。", accent: "#86efac" },
+      ],
+      gas: [
+        { id: "basis", title: "选择依据", summary: "密度和溶解性。", accent: "#93c5fd" },
+        { id: "method", title: "常见方法", summary: "排水法、向上/向下排空气法。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先看性质再选装置。", accent: "#86efac" },
+      ],
+      filtration: [
+        { id: "tool", title: "装置", summary: "漏斗、滤纸、烧杯、玻璃棒。", accent: "#93c5fd" },
+        { id: "step", title: "重点步骤", summary: "一贴二低三靠。", accent: "#fdba74" },
+        { id: "tip", title: "易错点", summary: "液面别高于滤纸边缘。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("实验装置流程板", items[String(device)]);
   },
 };
 
@@ -1704,6 +2745,327 @@ const englishWordFamilyDemo: MixedDemo = {
   },
 };
 
+const englishSentenceCompressionDemo: MixedDemo = {
+  id: "english-sentence-compression",
+  title: "长难句主干压缩",
+  description: "先抽主干，再层层挂回修饰，帮助学生从“看不懂”变成“分层读”。",
+  defaultParams: { step: "trunk" },
+  presets: [
+    { id: "trunk", label: "找主干", params: { step: "trunk" } },
+    { id: "modifier", label: "挂修饰", params: { step: "modifier" } },
+  ],
+  controls: {
+    step: {
+      kind: "select",
+      label: "拆句步骤",
+      options: [
+        { label: "找主干", value: "trunk" },
+        { label: "挂修饰", value: "modifier" },
+      ],
+    },
+  },
+  explanation({ step }) {
+    return step === "trunk"
+      ? ["先只保留主语、谓语、宾语等核心骨架。", "别一开始就试图把每个定语从句都解释清楚。"] 
+      : ["主干找稳之后，再把介词短语、从句、非谓语挂回去。", "这样复杂句会变得很有层次。"];
+  },
+  renderStage({ step }) {
+    return createBoard("长难句压缩板", step === "trunk"
+      ? [
+          { id: "goal", title: "目标", summary: "先找最短可成立句。", accent: "#93c5fd" },
+          { id: "items", title: "保留项", summary: "主语、谓语、宾语/表语。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "先别被长修饰干扰。", accent: "#86efac" },
+        ]
+      : [
+          { id: "first", title: "先后顺序", summary: "先主干，后修饰。", accent: "#93c5fd" },
+          { id: "modifier", title: "常见修饰", summary: "介词短语、从句、非谓语。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "一个修饰块一个修饰块地挂回去。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const englishSynonymMapDemo: MixedDemo = {
+  id: "english-synonym-semantic-map",
+  title: "近义词语义坐标图",
+  description: "把近义词放进语义强弱和语气差别里，而不是平铺地背一串意思。",
+  defaultParams: { group: "happy" },
+  presets: [
+    { id: "happy", label: "happy 家族", params: { group: "happy" } },
+    { id: "important", label: "important 家族", params: { group: "important" } },
+  ],
+  controls: {
+    group: {
+      kind: "select",
+      label: "词义组",
+      options: [
+        { label: "happy 家族", value: "happy" },
+        { label: "important 家族", value: "important" },
+      ],
+    },
+  },
+  explanation({ group }) {
+    return group === "happy"
+      ? ["happy、glad、delighted 不是完全等强度。", "近义词题最重要的是语气和场景。"] 
+      : ["important、significant、vital 在正式程度和强调度上有差异。", "不要把近义词当成可无条件互换。"];
+  },
+  renderStage({ group }) {
+    return createBoard("近义词语义板", group === "happy"
+      ? [
+          { id: "mild", title: "glad", summary: "较轻、日常。", accent: "#93c5fd" },
+          { id: "base", title: "happy", summary: "基础高频词。", accent: "#fdba74" },
+          { id: "strong", title: "delighted", summary: "情绪更强、更正式。", accent: "#86efac" },
+        ]
+      : [
+          { id: "base", title: "important", summary: "基础范围最广。", accent: "#93c5fd" },
+          { id: "formal", title: "significant", summary: "更书面，常带“重要且有影响”。", accent: "#fdba74" },
+          { id: "strong", title: "vital", summary: "强度更高，接近“至关重要”。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const englishNonfiniteDemo: MixedDemo = {
+  id: "english-nonfinite-structure",
+  title: "非谓语结构关系图",
+  description: "把 doing、done、to do 的判断拉回“主动被动 + 时间关系 + 句法功能”。",
+  defaultParams: { form: "doing" },
+  presets: [
+    { id: "doing", label: "doing", params: { form: "doing" } },
+    { id: "done", label: "done", params: { form: "done" } },
+    { id: "todo", label: "to do", params: { form: "todo" } },
+  ],
+  controls: {
+    form: {
+      kind: "select",
+      label: "非谓语形式",
+      options: [
+        { label: "doing", value: "doing" },
+        { label: "done", value: "done" },
+        { label: "to do", value: "todo" },
+      ],
+    },
+  },
+  explanation({ form }) {
+    const map: Record<string, string[]> = {
+      doing: ["常和主动、进行或伴随有关。", "但最先还是看它在句中做什么功能。"],
+      done: ["常和被动或完成感有关。", "判断时要特别看逻辑主语和动作承受关系。"],
+      todo: ["常带将来、目的或待发生感。", "很多题先看是否在表达“为了……”或“将要……”。"],
+    };
+    return map[String(form)];
+  },
+  renderStage({ form }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      doing: [
+        { id: "voice", title: "常见语态", summary: "主动。", accent: "#93c5fd" },
+        { id: "time", title: "常见时间感", summary: "进行/伴随。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先看功能，再看主动被动。", accent: "#86efac" },
+      ],
+      done: [
+        { id: "voice", title: "常见语态", summary: "被动。", accent: "#93c5fd" },
+        { id: "time", title: "常见时间感", summary: "完成或被处理后状态。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "逻辑主语常是动作承受者。", accent: "#86efac" },
+      ],
+      todo: [
+        { id: "voice", title: "常见语态", summary: "多见主动，但也能带被动结构。", accent: "#93c5fd" },
+        { id: "time", title: "常见时间感", summary: "将来/目的。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "很适合先问“是不是为了……”。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("非谓语判断板", items[String(form)]);
+  },
+};
+
+const englishWritingUpgradeDemo: MixedDemo = {
+  id: "english-writing-upgrade-workshop",
+  title: "写作句型升级工坊",
+  description: "把普通表达升级成更清晰、更有层次的表达，而不是只堆生词。",
+  defaultParams: { strategy: "variety" },
+  presets: [
+    { id: "variety", label: "句型丰富", params: { strategy: "variety" } },
+    { id: "logic", label: "逻辑连接", params: { strategy: "logic" } },
+  ],
+  controls: {
+    strategy: {
+      kind: "select",
+      label: "升级策略",
+      options: [
+        { label: "句型丰富", value: "variety" },
+        { label: "逻辑连接", value: "logic" },
+      ],
+    },
+  },
+  explanation({ strategy }) {
+    return strategy === "variety"
+      ? ["升级写作不只是换难词，也包括句型层次更丰富。", "简单句、并列句、从句适度穿插更自然。"] 
+      : ["好作文的连贯感很大一部分来自逻辑连接。", "先让读者看懂关系，再谈修辞。"];
+  },
+  renderStage({ strategy }) {
+    return createBoard("写作升级板", strategy === "variety"
+      ? [
+          { id: "base", title: "基础句", summary: "先把意思表达准确。", accent: "#93c5fd" },
+          { id: "upgrade", title: "升级点", summary: "适度加入从句、非谓语、倒装等。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "变化要服务表达，不是炫技。", accent: "#86efac" },
+        ]
+      : [
+          { id: "idea", title: "先定逻辑", summary: "并列、转折、因果、递进。", accent: "#93c5fd" },
+          { id: "connector", title: "再选连接", summary: "让句间关系清楚可见。", accent: "#fdba74" },
+          { id: "tip", title: "抓手", summary: "逻辑清楚比词更高级更重要。", accent: "#86efac" },
+        ]);
+  },
+};
+
+const englishReadingQuestionDemo: MixedDemo = {
+  id: "english-reading-question-map",
+  title: "阅读题型拆解",
+  description: "先分清题目在问主旨、细节、推断还是词义，再决定阅读策略。",
+  defaultParams: { question: "detail" },
+  presets: [
+    { id: "detail", label: "细节题", params: { question: "detail" } },
+    { id: "inference", label: "推断题", params: { question: "inference" } },
+    { id: "main", label: "主旨题", params: { question: "main" } },
+  ],
+  controls: {
+    question: {
+      kind: "select",
+      label: "题型",
+      options: [
+        { label: "细节题", value: "detail" },
+        { label: "推断题", value: "inference" },
+        { label: "主旨题", value: "main" },
+      ],
+    },
+  },
+  explanation({ question }) {
+    const map: Record<string, string[]> = {
+      detail: ["细节题通常要关键词回文定位。", "真正考的是定位与同义替换。"],
+      inference: ["推断题不是乱猜，而是基于文中证据作合逻辑延伸。", "常需要看语气和隐含立场。"],
+      main: ["主旨题最该先回到段落/全文在“总体上讲什么”。", "不要抓某一个局部例子当答案。"],
+    };
+    return map[String(question)];
+  },
+  renderStage({ question }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      detail: [
+        { id: "goal", title: "目标", summary: "找到原文对应信息。", accent: "#93c5fd" },
+        { id: "method", title: "方法", summary: "关键词定位 + 同义替换。", accent: "#fdba74" },
+        { id: "trap", title: "易错点", summary: "只看选项表面词，不回文核对。", accent: "#86efac" },
+      ],
+      inference: [
+        { id: "goal", title: "目标", summary: "基于证据做合理推断。", accent: "#93c5fd" },
+        { id: "method", title: "方法", summary: "看语气、态度、暗含关系。", accent: "#fdba74" },
+        { id: "trap", title: "易错点", summary: "越过原文证据范围。", accent: "#86efac" },
+      ],
+      main: [
+        { id: "goal", title: "目标", summary: "抓中心思想或最佳标题。", accent: "#93c5fd" },
+        { id: "method", title: "方法", summary: "优先看主题句和全文共同指向。", accent: "#fdba74" },
+        { id: "trap", title: "易错点", summary: "把例子或细节误当主旨。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("阅读题型策略板", items[String(question)]);
+  },
+};
+
+const englishParagraphWritingDemo: MixedDemo = {
+  id: "english-writing-paragraph-workshop",
+  title: "作文段落展开工坊",
+  description: "把段落从观点、解释、例子、回扣四层拆开，帮助学生稳定展开。",
+  defaultParams: { layer: "topic" },
+  presets: [
+    { id: "topic", label: "主题句", params: { layer: "topic" } },
+    { id: "support", label: "支撑句", params: { layer: "support" } },
+    { id: "example", label: "例证句", params: { layer: "example" } },
+  ],
+  controls: {
+    layer: {
+      kind: "select",
+      label: "段落层级",
+      options: [
+        { label: "主题句", value: "topic" },
+        { label: "支撑句", value: "support" },
+        { label: "例证句", value: "example" },
+      ],
+    },
+  },
+  explanation({ layer }) {
+    const map: Record<string, string[]> = {
+      topic: ["主题句先把段落核心观点亮出来。", "它是后面所有展开的锚点。"],
+      support: ["支撑句解释为什么。", "这里最适合补原因、影响或对比。"],
+      example: ["例证句让抽象观点落地。", "例子不是越多越好，而是要贴近观点。"],
+    };
+    return map[String(layer)];
+  },
+  renderStage({ layer }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      topic: [
+        { id: "goal", title: "作用", summary: "先亮观点。", accent: "#93c5fd" },
+        { id: "position", title: "常见位置", summary: "段首最清晰。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "一句话说清这一段想表达什么。", accent: "#86efac" },
+      ],
+      support: [
+        { id: "goal", title: "作用", summary: "解释、扩展、论证。", accent: "#93c5fd" },
+        { id: "position", title: "常见内容", summary: "原因、影响、对比。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "始终围绕主题句服务。", accent: "#86efac" },
+      ],
+      example: [
+        { id: "goal", title: "作用", summary: "让观点更具体。", accent: "#93c5fd" },
+        { id: "position", title: "常见内容", summary: "个人经历、社会案例、事实。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "例子要和主题直接对应。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("段落展开板", items[String(layer)]);
+  },
+};
+
+const englishListeningDemo: MixedDemo = {
+  id: "english-listening-capture",
+  title: "听力信息捕捉流程图",
+  description: "把听前预测、听中抓点、听后核对拆成流程，降低听力焦虑感。",
+  defaultParams: { stage: "before" },
+  presets: [
+    { id: "before", label: "听前", params: { stage: "before" } },
+    { id: "during", label: "听中", params: { stage: "during" } },
+    { id: "after", label: "听后", params: { stage: "after" } },
+  ],
+  controls: {
+    stage: {
+      kind: "select",
+      label: "流程阶段",
+      options: [
+        { label: "听前", value: "before" },
+        { label: "听中", value: "during" },
+        { label: "听后", value: "after" },
+      ],
+    },
+  },
+  explanation({ stage }) {
+    const map: Record<string, string[]> = {
+      before: ["听前先利用题干和选项做预测。", "这样听的时候更容易抓关键词。"],
+      during: ["听中不要追逐每个词。", "更重要的是抓人物、时间、地点、态度和转折。"],
+      after: ["听后要回到题目选项做快速核对。", "尤其注意有没有被干扰项带偏。"],
+    };
+    return map[String(stage)];
+  },
+  renderStage({ stage }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      before: [
+        { id: "predict", title: "先预测", summary: "看题干、选项、场景。", accent: "#93c5fd" },
+        { id: "prepare", title: "定关注点", summary: "人物、时间、地点、数字。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "带着问题去听。", accent: "#86efac" },
+      ],
+      during: [
+        { id: "focus", title: "抓关键信息", summary: "别强求逐词听懂。", accent: "#93c5fd" },
+        { id: "signal", title: "盯逻辑信号", summary: "转折、因果、比较、建议。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先抓主信息，再补细节。", accent: "#86efac" },
+      ],
+      after: [
+        { id: "check", title: "回选项核对", summary: "看是否和听到的信息真正吻合。", accent: "#93c5fd" },
+        { id: "trap", title: "排干扰项", summary: "特别防止半对半错。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "依据证据，不凭感觉。", accent: "#86efac" },
+      ],
+    };
+    return createBoard("听力捕捉流程板", items[String(stage)]);
+  },
+};
+
 const englishRootsDemo: MixedDemo = {
   id: "english-word-roots",
   title: "词根词缀网络",
@@ -1811,11 +3173,15 @@ export const demoRegistry = {
   "math/functions/exp-log": expLogDemo,
   "math/functions/power": powerDemo,
   "math/functions/quadratic-function": quadraticReferenceDemo,
+  "math/functions/transform-review": transformReviewDemo,
   "math/trigonometry/sin-basic": sinBasicDemo,
   "math/trigonometry/sin-transform": sinTransformDemo,
   "math/trigonometry/cos-basic": cosBasicDemo,
   "math/trigonometry/tan-basic": tanBasicDemo,
+  "math/sequences/sequences-basic": sequencesBasicDemo,
+  "math/sequences/sequence-recursive": sequenceRecursiveDemo,
   "math/analytic-geometry/conic-overview": conicOverviewDemo,
+  "math/analytic-geometry/circle-standard": circleStandardDemo,
   "math/analytic-geometry/ellipse-standard": ellipseStandardDemo,
   "math/analytic-geometry/hyperbola-standard": hyperbolaStandardDemo,
   "math/analytic-geometry/line-circle": lineCircleDemo,
@@ -1828,24 +3194,52 @@ export const demoRegistry = {
   "math/sets-logic/set-operations": setOperationsDemo,
   "physics/motion/physics-uniform-motion": uniformMotionDemo,
   "physics/motion/physics-accelerated-motion": acceleratedMotionDemo,
+  "physics/motion/physics-uniform-chase": uniformChaseDemo,
+  "physics/motion/physics-mixed-chase": mixedChaseDemo,
+  "physics/motion/physics-free-fall": freeFallDemo,
   "physics/motion/physics-projectile-motion": projectileDemo,
+  "physics/motion/physics-motion-graphs": motionGraphsDemo,
   "physics/force/physics-force-composition": forceCompositionDemo,
   "physics/force/physics-newton-second-law": newtonSecondLawDemo,
+  "physics/force/physics-force-balance": forceBalanceDemo,
+  "physics/force/physics-friction": frictionDemo,
+  "physics/force/physics-incline-motion": inclineMotionDemo,
+  "physics/force/physics-connected-bodies": connectedBodiesDemo,
+  "physics/force/physics-overweight-weightlessness": overweightWeightlessnessDemo,
+  "physics/energy/physics-work-power": workPowerDemo,
+  "physics/energy/physics-kinetic-energy": kineticEnergyDemo,
+  "physics/energy/physics-mechanical-energy": mechanicalEnergyDemo,
   "physics/energy/physics-work-energy-synthesis": workEnergyDemo,
+  "physics/electricity/physics-series-parallel": seriesParallelDemo,
+  "physics/electricity/physics-ohms-law": ohmsLawDemo,
+  "physics/wave/physics-vibration": vibrationDemo,
+  "physics/wave/physics-wave-propagation": wavePropagationDemo,
   "chemistry/chemical-language/chemistry-material-classification": chemistryMaterialClassificationDemo,
+  "chemistry/chemical-language/chemistry-dispersion-colloid": chemistryDispersionDemo,
   "chemistry/chemical-language/chemistry-mole": chemistryMoleDemo,
   "chemistry/reaction-principles/chemistry-ionic-reaction": chemistryIonicDemo,
   "chemistry/reaction-principles/chemistry-redox": chemistryRedoxDemo,
+  "chemistry/elements-compounds/chemistry-sodium": chemistrySodiumDemo,
+  "chemistry/elements-compounds/chemistry-chlorine": chemistryChlorineDemo,
+  "chemistry/elements-compounds/chemistry-iron": chemistryIronDemo,
+  "chemistry/experiments/chemistry-lab-devices": chemistryLabDevicesDemo,
   "chemistry/experiments/chemistry-ion-identification": chemistryIonIdentificationDemo,
   "english/sentence-structure/english-clause-hierarchy": englishClauseDemo,
   "english/sentence-structure/english-sentence-structure": englishSentenceStructureDemo,
+  "english/sentence-structure/english-sentence-compression": englishSentenceCompressionDemo,
   "english/sentence-structure/english-reading-layer": englishReadingLayerDemo,
   "english/sentence-structure/english-tense-timeline": englishTenseTimelineDemo,
+  "english/sentence-structure/english-nonfinite-structure": englishNonfiniteDemo,
+  "english/sentence-structure/english-reading-question-map": englishReadingQuestionDemo,
+  "english/sentence-structure/english-listening-capture": englishListeningDemo,
   "english/roots-vocabulary-network/english-affix-network": englishAffixNetworkDemo,
   "english/roots-vocabulary-network/english-logic-connector-map": englishLogicConnectorDemo,
+  "english/roots-vocabulary-network/english-synonym-semantic-map": englishSynonymMapDemo,
   "english/roots-vocabulary-network/english-word-family-atlas": englishWordFamilyDemo,
   "english/roots-vocabulary-network/english-word-roots": englishRootsDemo,
   "english/roots-vocabulary-network/english-grammar-cloze-strategy": englishGrammarClozeDemo,
+  "english/roots-vocabulary-network/english-writing-upgrade-workshop": englishWritingUpgradeDemo,
+  "english/roots-vocabulary-network/english-writing-paragraph-workshop": englishParagraphWritingDemo,
 } as const;
 
 export function getDemoDefinition(

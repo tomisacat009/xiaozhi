@@ -8,6 +8,18 @@ import { buildUnitPath } from "@/lib/routes";
 
 import { getUnitsByModuleRoute } from "@/features/knowledge/unit-page";
 
+function getUnitStatusLabel(status: "available" | "migrating" | "planned") {
+  if (status === "available") {
+    return "已可体验";
+  }
+
+  if (status === "migrating") {
+    return "迁移中";
+  }
+
+  return "建设中";
+}
+
 export function ModulePageView({
   subjectSlug,
   moduleSlug,
@@ -63,9 +75,7 @@ export function ModulePageView({
               >
                 <div className="contentCard__meta">
                   <span>Unit</span>
-                  <span>
-                    {unit.status === "migrating" ? "迁移中" : "建设中"}
-                  </span>
+                  <span>{getUnitStatusLabel(unit.status)}</span>
                 </div>
                 <h3>{unit.title}</h3>
                 <p>{unit.summary}</p>

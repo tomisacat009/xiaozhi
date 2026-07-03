@@ -8,6 +8,7 @@ import {
   getSubjectBySlug,
   getUnitsByModuleId,
 } from "@/lib/content/loaders";
+import { getDemoDefinition } from "@/content/demos/catalog";
 import { validateContentRegistry } from "@/lib/content/registry";
 import { buildUnitPath } from "@/lib/routes";
 
@@ -76,6 +77,26 @@ describe("content registry", () => {
     expect(getAllUnits()).toHaveLength(72);
     expect(getUnitsByModuleId("math-functions").length).toBe(6);
     expect(getUnitsByModuleId("physics-motion").length).toBe(7);
+  });
+
+  it("provides a formal demo definition for every registered knowledge unit", () => {
+    const subjects = new Map(getAllSubjects().map((subject) => [subject.id, subject.slug]));
+    const modules = new Map(
+      getAllModules().map((moduleEntry) => [moduleEntry.id, moduleEntry.slug]),
+    );
+
+    const missing = getAllUnits().filter((unit) => {
+      const subjectSlug = subjects.get(unit.subjectId);
+      const moduleSlug = modules.get(unit.moduleId);
+
+      if (!subjectSlug || !moduleSlug) {
+        return true;
+      }
+
+      return getDemoDefinition(subjectSlug, moduleSlug, unit.slug) === null;
+    });
+
+    expect(missing).toEqual([]);
   });
 
   it("fails when subject slugs are duplicated", () => {
