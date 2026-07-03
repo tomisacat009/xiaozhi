@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { PageShell } from "@/components/layout/page-shell";
-import { getModulesBySubject, getSubjectBySlug } from "@/lib/content/loaders";
+import {
+  getLearningPathsBySubject,
+  getModulesBySubject,
+  getSubjectBySlug,
+} from "@/lib/content/loaders";
 
 export function SubjectPageView({
   subjectSlug,
@@ -17,6 +21,7 @@ export function SubjectPageView({
   }
 
   const modules = getModulesBySubject(subject.id);
+  const learningPaths = getLearningPathsBySubject(subject.id);
 
   return (
     <PageShell>
@@ -61,6 +66,35 @@ export function SubjectPageView({
           ))}
         </div>
       </section>
+
+      {learningPaths.length > 0 ? (
+        <section
+          className="contentSection"
+          aria-labelledby="subject-learning-paths-title"
+        >
+          <div className="sectionHeading">
+            <p className="sectionHeading__eyebrow">Learning Paths</p>
+            <h2 id="subject-learning-paths-title">推荐学习路径</h2>
+          </div>
+          <div className="contentGrid">
+            {learningPaths.map((pathEntry) => (
+              <article key={pathEntry.id} className="contentCard">
+                <div className="contentCard__meta">
+                  <span>Path</span>
+                  <span>{pathEntry.order}</span>
+                </div>
+                <h3>{pathEntry.title}</h3>
+                <p>{pathEntry.summary}</p>
+                <ul className="contentCard__chips">
+                  {pathEntry.topics.map((topic) => (
+                    <li key={topic}>{topic}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </PageShell>
   );
 }

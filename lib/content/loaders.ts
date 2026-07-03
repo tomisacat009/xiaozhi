@@ -1,3 +1,4 @@
+import { learningPaths } from "@/content/learning-paths";
 import {
   moduleRegistry,
   modulesBySubjectId,
@@ -7,7 +8,12 @@ import {
   unitsByModuleId,
   unitsBySlug,
 } from "@/lib/content/registry";
-import type { KnowledgeUnitMeta, Module, Subject } from "@/lib/content/types";
+import type {
+  KnowledgeUnitMeta,
+  LearningPath,
+  Module,
+  Subject,
+} from "@/lib/content/types";
 
 function cloneSubject(subject: Subject): Subject {
   return { ...subject };
@@ -28,6 +34,13 @@ function cloneUnit(unit: KnowledgeUnitMeta): KnowledgeUnitMeta {
     keywords: [...unit.keywords],
     relatedUnits: [...unit.relatedUnits],
     demoIds: [...unit.demoIds],
+  };
+}
+
+function cloneLearningPath(pathEntry: LearningPath): LearningPath {
+  return {
+    ...pathEntry,
+    topics: [...pathEntry.topics],
   };
 }
 
@@ -106,4 +119,11 @@ export function getUnitByRoute(
       (entry) => entry.slug === unitSlug,
     ) ?? null
   );
+}
+
+export function getLearningPathsBySubject(subjectId: string): LearningPath[] {
+  return learningPaths
+    .filter((pathEntry) => pathEntry.subjectId === subjectId)
+    .sort((left, right) => left.order - right.order)
+    .map(cloneLearningPath);
 }

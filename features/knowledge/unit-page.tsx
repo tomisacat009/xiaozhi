@@ -262,6 +262,23 @@ export async function UnitPageView({
 
       {demo}
 
+      {!demo && unitMeta.demoIds.length > 0 ? (
+        <section className="contentSection">
+          <div className="contentCard">
+            <h2>交互演示迁移状态</h2>
+            <p>
+              这个知识点在旧原型中已经有演示器，当前正在重写为正式的
+              React + TypeScript demo。
+            </p>
+            <ul className="contentCard__chips">
+              {unitMeta.demoIds.map((demoId) => (
+                <li key={demoId}>{demoId}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
       <article className="contentSection">
         {document.learningGoals.length > 0 ? (
           <div className="contentCard" style={{ marginBottom: "1.5rem" }}>

@@ -38,3 +38,12 @@ export type KnowledgeUnitMeta = {
   demoIds: string[];
   migrationSource: string;
 };
+
+export type LearningPath = {
+  id: string;
+  subjectId: Subject["id"];
+  title: string;
+  summary: string;
+  topics: string[];
+  order: number;
+};
