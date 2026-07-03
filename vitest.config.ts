@@ -13,6 +13,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["tests/integration/**/*.test.ts?(x)"],
+    include: [
+      "tests/integration/**/*.test.ts?(x)",
+      "tests/unit/**/*.test.ts?(x)",
+    ],
   },
 });
