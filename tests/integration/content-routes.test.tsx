@@ -51,7 +51,7 @@ describe("expanded content routes", () => {
     expect(
       screen.getByRole("heading", { name: "匀速直线运动与图像", level: 1 }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/内容迁移中/)).toBeInTheDocument();
+    expect(screen.getByText(/迁移说明/)).toBeInTheDocument();
     expect(
       screen.getByText(/unit-physics-uniform-motion\.html/),
     ).toBeInTheDocument();

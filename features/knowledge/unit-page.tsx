@@ -26,7 +26,7 @@ type UnitRouteEntry = {
   title: string;
   summary: string;
   status: KnowledgeUnitMeta["status"];
-  sourcePath: string | null;
+  sourcePath: string;
 };
 
 type UnitDocument = {
@@ -35,13 +35,6 @@ type UnitDocument = {
   body: string;
   learningGoals: string[];
 };
-
-const unitSourcePaths = new Map<string, string>([
-  [
-    "math/functions/quadratic-function",
-    path.join(process.cwd(), "content/units/math/functions/quadratic-function.mdx"),
-  ],
-]);
 
 function buildUnitRouteEntries(): UnitRouteEntry[] {
   const subjects = getAllSubjects();
@@ -68,7 +61,13 @@ function buildUnitRouteEntries(): UnitRouteEntry[] {
         title: unit.title,
         summary: unit.summary,
         status: unit.status,
-        sourcePath: unitSourcePaths.get(routeKey) ?? null,
+        sourcePath: path.join(
+          process.cwd(),
+          "content/units",
+          subject.slug,
+          moduleEntry.slug,
+          `${unit.slug}.mdx`,
+        ),
       };
     })
     .filter((entry): entry is UnitRouteEntry => entry !== null);
@@ -124,7 +123,18 @@ async function readUnitDocument(
   entry: UnitRouteEntry,
   unitMeta: KnowledgeUnitMeta,
 ): Promise<UnitDocument> {
-  if (!entry.sourcePath) {
+  try {
+    await access(entry.sourcePath);
+    const source = await readFile(entry.sourcePath, "utf8");
+    const { metadata, body } = parseFrontmatter(source);
+
+    return {
+      title: metadata.title ?? unitMeta.title,
+      summary: metadata.summary ?? unitMeta.summary,
+      body,
+      learningGoals: unitMeta.learningGoals,
+    };
+  } catch {
     return {
       title: unitMeta.title,
       summary: unitMeta.summary,
@@ -142,17 +152,6 @@ async function readUnitDocument(
       learningGoals: unitMeta.learningGoals,
     };
   }
-
-  await access(entry.sourcePath);
-  const source = await readFile(entry.sourcePath, "utf8");
-  const { metadata, body } = parseFrontmatter(source);
-
-  return {
-    title: metadata.title ?? unitMeta.title,
-    summary: metadata.summary ?? unitMeta.summary,
-    body,
-    learningGoals: unitMeta.learningGoals,
-  };
 }
 
 export function getUnitsByModuleRoute(subjectSlug: string, moduleSlug: string) {
