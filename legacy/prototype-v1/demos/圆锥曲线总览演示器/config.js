@@ -1,0 +1,38 @@
+export const config = {
+  id: "conic-overview-demo",
+  title: "圆锥曲线总览演示器",
+  eyebrow: "圆锥曲线 · 总览对比",
+  heroText: "把抛物线、椭圆、双曲线放到同一套交互框架里，让孩子快速看清三类曲线到底哪里一样、哪里不一样。",
+  graphTitle: "圆锥曲线对比舞台",
+  graphNote: "先分清是哪一类曲线，再看焦点、闭合性和方程结构。",
+  controlHint: "先切曲线类型，再看参数变化",
+  sampleHint: "三类曲线一键切换",
+  teachingHint: "先抓结构，再记公式",
+  backHref: "../../modules/analytic-geometry.html",
+  backLabel: "返回解析几何模块",
+  controls: [
+    {
+      key: "family",
+      label: "曲线类型",
+      type: "select",
+      default: "parabola",
+      options: [
+        { value: "parabola", label: "抛物线" },
+        { value: "ellipse", label: "椭圆" },
+        { value: "hyperbola", label: "双曲线" },
+      ],
+    },
+    { key: "a", label: "主参数 a", type: "range", min: 2, max: 6, step: 0.2, default: 4 },
+    { key: "b", label: "辅助参数 b", type: "range", min: 1.5, max: 4.5, step: 0.1, default: 3 },
+  ],
+  presets: [
+    { id: "parabola-basic", label: "抛物线", params: { family: "parabola", a: 2.5, b: 3 }, note: "先把抛物线看成“一个焦点 + 一条准线 + 一个连续分支”。" },
+    { id: "ellipse-basic", label: "椭圆", params: { family: "ellipse", a: 5, b: 3 }, note: "椭圆的关键是“闭合曲线 + 两个焦点 + 两个平方项相加”。" },
+    { id: "hyperbola-basic", label: "双曲线", params: { family: "hyperbola", a: 4, b: 3 }, note: "双曲线的关键是“两个分支 + 两条渐近线 + 两个平方项相减”。" },
+  ],
+  viewport: { xMin: -10, xMax: 10, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先在三类曲线之间切换，形成整体框架。",
+  liveMessage: "圆锥曲线复习时，最值钱的不是死背公式，而是先抓住结构差异。",
+  resetMessage: "已经回到圆锥曲线总览的基础状态。",
+};

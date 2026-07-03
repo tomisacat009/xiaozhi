@@ -1,0 +1,28 @@
+export const config = {
+  id: "solid-section-demo",
+  title: "立体几何体与截面变化演示器",
+  eyebrow: "立体几何 · 截面变化",
+  heroText: "先从平行于底面的截面切起，让孩子把“哪种截面保持不变、哪种会逐渐缩小”真正看成图像感觉。",
+  graphTitle: "几何体与截面",
+  graphNote: "左边看立体中的切面位置，右边看截面形状本身。",
+  controlHint: "先切换几何体，再拖截面位置",
+  sampleHint: "先对比柱体类和锥体类",
+  teachingHint: "先看截面会不会变小",
+  controls: [
+    { key: "size", label: "底面尺寸 / 半径", type: "range", min: 2, max: 5, step: 0.2, default: 4 },
+    { key: "height", label: "高 h", type: "range", min: 4, max: 8, step: 0.2, default: 6 },
+    { key: "sliceRatio", label: "截面位置", type: "range", min: 0.05, max: 0.95, step: 0.05, default: 0.3 },
+  ],
+  defaultParams: { solidType: "prism" },
+  presets: [
+    { id: "prism", label: "四棱柱", params: { solidType: "prism", size: 4, height: 6, sliceRatio: 0.3 }, note: "先看棱柱，截面始终和底面一样大。" },
+    { id: "pyramid", label: "四棱锥", params: { solidType: "pyramid", size: 4, height: 6, sliceRatio: 0.3 }, note: "再看棱锥，越往上切，截面会越小。" },
+    { id: "cylinder", label: "圆柱", params: { solidType: "cylinder", size: 4, height: 6, sliceRatio: 0.3 }, note: "圆柱和平行底面的截面始终是同样大小的圆。" },
+    { id: "cone", label: "圆锥", params: { solidType: "cone", size: 4, height: 6, sliceRatio: 0.3 }, note: "圆锥越往上切，截面的圆会越小，直到顶点附近逐渐收缩。" },
+  ],
+  viewport: { xMin: 0, xMax: 100, yMin: 0, yMax: 100 },
+  features: { animation: true, gridToggle: false, keyPointToggle: false, explanationCards: true },
+  initialMessage: "准备好了，建议先切换四棱柱和四棱锥，再拖动截面位置。",
+  liveMessage: "先盯住截面大小会不会变化，再回头总结“柱体不变、锥体缩小”的规律。",
+  resetMessage: "已经回到最基础的立体截面模型。",
+};

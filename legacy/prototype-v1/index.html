@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>高中学习可视化系统</title>
+    <link rel="stylesheet" href="./assets/system.css" />
+  </head>
+  <body data-root="./" data-title="高中学习可视化系统" data-summary="先搭起数学、物理、化学、英语四门学科的统一入口，再把真正适合动态展示的知识点逐步做成可交互、可讲解、可复盘的学习页面。">
+    <div class="shell">
+      <div class="topbar">
+        <a class="home-link" href="./index.html">学科首页</a>
+        <span class="mini-note">学科入口层 · 数学、物理、化学已形成首批体系，英语第一批开始接入</span>
+      </div>
+
+      <header class="hero">
+        <section class="hero-main">
+          <p class="eyebrow" id="pageBadge"></p>
+          <h1 id="pageTitle"></h1>
+          <p id="pageSummary"></p>
+        </section>
+        <aside class="hero-side">
+          <h2>当前建设状态</h2>
+          <ul class="mini-list">
+            <li>数学、物理、化学已经形成首批学科内容结构</li>
+            <li>英语开始接入句子结构与词根词缀两条可视化主线</li>
+            <li>统一交互引擎继续复用，避免后续每门学科重复搭架子</li>
+          </ul>
+        </aside>
+      </header>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>学科入口</h2>
+          <span class="section-lead">先把学科层级理顺，再让每门学科沿着自己的内容地图逐步长出来。</span>
+        </div>
+        <div class="grid subject-grid" id="subjectGrid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>建设节奏</h2>
+          <span class="section-lead">先稳住各学科入口层，再把每门学科真正适合图形化的内容逐步升级成交互演示。</span>
+        </div>
+        <div class="grid roadmap-grid" id="roadmapGrid"></div>
+      </section>
+    </div>
+
+    <script src="./assets/content.js"></script>
+    <script src="./assets/system.js"></script>
+  </body>
+</html>

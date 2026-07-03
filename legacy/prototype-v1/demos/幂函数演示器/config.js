@@ -1,0 +1,25 @@
+export const config = {
+  id: "power-demo",
+  title: "幂函数演示器",
+  eyebrow: "函数主线 · 幂函数",
+  heroText: "对比奇次幂、偶次幂和分数指数，把幂函数图像的差异一口气看清。",
+  graphTitle: "幂函数舞台",
+  graphNote: "先看指数属于哪一类，再看定义域和对称性。",
+  controlHint: "优先比较 2、3、1/2 这几种指数",
+  sampleHint: "典型指数一键切换",
+  teachingHint: "盯住指数类别",
+  controls: [
+    { key: "exponent", label: "指数 p", type: "range", min: 0.5, max: 5, step: 0.5, default: 2 },
+  ],
+  presets: [
+    { id: "even", label: "偶次幂", params: { exponent: 2 }, note: "偶次幂会左右对称展开。" },
+    { id: "odd", label: "奇次幂", params: { exponent: 3 }, note: "奇次幂会穿过原点，保持原点对称。" },
+    { id: "fraction", label: "分数指数", params: { exponent: 0.5 }, note: "分数指数最重要的是先盯住定义域。" },
+    { id: "higher", label: "更高偶次", params: { exponent: 4 }, note: "指数更大以后，图像靠近原点更平，远离原点更陡。" },
+  ],
+  viewport: { xMin: -4, xMax: 4, yMin: -2, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "先切到 2、3、1/2 这三个典型指数，建立整体感觉。",
+  liveMessage: "幂函数先看指数属于哪一类，再看定义域和对称性。",
+  resetMessage: "已经回到最基础的偶次幂。",
+};

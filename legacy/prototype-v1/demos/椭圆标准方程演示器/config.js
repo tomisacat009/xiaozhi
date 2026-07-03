@@ -1,0 +1,38 @@
+export const config = {
+  id: "ellipse-standard-demo",
+  title: "椭圆标准方程演示器",
+  eyebrow: "圆锥曲线 · 椭圆入门",
+  heroText: "把长轴、短轴、焦点和离心率同步放到图上，让孩子先建立椭圆“两个焦点 + 长短轴”的整体感。",
+  graphTitle: "椭圆变化舞台",
+  graphNote: "先看长短轴，再看焦点位置，最后回到标准方程。",
+  controlHint: "先调 a，再调 b，再换方向",
+  sampleHint: "先看横轴椭圆，再看纵轴椭圆",
+  teachingHint: "a、b、c 三个量要连起来看",
+  backHref: "../../modules/analytic-geometry.html",
+  backLabel: "返回解析几何模块",
+  controls: [
+    {
+      key: "orientation",
+      label: "长轴方向",
+      type: "select",
+      default: "horizontal",
+      options: [
+        { value: "horizontal", label: "水平方向" },
+        { value: "vertical", label: "竖直方向" },
+      ],
+    },
+    { key: "a", label: "半长轴 a", type: "range", min: 4, max: 7, step: 0.2, default: 5 },
+    { key: "b", label: "半短轴 b", type: "range", min: 1.5, max: 3.5, step: 0.1, default: 3 },
+  ],
+  presets: [
+    { id: "horizontal-basic", label: "横轴椭圆", params: { orientation: "horizontal", a: 5, b: 3 }, note: "先建立最常见的横向椭圆，长轴在 x 轴上。" },
+    { id: "horizontal-flat", label: "更扁一些", params: { orientation: "horizontal", a: 6, b: 2.2 }, note: "a 和 b 差得越大，椭圆会越扁，焦点也会更分开。" },
+    { id: "vertical-basic", label: "纵轴椭圆", params: { orientation: "vertical", a: 5.4, b: 2.6 }, note: "切到纵轴时，标准方程里分母位置也会一起交换。" },
+    { id: "vertical-round", label: "更接近圆", params: { orientation: "vertical", a: 4.6, b: 3.4 }, note: "当 a 和 b 越接近时，椭圆会更像圆，两个焦点也会更靠近中心。" },
+  ],
+  viewport: { xMin: -9, xMax: 9, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先看长轴方向，再盯住焦点和长短轴长度。",
+  liveMessage: "椭圆最容易混的是分母位置、焦点方向和 a、b 的大小关系。",
+  resetMessage: "已经回到最基础的横轴椭圆。",
+};

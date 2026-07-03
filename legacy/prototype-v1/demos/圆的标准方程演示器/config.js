@@ -1,0 +1,27 @@
+export const config = {
+  id: "circle-standard-demo",
+  title: "圆的标准方程演示器",
+  eyebrow: "解析几何 · 圆的基础",
+  heroText: "让圆心、半径和标准方程同步变化，帮助孩子把方程里的每个参数都映射到图上。",
+  graphTitle: "圆心、半径与图像",
+  graphNote: "先看圆在哪里、圆有多大，再回头理解方程里的符号。",
+  controlHint: "先调圆心，再看半径",
+  sampleHint: "先看标准圆，再看平移与放缩",
+  teachingHint: "先读圆心，再读半径",
+  controls: [
+    { key: "h", label: "圆心 h", type: "range", min: -4, max: 4, step: 0.2, default: 0 },
+    { key: "k", label: "圆心 k", type: "range", min: -4, max: 4, step: 0.2, default: 0 },
+    { key: "r", label: "半径 r", type: "range", min: 1, max: 5, step: 0.2, default: 3 },
+  ],
+  presets: [
+    { id: "standard", label: "标准圆", params: { h: 0, k: 0, r: 3 }, note: "先看标准圆，圆心在原点，最容易建立第一层感觉。" },
+    { id: "shift-up-right", label: "右上平移", params: { h: 2, k: 1.5, r: 3 }, note: "先拖圆心，看图像整体怎样被平移。" },
+    { id: "small-offset", label: "偏心小圆", params: { h: -2, k: 1, r: 2 }, note: "圆心和半径一起变化时，方程的三部分都在同步改变。" },
+    { id: "large-circle", label: "大圆", params: { h: 0, k: -1.5, r: 4.5 }, note: "半径变大以后，图像会整体放大。" },
+  ],
+  viewport: { xMin: -10, xMax: 10, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先拖圆心，再拖半径。",
+  liveMessage: "先让眼睛读出圆心和半径，再去看方程里的减号与加号。",
+  resetMessage: "已经回到最基础的标准圆。",
+};

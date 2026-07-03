@@ -52,8 +52,6 @@ function buildUnitRouteEntries(): UnitRouteEntry[] {
         return null;
       }
 
-      const routeKey = `${subject.slug}/${moduleEntry.slug}/${unit.slug}`;
-
       return {
         subjectSlug: subject.slug,
         moduleSlug: moduleEntry.slug,

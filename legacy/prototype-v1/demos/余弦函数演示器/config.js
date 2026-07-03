@@ -1,0 +1,26 @@
+export const config = {
+  id: "cos-basic-demo",
+  title: "余弦函数演示器",
+  eyebrow: "三角函数 · cos(x) 基础",
+  heroText: "把起点、关键角和余弦值串起来，分清它与正弦函数的区别。",
+  graphTitle: "余弦图像舞台",
+  graphNote: "重点盯住起点是 1、波谷在 π、一个周期到 2π。",
+  controlHint: "拖动角度，观察余弦值怎样从 1 开始变化",
+  sampleHint: "关键角一键切换",
+  teachingHint: "余弦看横坐标对应",
+  controls: [
+    { key: "angle", label: "当前角", type: "range", min: 0, max: 6.283185307179586, step: 0.05, default: 0 },
+  ],
+  presets: [
+    { id: "start", label: "0", params: { angle: 0 }, note: "余弦函数从 1 开始，不像正弦那样从 0 出发。" },
+    { id: "zero1", label: "π/2", params: { angle: Math.PI / 2 }, note: "到 π/2 时，余弦值变成 0。" },
+    { id: "trough", label: "π", params: { angle: Math.PI }, note: "到 π 时，余弦值到达最小值 -1。" },
+    { id: "zero2", label: "3π/2", params: { angle: (3 * Math.PI) / 2 }, note: "到 3π/2 时，余弦值再次回到 0。" },
+    { id: "end", label: "2π", params: { angle: Math.PI * 2 }, note: "到 2π 时，一个完整周期结束，又回到 1。" },
+  ],
+  viewport: { xMin: 0, xMax: Math.PI * 2, yMin: -1.6, yMax: 1.6 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "先比较它和正弦函数的起点差异，再看后续变化。",
+  liveMessage: "余弦函数的第一个强记忆点，是它从 1 开始而不是从 0 开始。",
+  resetMessage: "已经回到余弦曲线的起点。",
+};

@@ -1,0 +1,26 @@
+export const config = {
+  id: "linear-demo",
+  title: "一次函数演示器",
+  eyebrow: "函数主线 · 一次函数",
+  heroText: "用斜率和截距的变化，让孩子把增减、倾斜和交点真正看懂。",
+  graphTitle: "图像舞台",
+  graphNote: "先看方向和交点，再回头理解 k 和 b。",
+  controlHint: "先调 k，再看 b",
+  sampleHint: "像老师板书一样演示",
+  teachingHint: "一眼抓住关键变化",
+  controls: [
+    { key: "k", label: "斜率 k", type: "range", min: -3, max: 3, step: 0.1, default: 1 },
+    { key: "b", label: "截距 b", type: "range", min: -8, max: 8, step: 0.2, default: 0 },
+  ],
+  presets: [
+    { id: "rise", label: "基础上升", params: { k: 1, b: 0 }, note: "斜率是正数，所以直线从左下往右上走。" },
+    { id: "steeper", label: "更陡上升", params: { k: 2.2, b: 0 }, note: "|k| 变大以后，直线会更陡。" },
+    { id: "fall", label: "下降直线", params: { k: -1.6, b: 3 }, note: "斜率变成负数以后，直线就开始下降。" },
+    { id: "shift", label: "截距上移", params: { k: 0.6, b: 4 }, note: "b 变化时，整条直线会整体上移或下移。" },
+  ],
+  viewport: { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先拖动斜率 k 看直线怎么倾斜。",
+  liveMessage: "观察 k 的正负和大小，直线的方向和陡缓会一起变。",
+  resetMessage: "已经回到最基础的一次函数。",
+};

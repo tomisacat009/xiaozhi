@@ -1,0 +1,27 @@
+export const config = {
+  id: "reciprocal-demo",
+  title: "反比例函数演示器",
+  eyebrow: "函数主线 · 反比例函数",
+  heroText: "把 k 的正负和大小直接映射成双曲线所在象限与开口疏密，帮助孩子建立“乘积保持不变”的图像感觉。",
+  graphTitle: "双曲线变化舞台",
+  graphNote: "先看象限，再看离坐标轴远近，最后回头理解 k 的作用。",
+  controlHint: "先看正负，再看大小",
+  sampleHint: "先看第一、三象限，再切到第二、四象限",
+  teachingHint: "两条坐标轴都是渐近线",
+  backHref: "../../modules/functions.html",
+  backLabel: "返回函数模块",
+  controls: [
+    { key: "k", label: "比例系数 k", type: "range", min: -5, max: 5, step: 0.2, default: 2 },
+  ],
+  presets: [
+    { id: "positive-basic", label: "基础正比例", params: { k: 2 }, note: "k > 0 时，图像会落在第一、三象限。" },
+    { id: "positive-wide", label: "更大开口", params: { k: 4 }, note: "|k| 变大以后，同一个 x 对应的 |y| 也会变大，曲线会离坐标轴更远。" },
+    { id: "negative-basic", label: "负比例", params: { k: -2 }, note: "k < 0 时，图像会转到第二、四象限。" },
+    { id: "negative-wide", label: "负值更大", params: { k: -4 }, note: "先看象限，再看曲线离坐标轴的远近，不要一上来只盯公式符号。" },
+  ],
+  viewport: { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先看 k 的正负决定图像在哪两个象限。",
+  liveMessage: "反比例函数最值得先盯住两件事：象限位置和靠近坐标轴时的变化。",
+  resetMessage: "已经回到最基础的反比例函数。",
+};

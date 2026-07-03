@@ -1,0 +1,38 @@
+export const config = {
+  id: "hyperbola-standard-demo",
+  title: "双曲线标准方程演示器",
+  eyebrow: "圆锥曲线 · 双曲线入门",
+  heroText: "把实轴方向、焦点、渐近线和标准方程放到同一张图里，帮助孩子先建立双曲线“分支 + 渐近线”的整体感觉。",
+  graphTitle: "双曲线变化舞台",
+  graphNote: "先看开口方向，再看渐近线，最后回到方程中的减号结构。",
+  controlHint: "先调 a，再调 b，再换方向",
+  sampleHint: "先看横轴双曲线，再看纵轴双曲线",
+  teachingHint: "减号所在的项决定开口方向",
+  backHref: "../../modules/analytic-geometry.html",
+  backLabel: "返回解析几何模块",
+  controls: [
+    {
+      key: "orientation",
+      label: "实轴方向",
+      type: "select",
+      default: "horizontal",
+      options: [
+        { value: "horizontal", label: "水平方向" },
+        { value: "vertical", label: "竖直方向" },
+      ],
+    },
+    { key: "a", label: "半实轴 a", type: "range", min: 2, max: 6, step: 0.2, default: 4 },
+    { key: "b", label: "半虚轴 b", type: "range", min: 1.5, max: 4.5, step: 0.1, default: 3 },
+  ],
+  presets: [
+    { id: "horizontal-basic", label: "横轴双曲线", params: { orientation: "horizontal", a: 4, b: 3 }, note: "先看最常见的横向双曲线，开口沿 x 轴方向展开。" },
+    { id: "horizontal-steep", label: "更陡渐近线", params: { orientation: "horizontal", a: 3, b: 4 }, note: "b 变大以后，渐近线会更陡，双曲线也会张得更高。" },
+    { id: "vertical-basic", label: "纵轴双曲线", params: { orientation: "vertical", a: 4, b: 3 }, note: "切到纵轴时，方程里减号的位置也会一起交换。" },
+    { id: "vertical-wide", label: "纵向更开", params: { orientation: "vertical", a: 5, b: 2.4 }, note: "a 变大以后，顶点和焦点会沿实轴方向继续拉开。" },
+  ],
+  viewport: { xMin: -10, xMax: 10, yMin: -8, yMax: 8 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先看开口方向和两条渐近线。",
+  liveMessage: "双曲线最重要的不是死背公式，而是先抓住“两个分支 + 两条渐近线”的画面。",
+  resetMessage: "已经回到最基础的横轴双曲线。",
+};

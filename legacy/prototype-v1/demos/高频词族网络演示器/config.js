@@ -1,0 +1,47 @@
+export const config = {
+  id: "english-word-family-atlas-demo",
+  title: "高频词族网络演示器",
+  eyebrow: "英语词汇 · 高频词族",
+  heroText: "把教材里经常反复出现的高频词族放进一张核心义扩展图，让孩子看清哪些单词本来就属于同一家族。",
+  graphTitle: "高频词族扩展舞台",
+  graphNote: "不要把词一个一个孤立去背，先抓核心义，再看它往动作、状态、结果和互动场景怎样扩展。",
+  controlTitle: "词族切换",
+  controlHint: "先抓核心义，再看家族分支",
+  sampleTitle: "典型样例",
+  sampleHint: "先看 act 词族，再看 form 词族",
+  teachingTitle: "观察提示",
+  teachingHint: "每次先说核心义，再猜家族词",
+  backHref: "../../modules/unit-english-word-family-atlas.html",
+  backLabel: "返回高频教材词族网络单元",
+  controls: [
+    {
+      key: "familyId",
+      label: "当前词族",
+      type: "select",
+      default: "act",
+      options: [
+        { value: "act", label: "act 词族" },
+        { value: "form", label: "form 词族" },
+      ],
+    },
+    {
+      key: "emphasis",
+      label: "讲解重点",
+      type: "select",
+      default: "family",
+      options: [
+        { value: "family", label: "家族结构" },
+        { value: "derivation", label: "派生方向" },
+      ],
+    },
+  ],
+  presets: [
+    { id: "act", label: "act 词族", params: { familyId: "act", emphasis: "family" }, note: "最适合先让孩子看见“行动”核心义如何长出一串教材常见词。" },
+    { id: "form", label: "form 词族", params: { familyId: "form", emphasis: "family" }, note: "帮助孩子把 form 的“形成/形式”家族真正连成网。" },
+  ],
+  viewport: { xMin: 0, xMax: 12, yMin: 0, yMax: 8 },
+  features: { animation: true, gridToggle: false, keyPointToggle: false, explanationCards: true },
+  initialMessage: "先让孩子说出这个词族最核心的意思，再去猜各个家族词。",
+  liveMessage: "同一家族的词不是散点，而是围着同一个核心义在扩张。",
+  resetMessage: "已经回到 act 词族。",
+};

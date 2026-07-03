@@ -1,0 +1,47 @@
+export const config = {
+  id: "english-word-roots-demo",
+  title: "词根词缀演示器",
+  eyebrow: "英语词汇 · 词根词缀",
+  heroText: "把词根放在中心，再把前缀、后缀和同根词向外展开，让孩子看到单词记忆如何从一个词长成一组词。",
+  graphTitle: "词根词汇网络舞台",
+  graphNote: "先抓词根核心义，再看前缀怎样改变方向、后缀怎样改变词性或角色，单词网络就会逐步成型。",
+  controlTitle: "词根切换",
+  controlHint: "先抓核心义，再看扩展",
+  sampleTitle: "典型样例",
+  sampleHint: "先看 spect，再看 struct",
+  teachingTitle: "观察提示",
+  teachingHint: "每次都先找词根核心义",
+  backHref: "../../modules/unit-english-word-roots.html",
+  backLabel: "返回词根归类与词义扩展单元",
+  controls: [
+    {
+      key: "rootId",
+      label: "当前词根",
+      type: "select",
+      default: "spect",
+      options: [
+        { value: "spect", label: "spect = 看" },
+        { value: "struct", label: "struct = 建造" },
+      ],
+    },
+    {
+      key: "familyView",
+      label: "网络视角",
+      type: "select",
+      default: "network",
+      options: [
+        { value: "network", label: "词汇网络" },
+        { value: "family", label: "家族阅读" },
+      ],
+    },
+  ],
+  presets: [
+    { id: "spect", label: "spect 词族", params: { rootId: "spect", familyView: "network" }, note: "最适合先建立“看”这一核心义如何被前缀拉出不同方向。" },
+    { id: "struct", label: "struct 词族", params: { rootId: "struct", familyView: "network" }, note: "切到 structure 相关词时，更容易看出词根和学科阅读词汇的联系。" },
+  ],
+  viewport: { xMin: 0, xMax: 12, yMin: 0, yMax: 8 },
+  features: { animation: true, gridToggle: false, keyPointToggle: false, explanationCards: true },
+  initialMessage: "先让孩子回答：这个词根最核心的中文义是什么？",
+  liveMessage: "词根先抓核心义，词缀再看方向和词性变化，记词会稳很多。",
+  resetMessage: "已经回到 spect 词根网络。",
+};

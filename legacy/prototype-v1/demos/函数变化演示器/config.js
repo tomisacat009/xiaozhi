@@ -1,0 +1,27 @@
+export const config = {
+  id: "quadratic-demo",
+  title: "二次函数变化演示器",
+  eyebrow: "函数主线 · 二次函数",
+  heroText: "用 a、b、c 的变化把开口、顶点和对称轴连接起来。",
+  graphTitle: "抛物线舞台",
+  graphNote: "先找顶点和对称轴，再看整体开口。",
+  controlHint: "建议先调 a，再看 b 和 c",
+  sampleHint: "典型抛物线一键切换",
+  teachingHint: "把三个参数拆开看",
+  controls: [
+    { key: "a", label: "二次项 a", type: "range", min: -3, max: 3, step: 0.1, default: 1 },
+    { key: "b", label: "一次项 b", type: "range", min: -6, max: 6, step: 0.2, default: 0 },
+    { key: "c", label: "常数项 c", type: "range", min: -6, max: 6, step: 0.2, default: 0 },
+  ],
+  presets: [
+    { id: "basic", label: "基础抛物线", params: { a: 1, b: 0, c: 0 }, note: "先看最标准的 y = x²。" },
+    { id: "wide", label: "开口更宽", params: { a: 0.5, b: 0, c: 0 }, note: "|a| 变小以后，开口会变宽。" },
+    { id: "flip", label: "开口向下", params: { a: -1.2, b: 0, c: 2 }, note: "a 变成负数以后，抛物线会翻转向下。" },
+    { id: "shift", label: "顶点平移", params: { a: 1, b: -4, c: 1 }, note: "b 和 c 变化时，顶点和对称轴会一起变化。" },
+  ],
+  viewport: { xMin: -8, xMax: 8, yMin: -8, yMax: 10 },
+  features: { animation: true, gridToggle: true, keyPointToggle: true, explanationCards: true },
+  initialMessage: "准备好了，先看 a 改变时开口怎么变。",
+  liveMessage: "抛物线最值得先看开口方向、顶点和对称轴。",
+  resetMessage: "已经回到标准抛物线。",
+};

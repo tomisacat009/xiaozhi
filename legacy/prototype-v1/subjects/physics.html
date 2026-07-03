@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>物理学科页-理科学习可视化系统</title>
+    <link rel="stylesheet" href="../assets/system.css" />
+  </head>
+  <body data-root="../" data-subject="physics" data-content-scope="physics" data-title="高中物理可视化学习系统" data-summary="先把最适合可视化的物理主线做成可浏览、可讲解、可继续扩展的学习骨架，再逐步把关键单元做成交互演示。">
+    <div class="shell">
+      <div class="topbar">
+        <a class="home-link" href="../index.html">返回学科首页</a>
+        <span class="mini-note">物理学科页 · 第一批内容已上线</span>
+      </div>
+
+      <header class="hero">
+        <section class="hero-main">
+          <p class="eyebrow" id="pageBadge"></p>
+          <h1 id="pageTitle"></h1>
+          <p id="pageSummary"></p>
+          <p class="subject-hero-note">这一轮已经把物理学科扩到高一主线更完整的浏览链路：学科页、模块页、单元页和学习路径先搭稳，运动模块优先补真实演示器，受力和功能量继续补深。</p>
+        </section>
+        <aside class="hero-side">
+          <h2>当前物理主线</h2>
+          <ul class="mini-list" id="subjectHighlights"></ul>
+        </aside>
+      </header>
+
+      <section class="summary-panel">
+        <div class="summary-layout">
+          <div>
+            <h2>为什么物理适合可视化</h2>
+            <p>物理最怕只剩下公式推导而没有过程感。只要把位移、速度、受力、电流和波动这些量的变化重新放回同一视角，孩子就更容易理解“为什么会这样变”。</p>
+            <p>这次先把最适合可视化的五条主线整理出来，让家长和孩子能先按模块、单元、路径去浏览，再继续补更深的图像化交互。</p>
+          </div>
+          <aside class="focus-card">
+            <h2>这一批在做什么</h2>
+            <ul class="mini-list" id="subjectFocus"></ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>知识地图</h2>
+          <span class="section-lead">先从运动、受力、功能量、电学、振动与波动五条主线切入，把物理最容易“只剩结论”的内容重新整理成结构化入口。</span>
+        </div>
+        <div class="grid module-grid" id="moduleGrid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>当前单元</h2>
+          <span class="section-lead">这一批先覆盖 22 个核心单元，尽量把高一主线一次补到位，重点是建立图像感、变量感和因果链条，而不是直接跳到刷题。</span>
+        </div>
+        <div class="grid mvp-grid" id="mvpGrid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>学习路径</h2>
+          <span class="section-lead">可以按高一起步、运动综合、受力进阶、功能量、电学结构、高二波动几个视角使用，不必一次全部看完。</span>
+        </div>
+        <div class="grid path-grid" id="pathGrid"></div>
+      </section>
+    </div>
+
+    <script src="../assets/content.js"></script>
+    <script src="../assets/system.js"></script>
+  </body>
+</html>
