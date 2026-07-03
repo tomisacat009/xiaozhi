@@ -53,4 +53,25 @@ describe("demo store", () => {
 
     expect(store.getState().params).toEqual({ a: 3, b: 0, c: 2 });
   });
+
+  it("supports select-style string params", () => {
+    const store = createDemoStore({
+      id: "english-clause",
+      title: "从句层级",
+      defaultParams: { clause: "object" },
+      presets: [
+        {
+          id: "adverbial",
+          label: "状语从句",
+          params: { clause: "adverbial" },
+        },
+      ],
+      explanation: () => [],
+    });
+
+    store.setParam("clause", "object");
+    store.applyPreset("adverbial");
+
+    expect(store.getState().params).toEqual({ clause: "adverbial" });
+  });
 });

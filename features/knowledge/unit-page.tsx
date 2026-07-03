@@ -6,8 +6,9 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { RichContent } from "@/components/content/rich-content";
-import { QuadraticFunctionDemo } from "@/components/demo/quadratic-function-demo";
+import { UnitDemo } from "@/components/demo/unit-demo";
 import { PageShell } from "@/components/layout/page-shell";
+import { getDemoDefinition } from "@/content/demos/catalog";
 import {
   getAllModules,
   getAllSubjects,
@@ -184,22 +185,6 @@ export function getAllUnitEntries() {
   return [...unitEntries];
 }
 
-function renderUnitDemo(
-  subjectSlug: string,
-  moduleSlug: string,
-  unitSlug: string,
-) {
-  if (
-    subjectSlug === "math" &&
-    moduleSlug === "functions" &&
-    unitSlug === "quadratic-function"
-  ) {
-    return <QuadraticFunctionDemo />;
-  }
-
-  return null;
-}
-
 export async function UnitPageView({
   subjectSlug,
   moduleSlug,
@@ -231,7 +216,7 @@ export async function UnitPageView({
   }
 
   const document = await readUnitDocument(unitEntry, unitMeta);
-  const demo = renderUnitDemo(subjectSlug, moduleSlug, unitSlug);
+  const hasDemo = getDemoDefinition(subjectSlug, moduleSlug, unitSlug) !== null;
 
   return (
     <PageShell>
@@ -253,14 +238,24 @@ export async function UnitPageView({
           <p className="contentSection__summary">{document.summary}</p>
           <p className="contentSection__summary">
             当前状态：
-            {unitMeta.status === "migrating" ? "迁移中" : "规划中"}
+            {unitMeta.status === "available"
+              ? "已可体验"
+              : unitMeta.status === "migrating"
+                ? "迁移中"
+                : "规划中"}
           </p>
         </div>
       </section>
 
-      {demo}
+      {hasDemo ? (
+        <UnitDemo
+          subjectSlug={subjectSlug}
+          moduleSlug={moduleSlug}
+          unitSlug={unitSlug}
+        />
+      ) : null}
 
-      {!demo && unitMeta.demoIds.length > 0 ? (
+      {!hasDemo && unitMeta.demoIds.length > 0 ? (
         <section className="contentSection">
           <div className="contentCard">
             <h2>交互演示迁移状态</h2>

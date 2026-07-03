@@ -302,6 +302,16 @@ h3 {
   accent-color: var(--accent);
 }
 
+.demoControl__select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: #fff;
+  color: var(--text-primary);
+  font: inherit;
+}
+
 .quadraticViz {
   display: grid;
   gap: 10px;
@@ -338,6 +348,95 @@ h3 {
   gap: 12px;
   color: var(--text-secondary);
   font-size: 0.9rem;
+}
+
+.plotFigure,
+.conceptBoard {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 10px;
+}
+
+.plotFigure__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plotFigure__grid {
+  stroke: rgba(148, 163, 184, 0.22);
+  stroke-width: 1;
+}
+
+.plotFigure__axis {
+  stroke: rgba(71, 85, 105, 0.45);
+  stroke-width: 1.5;
+}
+
+.plotFigure__label {
+  fill: #0f172a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.plotFigure__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.plotFigure__legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plotFigure__legendItem i {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.conceptBoard {
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(180deg, rgba(255, 247, 237, 0.72), rgba(255, 255, 255, 0.98));
+}
+
+.conceptBoard__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.conceptBoard__grid {
+  display: grid;
+  gap: 12px;
+}
+
+.conceptBoard__card {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.conceptBoard__card h3,
+.conceptBoard__card p {
+  margin: 0;
+}
+
+.conceptBoard__card p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  line-height: 1.7;
 }
 
 .contentCard__chips,
@@ -541,6 +640,10 @@ h3 {
 
   .subjectGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .conceptBoard__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

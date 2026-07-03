@@ -36,4 +36,30 @@ describe("DemoShell", () => {
 
     expect(screen.getByLabelText("a")).toHaveProperty("value", "2");
   });
+
+  it("renders select controls for string-based demos", () => {
+    render(
+      <DemoShell
+        definition={{
+          id: "english-clause",
+          title: "从句层级",
+          defaultParams: { clause: "object" },
+          presets: [],
+          controls: {
+            clause: {
+              kind: "select",
+              label: "从句类型",
+              options: [
+                { label: "宾语从句", value: "object" },
+                { label: "状语从句", value: "adverbial" },
+              ],
+            },
+          },
+          explanation: () => [],
+        }}
+      />,
+    );
+
+    expect(screen.getByLabelText("从句类型").tagName).toBe("SELECT");
+  });
 });

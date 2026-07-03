@@ -10,5 +10,5 @@ test("migrated content smoke", async ({ page }) => {
     .click();
   await page.waitForURL("**/subjects/physics/motion/physics-uniform-motion");
   await expect(page.getByRole("heading", { name: "匀速直线运动与图像" })).toBeVisible();
-  await expect(page.getByText("迁移说明")).toBeVisible();
+  await expect(page.getByRole("slider", { name: "速度 v" })).toBeVisible();
 });

@@ -51,10 +51,8 @@ describe("expanded content routes", () => {
     expect(
       screen.getByRole("heading", { name: "匀速直线运动与图像", level: 1 }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/迁移说明/)).toBeInTheDocument();
-    expect(screen.getByText(/交互演示迁移状态/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/unit-physics-uniform-motion\.html/),
-    ).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { name: "匀速直线运动", level: 2 }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("slider", { name: "速度 v" })).toBeInTheDocument();
+    expect(screen.getByText(/位置公式是 s =/)).toBeInTheDocument();
   });
 });

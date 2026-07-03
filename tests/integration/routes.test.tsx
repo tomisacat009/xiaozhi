@@ -138,7 +138,7 @@ describe("semantic route pages", () => {
     render(view);
 
     expect(screen.getByRole("slider", { name: "a" })).toBeInTheDocument();
-    expect(screen.getByText("开口方向与顶点变化")).toBeInTheDocument();
+    expect(screen.getByText("观察要点")).toBeInTheDocument();
   });
 });
 

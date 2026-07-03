@@ -1,13 +1,26 @@
 import type { ReactNode } from "react";
 
-export type DemoParams = Record<string, number>;
+export type DemoValue = number | string;
+
+export type DemoParams = Record<string, DemoValue>;
 
 export type DemoControlDefinition = {
   label: string;
-  min: number;
-  max: number;
-  step?: number;
-};
+} & (
+  | {
+      kind?: "range";
+      min: number;
+      max: number;
+      step?: number;
+    }
+  | {
+      kind: "select";
+      options: Array<{
+        label: string;
+        value: string;
+      }>;
+    }
+);
 
 export type DemoPreset<TParams extends DemoParams> = {
   id: string;

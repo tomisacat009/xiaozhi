@@ -30,6 +30,10 @@ export function DemoControls<TParams extends DemoParams>({
         {entries.map(([key, value]) => {
           const inputId = `demo-control-${definition.id}-${String(key)}`;
           const label = definition.controls?.[key]?.label ?? String(key);
+          const displayValue =
+            definition.controls?.[key]?.kind === "select"
+              ? definition.controls[key].options.find((option) => option.value === value)?.label ?? value
+              : value;
 
           return (
             <div key={String(key)} className="demoControl">
@@ -38,20 +42,37 @@ export function DemoControls<TParams extends DemoParams>({
                   {label}
                 </label>
                 <strong className="demoControl__value" aria-hidden="true">
-                  {value}
+                  {displayValue}
                 </strong>
               </div>
-              <input
-                id={inputId}
-                type={definition.controls?.[key] ? "range" : "number"}
-                value={value}
-                min={definition.controls?.[key]?.min}
-                max={definition.controls?.[key]?.max}
-                step={definition.controls?.[key]?.step ?? 1}
-                onChange={(event) =>
-                  onParamChange(key, Number(event.target.value) as TParams[typeof key])
-                }
-              />
+              {definition.controls?.[key]?.kind === "select" ? (
+                <select
+                  id={inputId}
+                  className="demoControl__select"
+                  value={String(value)}
+                  onChange={(event) =>
+                    onParamChange(key, event.target.value as TParams[typeof key])
+                  }
+                >
+                  {definition.controls[key].options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  id={inputId}
+                  type={definition.controls?.[key] ? "range" : "number"}
+                  value={value}
+                  min={definition.controls?.[key]?.min}
+                  max={definition.controls?.[key]?.max}
+                  step={definition.controls?.[key]?.step ?? 1}
+                  onChange={(event) =>
+                    onParamChange(key, Number(event.target.value) as TParams[typeof key])
+                  }
+                />
+              )}
             </div>
           );
         })}
