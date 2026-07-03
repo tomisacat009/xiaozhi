@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   getAllSubjects,
   getAllModules,
+  getAllUnits,
   getModulesBySubject,
   getSubjectBySlug,
+  getUnitsByModuleId,
 } from "@/lib/content/loaders";
 import { validateContentRegistry } from "@/lib/content/registry";
 import { buildUnitPath } from "@/lib/routes";
@@ -36,7 +38,10 @@ describe("content registry", () => {
   it("loads modules by subject", () => {
     const subject = getSubjectBySlug("math");
     expect(subject?.nameZh).toBe("数学");
-    expect(getModulesBySubject(subject!.id).length).toBeGreaterThan(0);
+    expect(getModulesBySubject(subject!.id).length).toBe(6);
+    expect(getModulesBySubject("physics").length).toBe(5);
+    expect(getModulesBySubject("chemistry").length).toBe(4);
+    expect(getModulesBySubject("english").length).toBe(2);
   });
 
   it("returns null for an unknown subject slug", () => {
@@ -61,8 +66,16 @@ describe("content registry", () => {
     expect(getAllModules()[0].highlights).toEqual([
       "一次函数",
       "二次函数",
-      "函数图像",
+      "反比例函数",
+      "幂函数",
+      "函数变换",
     ]);
+  });
+
+  it("returns all migrated units and module-scoped unit lists", () => {
+    expect(getAllUnits()).toHaveLength(72);
+    expect(getUnitsByModuleId("math-functions").length).toBe(6);
+    expect(getUnitsByModuleId("physics-motion").length).toBe(7);
   });
 
   it("fails when subject slugs are duplicated", () => {
@@ -87,6 +100,7 @@ describe("content registry", () => {
           },
         ],
         modules: [],
+        units: [],
       }),
     ).toThrow(/Duplicate subject slug: math/);
   });
@@ -113,8 +127,10 @@ describe("content registry", () => {
             summary: "summary",
             highlights: [],
             order: 1,
+            status: "planned",
           },
         ],
+        units: [],
       }),
     ).toThrow(/Unknown module subjectId: physics/);
   });

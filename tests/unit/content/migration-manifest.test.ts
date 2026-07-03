@@ -9,7 +9,7 @@ import {
 describe("migration manifest", () => {
   it("covers all four subjects", () => {
     expect(
-      ["math", "physics", "chemistry", "english"].map(
+      (["math", "physics", "chemistry", "english"] as const).map(
         (subjectId) => getManifestBySubject(subjectId).length > 0,
       ),
     ).toEqual([true, true, true, true]);

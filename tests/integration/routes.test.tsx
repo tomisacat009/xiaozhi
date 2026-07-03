@@ -100,7 +100,7 @@ describe("semantic route pages", () => {
     render(view);
 
     expect(
-      screen.getByRole("heading", { name: "函数", level: 1 }),
+      screen.getByRole("heading", { name: "函数与图像", level: 1 }),
     ).toBeInTheDocument();
   });
 

@@ -7,6 +7,8 @@ export type Subject = {
   theme: "sunrise" | "marine" | "leaf" | "plum";
 };
 
+export type ContentStatus = "planned" | "migrating" | "available";
+
 export type Module = {
   id: string;
   subjectId: string;
@@ -15,13 +17,24 @@ export type Module = {
   summary: string;
   highlights: string[];
   order: number;
+  status: ContentStatus;
 };
 
 export type KnowledgeUnitMeta = {
   id: string;
+  subjectId: string;
   moduleId: string;
   slug: string;
   title: string;
+  titleEn: string | null;
   summary: string;
   order: number;
+  difficulty: string;
+  status: ContentStatus;
+  learningGoals: string[];
+  coreTakeaways: string[];
+  keywords: string[];
+  relatedUnits: string[];
+  demoIds: string[];
+  migrationSource: string;
 };
