@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
@@ -24,6 +26,14 @@ describe("home page", () => {
     expect(screen.getByRole("link", { name: /物理/i })).toHaveAttribute(
       "href",
       "/subjects/physics",
+    );
+    expect(screen.getByRole("link", { name: /化学/i })).toHaveAttribute(
+      "href",
+      "/subjects/chemistry",
+    );
+    expect(screen.getByRole("link", { name: /英语/i })).toHaveAttribute(
+      "href",
+      "/subjects/english",
     );
   });
 });

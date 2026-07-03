@@ -10,6 +10,10 @@ import { validateContentRegistry } from "@/lib/content/registry";
 import { buildUnitPath } from "@/lib/routes";
 
 describe("content registry", () => {
+  it("runs registry unit tests in the node environment", () => {
+    expect(typeof document).toBe("undefined");
+  });
+
   it("returns the four existing subjects", () => {
     expect(getAllSubjects().map((subject) => subject.slug)).toEqual([
       "math",
