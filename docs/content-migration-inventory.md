@@ -15,6 +15,15 @@
 - 允许适度重组，但不改变核心知识路线。
 - 旧 demo 统一按 `rewrite-demo` 或 `archive-only` 处理，不直接复用旧运行时。
 
+## 当前正式交互覆盖说明
+
+以下知识点已经从“仅有旧原型记录”推进到“正式站点可体验”：
+
+- 数学：`linear`、`reciprocal`、`exp-log`、`power`、`quadratic-function`、`sin-basic`、`sin-transform`、`cos-basic`、`tan-basic`、`line-circle`、`parabola-standard`、`ellipse-standard`、`hyperbola-standard`、`conic-overview`、`line-conic-relation`、`point-line-distance`、`solid-section`、`solid-rotation`、`sets-basics`、`set-operations`
+- 物理：`physics-uniform-motion`、`physics-accelerated-motion`、`physics-projectile-motion`、`physics-force-composition`、`physics-newton-second-law`、`physics-work-energy-synthesis`
+- 化学：`chemistry-material-classification`、`chemistry-mole`、`chemistry-ionic-reaction`、`chemistry-redox`、`chemistry-ion-identification`
+- 英语：`english-clause-hierarchy`、`english-sentence-structure`、`english-reading-layer`、`english-tense-timeline`、`english-affix-network`、`english-logic-connector-map`、`english-word-family-atlas`、`english-word-roots`、`english-grammar-cloze-strategy`
+
 ## math
 
 - 模块数：`6`

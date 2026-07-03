@@ -410,6 +410,452 @@ const parabolaStandardDemo: NumericDemo = {
   },
 };
 
+const ellipseStandardDemo: NumericDemo = {
+  id: "ellipse-standard",
+  title: "椭圆标准方程",
+  description: "用长轴和短轴的变化，建立椭圆整体形态与焦点位置的感觉。",
+  defaultParams: { a: 4, b: 2.5 },
+  presets: [
+    { id: "flat", label: "横向拉长", params: { a: 4.5, b: 2 } },
+    { id: "round", label: "更接近圆", params: { a: 3.2, b: 2.8 } },
+  ],
+  controls: {
+    a: { label: "长半轴 a", min: 2.5, max: 5.5, step: 0.1 },
+    b: { label: "短半轴 b", min: 1.5, max: 4.5, step: 0.1 },
+  },
+  explanation({ a, b }) {
+    const safeA = Math.max(a, b + 0.1);
+    const c = Math.sqrt(safeA * safeA - b * b);
+
+    return [
+      `长半轴 a = ${round(safeA)}，短半轴 b = ${round(b)}。`,
+      `焦点大约在 (${round(c)}, 0) 与 (${round(-c)}, 0)。`,
+      safeA - b > 1 ? "a 和 b 差得更大时，椭圆会更扁长。" : "a 和 b 越接近，图像越接近圆。",
+    ];
+  },
+  renderStage({ a, b }) {
+    const safeA = Math.max(a, b + 0.1);
+    const points = Array.from({ length: 161 }, (_, index) => {
+      const angle = (index / 160) * Math.PI * 2;
+
+      return { x: safeA * Math.cos(angle), y: b * Math.sin(angle) };
+    });
+    const c = Math.sqrt(safeA * safeA - b * b);
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "椭圆标准方程图像",
+      bounds: { xMin: -6, xMax: 6, yMin: -5, yMax: 5 },
+      series: [makeSeries("ellipse", "x^2/a^2 + y^2/b^2 = 1", "#2563eb", points)],
+      markers: [
+        { id: "focus-right", x: c, y: 0, label: "F1" },
+        { id: "focus-left", x: -c, y: 0, label: "F2", color: "#ea580c" },
+      ],
+    });
+  },
+};
+
+const hyperbolaStandardDemo: NumericDemo = {
+  id: "hyperbola-standard",
+  title: "双曲线标准方程",
+  description: "把两支图像、焦点与渐近线一起看，双曲线就更不容易抽象化。",
+  defaultParams: { a: 2.5, b: 2 },
+  presets: [
+    { id: "narrow", label: "更瘦的开口", params: { a: 2, b: 2.8 } },
+    { id: "wide", label: "更宽的开口", params: { a: 3.5, b: 1.8 } },
+  ],
+  controls: {
+    a: { label: "实半轴 a", min: 1.5, max: 4, step: 0.1 },
+    b: { label: "虚半轴 b", min: 1, max: 4, step: 0.1 },
+  },
+  explanation({ a, b }) {
+    const c = Math.sqrt(a * a + b * b);
+
+    return [
+      `焦点大约在 (${round(c)}, 0) 与 (${round(-c)}, 0)。`,
+      `渐近线斜率约为 ±${round(b / a)}。`,
+      b / a > 1 ? "b 相对更大时，开口更陡。" : "a 相对更大时，两支曲线会更平缓地展开。",
+    ];
+  },
+  renderStage({ a, b }) {
+    const right = sampleCurve((x) => (b / a) * Math.sqrt(x * x - a * a), { xMin: a + 0.05, xMax: 6 }, 0.05);
+    const rightDown = right.map((point) => ({ x: point.x, y: -point.y }));
+    const left = right.map((point) => ({ x: -point.x, y: point.y }));
+    const leftDown = right.map((point) => ({ x: -point.x, y: -point.y }));
+    const c = Math.sqrt(a * a + b * b);
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "双曲线标准方程图像",
+      bounds: { xMin: -6, xMax: 6, yMin: -5, yMax: 5 },
+      series: [
+        makeSeries("r1", "第一支", "#ea580c", right),
+        makeSeries("r2", "第二支", "#ea580c", rightDown),
+        makeSeries("l1", "第三支", "#2563eb", left),
+        makeSeries("l2", "第四支", "#2563eb", leftDown),
+      ],
+      markers: [
+        { id: "focus-right", x: c, y: 0, label: "F1" },
+        { id: "focus-left", x: -c, y: 0, label: "F2", color: "#2563eb" },
+      ],
+    });
+  },
+};
+
+const conicOverviewDemo: MixedDemo = {
+  id: "conic-overview",
+  title: "圆锥曲线总览",
+  description: "把圆、椭圆、抛物线、双曲线放到一张结构板里，快速建立家族关系。",
+  defaultParams: { conic: "ellipse" },
+  presets: [
+    { id: "circle", label: "圆", params: { conic: "circle" } },
+    { id: "ellipse", label: "椭圆", params: { conic: "ellipse" } },
+    { id: "parabola", label: "抛物线", params: { conic: "parabola" } },
+    { id: "hyperbola", label: "双曲线", params: { conic: "hyperbola" } },
+  ],
+  controls: {
+    conic: {
+      kind: "select",
+      label: "曲线类型",
+      options: [
+        { label: "圆", value: "circle" },
+        { label: "椭圆", value: "ellipse" },
+        { label: "抛物线", value: "parabola" },
+        { label: "双曲线", value: "hyperbola" },
+      ],
+    },
+  },
+  explanation({ conic }) {
+    const map: Record<string, string[]> = {
+      circle: ["圆可以看成长短半轴相等的特殊椭圆。", "最先抓的是“到圆心距离恒定”。"],
+      ellipse: ["椭圆最先抓长短轴和两焦点。", "焦点和轴长共同决定扁长程度。"],
+      parabola: ["抛物线最核心的是“到焦点和准线距离相等”。", "它只有一支，没有封闭区域。"],
+      hyperbola: ["双曲线一定成双支出现。", "焦点与渐近线是理解它的两个抓手。"],
+    };
+
+    return map[String(conic)];
+  },
+  renderStage({ conic }) {
+    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      circle: [
+        { id: "shape", title: "形态", summary: "完全对称、封闭曲线。", accent: "#93c5fd" },
+        { id: "feature", title: "核心量", summary: "半径决定一切。", accent: "#fdba74" },
+        { id: "relation", title: "家族位置", summary: "是椭圆的特殊情形。", accent: "#86efac" },
+      ],
+      ellipse: [
+        { id: "shape", title: "形态", summary: "封闭、扁长。", accent: "#93c5fd" },
+        { id: "feature", title: "核心量", summary: "长短轴与焦点。", accent: "#fdba74" },
+        { id: "relation", title: "家族位置", summary: "圆是它的极限情形之一。", accent: "#86efac" },
+      ],
+      parabola: [
+        { id: "shape", title: "形态", summary: "单支开口。", accent: "#93c5fd" },
+        { id: "feature", title: "核心量", summary: "焦点与准线。", accent: "#fdba74" },
+        { id: "relation", title: "家族位置", summary: "是离心率等于 1 的典型曲线。", accent: "#86efac" },
+      ],
+      hyperbola: [
+        { id: "shape", title: "形态", summary: "两支分离的开口曲线。", accent: "#93c5fd" },
+        { id: "feature", title: "核心量", summary: "焦点与渐近线。", accent: "#fdba74" },
+        { id: "relation", title: "家族位置", summary: "离心率大于 1。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "圆锥曲线家族板",
+      items: boards[String(conic)],
+    });
+  },
+};
+
+const lineConicRelationDemo: MixedDemo = {
+  id: "line-conic-relation",
+  title: "直线与圆锥曲线位置关系",
+  description: "先看直线扫过曲线时交点个数怎样变化，再回到判别条件。",
+  defaultParams: { relation: "secant" },
+  presets: [
+    { id: "secant", label: "相交", params: { relation: "secant" } },
+    { id: "tangent", label: "相切", params: { relation: "tangent" } },
+    { id: "separate", label: "相离", params: { relation: "separate" } },
+  ],
+  controls: {
+    relation: {
+      kind: "select",
+      label: "位置关系",
+      options: [
+        { label: "相交", value: "secant" },
+        { label: "相切", value: "tangent" },
+        { label: "相离", value: "separate" },
+      ],
+    },
+  },
+  explanation({ relation }) {
+    const map: Record<string, string[]> = {
+      secant: ["交点有 2 个时，通常回到判别式大于 0。", "图像先帮你建立“确实切进去过”的感觉。"],
+      tangent: ["只碰到 1 个点时，对应临界状态。", "这是最适合孩子理解判别式等于 0 的场景。"],
+      separate: ["完全碰不到时，交点个数为 0。", "图像感先稳住，再回代数判别。"],
+    };
+
+    return map[String(relation)];
+  },
+  renderStage({ relation }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      secant: [
+        { id: "contact", title: "交点数", summary: "2 个交点。", accent: "#93c5fd" },
+        { id: "algebra", title: "代数信号", summary: "判别式大于 0。", accent: "#fdba74" },
+        { id: "meaning", title: "图像意义", summary: "直线真正穿过曲线。", accent: "#86efac" },
+      ],
+      tangent: [
+        { id: "contact", title: "交点数", summary: "1 个交点。", accent: "#93c5fd" },
+        { id: "algebra", title: "代数信号", summary: "判别式等于 0。", accent: "#fdba74" },
+        { id: "meaning", title: "图像意义", summary: "直线刚好擦到曲线。", accent: "#86efac" },
+      ],
+      separate: [
+        { id: "contact", title: "交点数", summary: "0 个交点。", accent: "#93c5fd" },
+        { id: "algebra", title: "代数信号", summary: "判别式小于 0。", accent: "#fdba74" },
+        { id: "meaning", title: "图像意义", summary: "直线没有切进曲线。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "位置关系判断板",
+      items: items[String(relation)],
+    });
+  },
+};
+
+const pointLineDistanceDemo: NumericDemo = {
+  id: "point-line-distance",
+  title: "点到直线距离",
+  description: "把点、直线和垂线段一起画出来，先建立“最短距离一定是垂线段”的感觉。",
+  defaultParams: { px: 2, py: 3, k: -0.5, b: -1 },
+  presets: [
+    { id: "base", label: "基础情形", params: { px: 2, py: 3, k: -0.5, b: -1 } },
+    { id: "near", label: "更靠近直线", params: { px: 1, py: 1.2, k: -0.5, b: -1 } },
+  ],
+  controls: {
+    px: { label: "点横坐标", min: -4, max: 4, step: 0.2 },
+    py: { label: "点纵坐标", min: -4, max: 5, step: 0.2 },
+    k: { label: "斜率 k", min: -2, max: 2, step: 0.1 },
+    b: { label: "截距 b", min: -4, max: 4, step: 0.2 },
+  },
+  explanation({ px, py, k, b }) {
+    const distance = Math.abs(k * px - py + b) / Math.sqrt(k * k + 1);
+    return [
+      `当前最短距离约为 ${round(distance)}。`,
+      "最短不是随便连一条线，而是从点向直线作垂线。",
+      "公式只是压缩表达，真正的几何意义是“垂直时最短”。",
+    ];
+  },
+  renderStage({ px, py, k, b }) {
+    const line = sampleCurve((x) => k * x + b, { xMin: -6, xMax: 6 }, 0.1);
+    const footX = (px - k * b + k * py) / (k * k + 1);
+    const footY = k * footX + b;
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "点到直线距离图像",
+      bounds: { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
+      series: [
+        makeSeries("line", "直线", "#2563eb", line),
+        makeSeries("distance", "垂线段", "#ea580c", [
+          { x: px, y: py },
+          { x: footX, y: footY },
+        ]),
+      ],
+      markers: [
+        { id: "point", x: px, y: py, label: "P" },
+        { id: "foot", x: footX, y: footY, label: "H", color: "#ea580c" },
+      ],
+    });
+  },
+};
+
+const solidSectionDemo: MixedDemo = {
+  id: "solid-section",
+  title: "立体截面变化",
+  description: "先看切面方向，再看截面形状怎样变化，别一上来只背结论。",
+  defaultParams: { plane: "parallel" },
+  presets: [
+    { id: "parallel", label: "平行底面", params: { plane: "parallel" } },
+    { id: "through-vertex", label: "过顶点", params: { plane: "through-vertex" } },
+    { id: "oblique", label: "斜切", params: { plane: "oblique" } },
+  ],
+  controls: {
+    plane: {
+      kind: "select",
+      label: "切面方式",
+      options: [
+        { label: "平行底面", value: "parallel" },
+        { label: "过顶点", value: "through-vertex" },
+        { label: "斜切", value: "oblique" },
+      ],
+    },
+  },
+  explanation({ plane }) {
+    const map: Record<string, string[]> = {
+      parallel: ["切面平行底面时，截面通常与底面同形。", "先抓“相似”而不是死记边数。"],
+      "through-vertex": ["过顶点时，经常会出现三角形一类的尖形截面。", "这时要特别盯住哪些棱被切到。"],
+      oblique: ["斜切时最容易误判。", "建议先在脑中标出切面依次经过哪些面。"],
+    };
+
+    return map[String(plane)];
+  },
+  renderStage({ plane }) {
+    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      parallel: [
+        { id: "plane", title: "切面方向", summary: "平行底面。", accent: "#93c5fd" },
+        { id: "shape", title: "截面形状", summary: "通常与底面同形且相似。", accent: "#fdba74" },
+        { id: "focus", title: "观察重点", summary: "看比例缩放，不要只盯边数。", accent: "#86efac" },
+      ],
+      "through-vertex": [
+        { id: "plane", title: "切面方向", summary: "穿过顶点。", accent: "#93c5fd" },
+        { id: "shape", title: "截面形状", summary: "容易形成三角形。", accent: "#fdba74" },
+        { id: "focus", title: "观察重点", summary: "看它切到了哪些侧棱。", accent: "#86efac" },
+      ],
+      oblique: [
+        { id: "plane", title: "切面方向", summary: "斜着穿过立体。", accent: "#93c5fd" },
+        { id: "shape", title: "截面形状", summary: "边数和形状最容易变化。", accent: "#fdba74" },
+        { id: "focus", title: "观察重点", summary: "按面逐个追踪截线。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "截面观察板",
+      items: boards[String(plane)],
+    });
+  },
+};
+
+const solidRotationDemo: NumericDemo = {
+  id: "solid-rotation",
+  title: "旋转体生成",
+  description: "把平面图形绕轴旋转前后的对应关系说清楚，旋转体就不再只是名字。",
+  defaultParams: { radius: 2, height: 4 },
+  presets: [
+    { id: "cylinder", label: "更像圆柱", params: { radius: 2.5, height: 5 } },
+    { id: "slim", label: "更细长", params: { radius: 1.5, height: 5.5 } },
+  ],
+  controls: {
+    radius: { label: "半径", min: 1, max: 4, step: 0.2 },
+    height: { label: "高度", min: 2, max: 6, step: 0.2 },
+  },
+  explanation({ radius, height }) {
+    const volume = Math.PI * radius * radius * height;
+    return [
+      `当前可联想到的圆柱体体积约为 ${round(volume)}。`,
+      "半径变化会平方放大体积，高度变化则是线性影响。",
+      "旋转体题里，关键是先找到“哪条线在转、绕哪条轴转”。",
+    ];
+  },
+  renderStage({ radius, height }) {
+    return createElement(ConceptBoard, {
+      title: "旋转体生成板",
+      items: [
+        { id: "profile", title: `母线高度 ${round(height)}`, summary: "先看平面图形里哪条边在提供高度。", accent: "#93c5fd" },
+        { id: "axis", title: "旋转轴", summary: "绕轴旋转后，距离轴的最远处决定半径。", accent: "#fdba74" },
+        { id: "solid", title: `半径 ${round(radius)}`, summary: "最终空间形体由“高度 + 半径”共同决定。", accent: "#86efac" },
+      ],
+    });
+  },
+};
+
+const setsBasicsDemo: MixedDemo = {
+  id: "sets-basics",
+  title: "集合基础概念",
+  description: "把元素、集合、属于与包含关系拆开，先稳住语言层面的理解。",
+  defaultParams: { focus: "element" },
+  presets: [
+    { id: "element", label: "元素与属于", params: { focus: "element" } },
+    { id: "subset", label: "子集关系", params: { focus: "subset" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "元素与属于", value: "element" },
+        { label: "子集关系", value: "subset" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return focus === "element"
+      ? ["先分清“3 属于 A”是元素与集合的关系。", "不要把它误说成子集关系。"] 
+      : ["A 包含 B，谈的是集合和集合之间的关系。", "子集关系和元素关系的主语层级不同。"];
+  },
+  renderStage({ focus }) {
+    const items =
+      focus === "element"
+        ? [
+            { id: "who", title: "对象层级", summary: "一个是元素，一个是集合。", accent: "#93c5fd" },
+            { id: "symbol", title: "符号", summary: "常写作 x ∈ A。", accent: "#fdba74" },
+            { id: "mistake", title: "易错点", summary: "别把单个元素说成子集。", accent: "#86efac" },
+          ]
+        : [
+            { id: "who", title: "对象层级", summary: "两边都是集合。", accent: "#93c5fd" },
+            { id: "symbol", title: "符号", summary: "常写作 B ⊆ A。", accent: "#fdba74" },
+            { id: "mistake", title: "易错点", summary: "别把属于和包含混成一件事。", accent: "#86efac" },
+          ];
+
+    return createElement(ConceptBoard, {
+      title: "集合语言板",
+      items,
+    });
+  },
+};
+
+const setOperationsDemo: MixedDemo = {
+  id: "set-operations",
+  title: "集合运算与韦恩图",
+  description: "把并集、交集、补集放回区域图里理解，而不是只看符号。",
+  defaultParams: { operation: "intersection" },
+  presets: [
+    { id: "intersection", label: "交集", params: { operation: "intersection" } },
+    { id: "union", label: "并集", params: { operation: "union" } },
+    { id: "complement", label: "补集", params: { operation: "complement" } },
+  ],
+  controls: {
+    operation: {
+      kind: "select",
+      label: "运算类型",
+      options: [
+        { label: "交集", value: "intersection" },
+        { label: "并集", value: "union" },
+        { label: "补集", value: "complement" },
+      ],
+    },
+  },
+  explanation({ operation }) {
+    const map: Record<string, string[]> = {
+      intersection: ["交集先看“共同拥有”的区域。", "它最适合帮学生建立“同时满足”的感觉。"],
+      union: ["并集看“至少在一个集合里”的整体区域。", "不要误以为并集只看重叠部分。"],
+      complement: ["补集必须先说清全集是谁。", "没有全集，补集就没有参照系。"],
+    };
+
+    return map[String(operation)];
+  },
+  renderStage({ operation }) {
+    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      intersection: [
+        { id: "region", title: "区域", summary: "A 与 B 重叠的中间部分。", accent: "#93c5fd" },
+        { id: "logic", title: "逻辑词", summary: "同时满足。", accent: "#fdba74" },
+        { id: "symbol", title: "符号", summary: "A ∩ B。", accent: "#86efac" },
+      ],
+      union: [
+        { id: "region", title: "区域", summary: "A 和 B 覆盖到的全部范围。", accent: "#93c5fd" },
+        { id: "logic", title: "逻辑词", summary: "至少满足一个。", accent: "#fdba74" },
+        { id: "symbol", title: "符号", summary: "A ∪ B。", accent: "#86efac" },
+      ],
+      complement: [
+        { id: "region", title: "区域", summary: "全集里除去 A 的部分。", accent: "#93c5fd" },
+        { id: "logic", title: "逻辑词", summary: "不属于 A 但仍在全集中。", accent: "#fdba74" },
+        { id: "symbol", title: "符号", summary: "C_U A 或 A 的补集。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "集合运算板",
+      items: boards[String(operation)],
+    });
+  },
+};
+
 const uniformMotionDemo: NumericDemo = {
   id: "physics-uniform-motion",
   title: "匀速直线运动",
@@ -684,6 +1130,51 @@ const chemistryMoleDemo: NumericDemo = {
   },
 };
 
+const chemistryMaterialClassificationDemo: MixedDemo = {
+  id: "chemistry-material-classification",
+  title: "物质分类关系",
+  description: "把纯净物、混合物、单质、化合物的层级关系放在同一张图里。",
+  defaultParams: { branch: "pure" },
+  presets: [
+    { id: "pure", label: "纯净物主线", params: { branch: "pure" } },
+    { id: "mixture", label: "混合物主线", params: { branch: "mixture" } },
+  ],
+  controls: {
+    branch: {
+      kind: "select",
+      label: "分类主线",
+      options: [
+        { label: "纯净物", value: "pure" },
+        { label: "混合物", value: "mixture" },
+      ],
+    },
+  },
+  explanation({ branch }) {
+    return branch === "pure"
+      ? ["纯净物最先再分成单质和化合物。", "判断时先问组成是否固定，再问元素种类。"] 
+      : ["混合物的关键是成分不唯一。", "空气、溶液、合金都要先回到“多种物质共存”。"];
+  },
+  renderStage({ branch }) {
+    const items =
+      branch === "pure"
+        ? [
+            { id: "pure", title: "纯净物", summary: "组成固定。", accent: "#93c5fd" },
+            { id: "element", title: "单质", summary: "只含一种元素。", accent: "#fdba74" },
+            { id: "compound", title: "化合物", summary: "含两种或更多元素。", accent: "#86efac" },
+          ]
+        : [
+            { id: "mixture", title: "混合物", summary: "成分不固定。", accent: "#93c5fd" },
+            { id: "solution", title: "溶液", summary: "均一稳定的常见混合物。", accent: "#fdba74" },
+            { id: "air", title: "空气/合金", summary: "也是典型混合物。", accent: "#86efac" },
+          ];
+
+    return createElement(ConceptBoard, {
+      title: "物质分类树",
+      items,
+    });
+  },
+};
+
 const chemistryIonicDemo: MixedDemo = {
   id: "chemistry-ionic-reaction",
   title: "离子反应拆解",
@@ -888,6 +1379,331 @@ const englishClauseDemo: MixedDemo = {
   },
 };
 
+const englishSentenceStructureDemo: MixedDemo = {
+  id: "english-sentence-structure",
+  title: "句子成分结构拆解",
+  description: "先找主干，再看修饰，帮助学生把长句拆成层次清晰的结构。",
+  defaultParams: { pattern: "svo" },
+  presets: [
+    { id: "sv", label: "主谓", params: { pattern: "sv" } },
+    { id: "svo", label: "主谓宾", params: { pattern: "svo" } },
+    { id: "svoc", label: "主谓宾补", params: { pattern: "svoc" } },
+  ],
+  controls: {
+    pattern: {
+      kind: "select",
+      label: "句型骨架",
+      options: [
+        { label: "主谓", value: "sv" },
+        { label: "主谓宾", value: "svo" },
+        { label: "主谓宾补", value: "svoc" },
+      ],
+    },
+  },
+  explanation({ pattern }) {
+    const map: Record<string, string[]> = {
+      sv: ["先找到谁在做动作。", "这是最短的句子主干。"],
+      svo: ["谓语后面的核心接受者是宾语。", "别把长修饰语误判成主干。"],
+      svoc: ["宾补是“补足宾语状态”的部分。", "它不是新的并列动作。"],
+    };
+
+    return map[String(pattern)];
+  },
+  renderStage({ pattern }) {
+    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      sv: [
+        { id: "s", title: "主语", summary: "谁/什么。", accent: "#93c5fd" },
+        { id: "v", title: "谓语", summary: "在做什么。", accent: "#fdba74" },
+        { id: "tip", title: "拆句抓手", summary: "先把这两块钉住。", accent: "#86efac" },
+      ],
+      svo: [
+        { id: "s", title: "主语", summary: "发出动作的一方。", accent: "#93c5fd" },
+        { id: "v", title: "谓语", summary: "核心动作。", accent: "#fdba74" },
+        { id: "o", title: "宾语", summary: "动作指向的对象。", accent: "#86efac" },
+      ],
+      svoc: [
+        { id: "s", title: "主语", summary: "动作发出者。", accent: "#93c5fd" },
+        { id: "vo", title: "谓语 + 宾语", summary: "先找到动作和承受对象。", accent: "#fdba74" },
+        { id: "c", title: "宾补", summary: "补充宾语状态或结果。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "句子结构主干板",
+      items: boards[String(pattern)],
+    });
+  },
+};
+
+const englishTenseTimelineDemo: MixedDemo = {
+  id: "english-tense-timeline",
+  title: "时态时间轴",
+  description: "把动作发生点放回时间线上，帮助学生先看时间关系，再选形式。",
+  defaultParams: { tense: "present-perfect" },
+  presets: [
+    { id: "present", label: "一般现在时", params: { tense: "present" } },
+    { id: "past", label: "一般过去时", params: { tense: "past" } },
+    { id: "present-perfect", label: "现在完成时", params: { tense: "present-perfect" } },
+  ],
+  controls: {
+    tense: {
+      kind: "select",
+      label: "时态类型",
+      options: [
+        { label: "一般现在时", value: "present" },
+        { label: "一般过去时", value: "past" },
+        { label: "现在完成时", value: "present-perfect" },
+      ],
+    },
+  },
+  explanation({ tense }) {
+    const map: Record<string, string[]> = {
+      present: ["一般现在时强调习惯、事实或常态。", "时间线上的重点是“常常如此”。"],
+      past: ["一般过去时把动作钉在过去某一点。", "是否与现在有关通常不是重点。"],
+      "present-perfect": ["现在完成时是“过去发生 + 对现在有影响”。", "时间线要同时看到过去起点和当前结果。"],
+    };
+
+    return map[String(tense)];
+  },
+  renderStage({ tense }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      present: [
+        { id: "time", title: "时间感", summary: "常态、习惯、事实。", accent: "#93c5fd" },
+        { id: "signal", title: "信号词", summary: "usually, often, every day。", accent: "#fdba74" },
+        { id: "focus", title: "判断重点", summary: "不是现在发生，而是经常如此。", accent: "#86efac" },
+      ],
+      past: [
+        { id: "time", title: "时间感", summary: "过去某一点或某段。", accent: "#93c5fd" },
+        { id: "signal", title: "信号词", summary: "yesterday, last year, ago。", accent: "#fdba74" },
+        { id: "focus", title: "判断重点", summary: "动作已离开现在。", accent: "#86efac" },
+      ],
+      "present-perfect": [
+        { id: "time", title: "时间感", summary: "从过去连到现在。", accent: "#93c5fd" },
+        { id: "signal", title: "信号词", summary: "since, for, already, yet。", accent: "#fdba74" },
+        { id: "focus", title: "判断重点", summary: "现在仍能看到结果或延续。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "时态时间轴板",
+      items: items[String(tense)],
+    });
+  },
+};
+
+const englishReadingLayerDemo: MixedDemo = {
+  id: "english-reading-layer",
+  title: "阅读信息分层",
+  description: "先区分主旨、论据、细节，再回到题目要求，阅读就不会陷在逐词翻译里。",
+  defaultParams: { layer: "main-idea" },
+  presets: [
+    { id: "main", label: "主旨层", params: { layer: "main-idea" } },
+    { id: "support", label: "论据层", params: { layer: "support" } },
+    { id: "detail", label: "细节层", params: { layer: "detail" } },
+  ],
+  controls: {
+    layer: {
+      kind: "select",
+      label: "阅读层级",
+      options: [
+        { label: "主旨层", value: "main-idea" },
+        { label: "论据层", value: "support" },
+        { label: "细节层", value: "detail" },
+      ],
+    },
+  },
+  explanation({ layer }) {
+    const map: Record<string, string[]> = {
+      "main-idea": ["主旨层回答“这段主要在说什么”。", "做标题题和中心思想题时先抓这一层。"],
+      support: ["论据层看作者如何支撑主张。", "通常由例子、原因、对比、数据构成。"],
+      detail: ["细节层适合回文定位。", "别把局部细节误当成整段主旨。"],
+    };
+
+    return map[String(layer)];
+  },
+  renderStage({ layer }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      "main-idea": [
+        { id: "question", title: "核心问题", summary: "作者最想表达什么。", accent: "#93c5fd" },
+        { id: "position", title: "常见位置", summary: "标题、首段、尾段和主题句。", accent: "#fdba74" },
+        { id: "pitfall", title: "易错点", summary: "别被某个例子带跑。", accent: "#86efac" },
+      ],
+      support: [
+        { id: "question", title: "核心问题", summary: "作者如何证明主张。", accent: "#93c5fd" },
+        { id: "position", title: "常见位置", summary: "中间展开段。", accent: "#fdba74" },
+        { id: "pitfall", title: "易错点", summary: "支撑点不能直接等于主旨。", accent: "#86efac" },
+      ],
+      detail: [
+        { id: "question", title: "核心问题", summary: "具体信息是什么。", accent: "#93c5fd" },
+        { id: "position", title: "常见位置", summary: "需要关键词回文定位。", accent: "#fdba74" },
+        { id: "pitfall", title: "易错点", summary: "注意同义替换。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "阅读分层板",
+      items: items[String(layer)],
+    });
+  },
+};
+
+const englishLogicConnectorDemo: MixedDemo = {
+  id: "english-logic-connector-map",
+  title: "逻辑连接词网络",
+  description: "把转折、因果、递进、条件放回逻辑关系里，而不是只背词表。",
+  defaultParams: { relation: "contrast" },
+  presets: [
+    { id: "contrast", label: "转折", params: { relation: "contrast" } },
+    { id: "cause", label: "因果", params: { relation: "cause" } },
+    { id: "addition", label: "递进", params: { relation: "addition" } },
+  ],
+  controls: {
+    relation: {
+      kind: "select",
+      label: "逻辑关系",
+      options: [
+        { label: "转折", value: "contrast" },
+        { label: "因果", value: "cause" },
+        { label: "递进", value: "addition" },
+      ],
+    },
+  },
+  explanation({ relation }) {
+    const map: Record<string, string[]> = {
+      contrast: ["however、but、yet 都在提示信息反向。", "先看语义冲突，再选连接词。"],
+      cause: ["because、therefore、so 强调前后因果链。", "判断方向时要分清原因和结果。"],
+      addition: ["moreover、besides、in addition 是在继续往上叠信息。", "不是所有长句都一定需要转折。"],
+    };
+
+    return map[String(relation)];
+  },
+  renderStage({ relation }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      contrast: [
+        { id: "logic", title: "逻辑感", summary: "前后方向相反或不一致。", accent: "#93c5fd" },
+        { id: "words", title: "高频词", summary: "however, but, yet。", accent: "#fdba74" },
+        { id: "tip", title: "判断抓手", summary: "先看意思是不是拐弯。", accent: "#86efac" },
+      ],
+      cause: [
+        { id: "logic", title: "逻辑感", summary: "前因后果。", accent: "#93c5fd" },
+        { id: "words", title: "高频词", summary: "because, since, therefore。", accent: "#fdba74" },
+        { id: "tip", title: "判断抓手", summary: "先问哪一句解释哪一句。", accent: "#86efac" },
+      ],
+      addition: [
+        { id: "logic", title: "逻辑感", summary: "继续补充、继续加码。", accent: "#93c5fd" },
+        { id: "words", title: "高频词", summary: "moreover, besides, in addition。", accent: "#fdba74" },
+        { id: "tip", title: "判断抓手", summary: "看是不是在同方向继续堆料。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "连接词逻辑板",
+      items: items[String(relation)],
+    });
+  },
+};
+
+const englishAffixNetworkDemo: MixedDemo = {
+  id: "english-affix-network",
+  title: "前后缀变义网络",
+  description: "让学生看到前后缀是在如何推动词义方向变化，而不是孤立记忆词表。",
+  defaultParams: { affix: "un" },
+  presets: [
+    { id: "un", label: "un-", params: { affix: "un" } },
+    { id: "re", label: "re-", params: { affix: "re" } },
+    { id: "ful", label: "-ful", params: { affix: "ful" } },
+  ],
+  controls: {
+    affix: {
+      kind: "select",
+      label: "词缀",
+      options: [
+        { label: "un-", value: "un" },
+        { label: "re-", value: "re" },
+        { label: "-ful", value: "ful" },
+      ],
+    },
+  },
+  explanation({ affix }) {
+    const map: Record<string, string[]> = {
+      un: ["un- 常给单词加上否定方向。", "但仍要结合词根和语境看具体词义。"],
+      re: ["re- 常表示“再次、回到”。", "它非常适合做动作类词汇扩展。"],
+      ful: ["-ful 常把词推向“充满……的”。", "后缀经常帮助判断词性。"],
+    };
+
+    return map[String(affix)];
+  },
+  renderStage({ affix }) {
+    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+      un: [
+        { id: "core", title: "方向", summary: "否定、反向。", accent: "#93c5fd" },
+        { id: "example", title: "例词", summary: "unhappy, unclear。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "先看原词，再看是否被翻转。", accent: "#86efac" },
+      ],
+      re: [
+        { id: "core", title: "方向", summary: "再次、回到。", accent: "#93c5fd" },
+        { id: "example", title: "例词", summary: "rewrite, return。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "看动作是不是被重复或回转。", accent: "#86efac" },
+      ],
+      ful: [
+        { id: "core", title: "方向", summary: "充满……的。", accent: "#93c5fd" },
+        { id: "example", title: "例词", summary: "helpful, useful。", accent: "#fdba74" },
+        { id: "tip", title: "抓手", summary: "后缀经常顺手提示词性。", accent: "#86efac" },
+      ],
+    };
+
+    return createElement(ConceptBoard, {
+      title: "前后缀变义板",
+      items: items[String(affix)],
+    });
+  },
+};
+
+const englishWordFamilyDemo: MixedDemo = {
+  id: "english-word-family-atlas",
+  title: "高频词族网络",
+  description: "把同一家族的名词、动词、形容词连起来，帮助学生做词形转换。",
+  defaultParams: { family: "act" },
+  presets: [
+    { id: "act", label: "act 家族", params: { family: "act" } },
+    { id: "develop", label: "develop 家族", params: { family: "develop" } },
+  ],
+  controls: {
+    family: {
+      kind: "select",
+      label: "词族中心",
+      options: [
+        { label: "act", value: "act" },
+        { label: "develop", value: "develop" },
+      ],
+    },
+  },
+  explanation({ family }) {
+    return family === "act"
+      ? ["act 可以扩成 action, active, activity, actor。", "词族题最重要的是看句子里需要什么词性。"] 
+      : ["develop 可以扩成 development, developed, developing。", "别只记一个词，要把变形方向连起来。"];
+  },
+  renderStage({ family }) {
+    const items =
+      family === "act"
+        ? [
+            { id: "verb", title: "act", summary: "动词原点。", accent: "#93c5fd" },
+            { id: "noun", title: "action / activity", summary: "动作本身或活动。", accent: "#fdba74" },
+            { id: "adj", title: "active", summary: "主动的、积极的。", accent: "#86efac" },
+          ]
+        : [
+            { id: "verb", title: "develop", summary: "发展、开发。", accent: "#93c5fd" },
+            { id: "noun", title: "development", summary: "发展、成果。", accent: "#fdba74" },
+            { id: "adj", title: "developed / developing", summary: "已发展的 / 发展中的。", accent: "#86efac" },
+          ];
+
+    return createElement(ConceptBoard, {
+      title: "词族扩展图",
+      items,
+    });
+  },
+};
+
 const englishRootsDemo: MixedDemo = {
   id: "english-word-roots",
   title: "词根词缀网络",
@@ -999,19 +1815,35 @@ export const demoRegistry = {
   "math/trigonometry/sin-transform": sinTransformDemo,
   "math/trigonometry/cos-basic": cosBasicDemo,
   "math/trigonometry/tan-basic": tanBasicDemo,
+  "math/analytic-geometry/conic-overview": conicOverviewDemo,
+  "math/analytic-geometry/ellipse-standard": ellipseStandardDemo,
+  "math/analytic-geometry/hyperbola-standard": hyperbolaStandardDemo,
   "math/analytic-geometry/line-circle": lineCircleDemo,
+  "math/analytic-geometry/line-conic-relation": lineConicRelationDemo,
   "math/analytic-geometry/parabola-standard": parabolaStandardDemo,
+  "math/analytic-geometry/point-line-distance": pointLineDistanceDemo,
+  "math/solid-geometry/solid-section": solidSectionDemo,
+  "math/solid-geometry/solid-rotation": solidRotationDemo,
+  "math/sets-logic/sets-basics": setsBasicsDemo,
+  "math/sets-logic/set-operations": setOperationsDemo,
   "physics/motion/physics-uniform-motion": uniformMotionDemo,
   "physics/motion/physics-accelerated-motion": acceleratedMotionDemo,
   "physics/motion/physics-projectile-motion": projectileDemo,
   "physics/force/physics-force-composition": forceCompositionDemo,
   "physics/force/physics-newton-second-law": newtonSecondLawDemo,
   "physics/energy/physics-work-energy-synthesis": workEnergyDemo,
+  "chemistry/chemical-language/chemistry-material-classification": chemistryMaterialClassificationDemo,
   "chemistry/chemical-language/chemistry-mole": chemistryMoleDemo,
   "chemistry/reaction-principles/chemistry-ionic-reaction": chemistryIonicDemo,
   "chemistry/reaction-principles/chemistry-redox": chemistryRedoxDemo,
   "chemistry/experiments/chemistry-ion-identification": chemistryIonIdentificationDemo,
   "english/sentence-structure/english-clause-hierarchy": englishClauseDemo,
+  "english/sentence-structure/english-sentence-structure": englishSentenceStructureDemo,
+  "english/sentence-structure/english-reading-layer": englishReadingLayerDemo,
+  "english/sentence-structure/english-tense-timeline": englishTenseTimelineDemo,
+  "english/roots-vocabulary-network/english-affix-network": englishAffixNetworkDemo,
+  "english/roots-vocabulary-network/english-logic-connector-map": englishLogicConnectorDemo,
+  "english/roots-vocabulary-network/english-word-family-atlas": englishWordFamilyDemo,
   "english/roots-vocabulary-network/english-word-roots": englishRootsDemo,
   "english/roots-vocabulary-network/english-grammar-cloze-strategy": englishGrammarClozeDemo,
 } as const;

@@ -1,4 +1,5 @@
 import { learningPaths } from "@/content/learning-paths";
+import { getDemoDefinition } from "@/content/demos/catalog";
 import {
   moduleRegistry,
   modulesBySubjectId,
@@ -9,6 +10,7 @@ import {
   unitsBySlug,
 } from "@/lib/content/registry";
 import type {
+  ContentStatus,
   KnowledgeUnitMeta,
   LearningPath,
   Module,
@@ -26,9 +28,31 @@ function cloneModule(module: Module): Module {
   };
 }
 
+const subjectsById = new Map(subjectRegistry.map((subject) => [subject.id, subject]));
+const modulesById = new Map(moduleRegistry.map((moduleEntry) => [moduleEntry.id, moduleEntry]));
+
+function resolveEffectiveUnitStatus(unit: KnowledgeUnitMeta): ContentStatus {
+  const subject = subjectsById.get(unit.subjectId);
+  const moduleEntry = modulesById.get(unit.moduleId);
+
+  if (!subject || !moduleEntry) {
+    return unit.status;
+  }
+
+  const hasDemo = getDemoDefinition(subject.slug, moduleEntry.slug, unit.slug) !== null;
+
+  if (hasDemo) {
+    return "available";
+  }
+  
+  return unit.status;
+}
+
 function cloneUnit(unit: KnowledgeUnitMeta): KnowledgeUnitMeta {
+
   return {
     ...unit,
+    status: resolveEffectiveUnitStatus(unit),
     learningGoals: [...unit.learningGoals],
     coreTakeaways: [...unit.coreTakeaways],
     keywords: [...unit.keywords],

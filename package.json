@@ -1,5 +1,6 @@
 {
   "name": "xiaozhi",
+  "description": "Xiaozhi is a high-school knowledge visualization and interactive learning project.",
   "private": true,
   "packageManager": "pnpm@11.7.0",
   "scripts": {
