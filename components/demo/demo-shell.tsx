@@ -1,0 +1,78 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+import { DemoControls } from "@/components/demo/demo-controls";
+import { DemoExplanation } from "@/components/demo/demo-explanation";
+import { DemoStage } from "@/components/demo/demo-stage";
+import { createDemoStore } from "@/engine/core/store";
+import type { DemoDefinition, DemoParams, DemoStore } from "@/engine/core/types";
+
+function cloneState<TParams extends DemoParams>(store: DemoStore<TParams>) {
+  const state = store.getState();
+
+  return {
+    params: { ...state.params },
+  };
+}
+
+export function DemoShell<TParams extends DemoParams>({
+  definition,
+}: {
+  definition: DemoDefinition<TParams>;
+}) {
+  const storeRef = useRef<DemoStore<TParams>>(createDemoStore(definition));
+  const [state, setState] = useState(() => cloneState(storeRef.current));
+
+  useEffect(() => {
+    storeRef.current = createDemoStore(definition);
+    setState(cloneState(storeRef.current));
+  }, [definition]);
+
+  function syncState() {
+    setState(cloneState(storeRef.current));
+  }
+
+  function handleParamChange<K extends keyof TParams>(key: K, value: TParams[K]) {
+    storeRef.current.setParam(key, value);
+    syncState();
+  }
+
+  function handlePresetSelect(presetId: string) {
+    storeRef.current.applyPreset(presetId);
+    syncState();
+  }
+
+  function handleReset() {
+    storeRef.current.reset();
+    syncState();
+  }
+
+  const explanation = definition.explanation(state.params);
+
+  return (
+    <section className="contentSection" aria-labelledby="demo-shell-title">
+      <div className="contentSection__hero">
+        <p className="sectionHeading__eyebrow">Demo Engine</p>
+        <h1 id="demo-shell-title">{definition.title}</h1>
+        <p className="contentSection__summary">
+          统一 demo shell 已就绪，当前展示基础参数状态与说明区域，具体可视化渲染留给后续任务接入。
+        </p>
+      </div>
+
+      <div className="contentGrid">
+        <DemoStage title={definition.title}>
+          <pre>{JSON.stringify(state.params, null, 2)}</pre>
+        </DemoStage>
+        <DemoControls
+          definition={definition}
+          params={state.params}
+          onParamChange={handleParamChange}
+          onPresetSelect={handlePresetSelect}
+          onReset={handleReset}
+        />
+        <DemoExplanation lines={explanation} />
+      </div>
+    </section>
+  );
+}
