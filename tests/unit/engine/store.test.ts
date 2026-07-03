@@ -16,4 +16,41 @@ describe("demo store", () => {
 
     expect(store.getState().params).toEqual({ a: 2, b: 0, c: 0 });
   });
+
+  it("resets params back to the definition defaults", () => {
+    const store = createDemoStore({
+      id: "quadratic",
+      title: "二次函数",
+      defaultParams: { a: 1, b: 0, c: 0 },
+      presets: [],
+      explanation: () => [],
+    });
+
+    store.setParam("a", 4);
+    store.setParam("b", 3);
+    store.reset();
+
+    expect(store.getState().params).toEqual({ a: 1, b: 0, c: 0 });
+  });
+
+  it("applies preset params on top of the definition defaults", () => {
+    const store = createDemoStore({
+      id: "quadratic",
+      title: "二次函数",
+      defaultParams: { a: 1, b: 0, c: 0 },
+      presets: [
+        {
+          id: "wide-open",
+          label: "开口变宽",
+          params: { a: 3, c: 2 },
+        },
+      ],
+      explanation: () => [],
+    });
+
+    store.setParam("b", 5);
+    store.applyPreset("wide-open");
+
+    expect(store.getState().params).toEqual({ a: 3, b: 0, c: 2 });
+  });
 });

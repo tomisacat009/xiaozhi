@@ -22,12 +22,18 @@ export function DemoShell<TParams extends DemoParams>({
   definition: DemoDefinition<TParams>;
 }) {
   const storeRef = useRef<DemoStore<TParams>>(createDemoStore(definition));
+  const definitionIdRef = useRef(definition.id);
   const [state, setState] = useState(() => cloneState(storeRef.current));
 
   useEffect(() => {
+    if (definitionIdRef.current === definition.id) {
+      return;
+    }
+
+    definitionIdRef.current = definition.id;
     storeRef.current = createDemoStore(definition);
     setState(cloneState(storeRef.current));
-  }, [definition]);
+  }, [definition.id, definition]);
 
   function syncState() {
     setState(cloneState(storeRef.current));
