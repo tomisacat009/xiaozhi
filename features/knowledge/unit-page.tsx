@@ -18,6 +18,7 @@ import {
   getUnitByRoute as loadUnitByRoute,
   getUnitsByModuleRoute as loadUnitsByModuleRoute,
 } from "@/lib/content/loaders";
+import { buildFallbackUnitBody, stripProcessSections } from "@/lib/content/unit-documents";
 import type { KnowledgeUnitMeta } from "@/lib/content/types";
 
 type UnitRouteEntry = {
@@ -121,6 +122,7 @@ function parseFrontmatter(source: string) {
 async function readUnitDocument(
   entry: UnitRouteEntry,
   unitMeta: KnowledgeUnitMeta,
+  moduleTitle: string,
 ): Promise<UnitDocument> {
   try {
     await access(entry.sourcePath);
@@ -130,24 +132,14 @@ async function readUnitDocument(
     return {
       title: metadata.title ?? unitMeta.title,
       summary: metadata.summary ?? unitMeta.summary,
-      body,
+      body: stripProcessSections(body),
       learningGoals: unitMeta.learningGoals,
     };
   } catch {
     return {
       title: unitMeta.title,
       summary: unitMeta.summary,
-      body: [
-        "## 内容迁移中",
-        "",
-        "这一知识点已经进入正式站点的结构骨架，正文与交互演示正在从旧原型重构迁移中。",
-        "",
-        "### 当前可先关注",
-        "",
-        `- 所属模块：${entry.moduleSlug}`,
-        `- 当前状态：${unitMeta.status === "migrating" ? "迁移中" : "规划中"}`,
-        `- 旧原型来源：\`${unitMeta.migrationSource}\``,
-      ].join("\n"),
+      body: buildFallbackUnitBody(unitMeta, moduleTitle),
       learningGoals: unitMeta.learningGoals,
     };
   }
@@ -215,7 +207,7 @@ export async function UnitPageView({
     notFound();
   }
 
-  const document = await readUnitDocument(unitEntry, unitMeta);
+  const document = await readUnitDocument(unitEntry, unitMeta, moduleEntry.title);
   const hasDemo = getDemoDefinition(subjectSlug, moduleSlug, unitSlug) !== null;
 
   return (
@@ -236,14 +228,6 @@ export async function UnitPageView({
           <p className="sectionHeading__eyebrow">Knowledge Unit</p>
           <h1>{document.title}</h1>
           <p className="contentSection__summary">{document.summary}</p>
-          <p className="contentSection__summary">
-            当前状态：
-            {unitMeta.status === "available"
-              ? "已可体验"
-              : unitMeta.status === "migrating"
-                ? "迁移中"
-                : "规划中"}
-          </p>
         </div>
       </section>
 
@@ -253,23 +237,6 @@ export async function UnitPageView({
           moduleSlug={moduleSlug}
           unitSlug={unitSlug}
         />
-      ) : null}
-
-      {!hasDemo && unitMeta.demoIds.length > 0 ? (
-        <section className="contentSection">
-          <div className="contentCard">
-            <h2>交互演示迁移状态</h2>
-            <p>
-              这个知识点在旧原型中已经有演示器，当前正在重写为正式的
-              React + TypeScript demo。
-            </p>
-            <ul className="contentCard__chips">
-              {unitMeta.demoIds.map((demoId) => (
-                <li key={demoId}>{demoId}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
       ) : null}
 
       <article className="contentSection">
