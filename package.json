@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app tests/integration next.config.ts eslint.config.mjs postcss.config.mjs vitest.config.ts",
+    "lint": "eslint app tests/integration tests/unit tests/e2e components content engine features lib next.config.ts eslint.config.mjs playwright.config.ts postcss.config.mjs vitest.config.ts",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

@@ -8,6 +8,8 @@ import { generateMetadata as generateUnitMetadata } from "@/app/subjects/[subjec
 import ModulePage from "@/app/subjects/[subjectSlug]/[moduleSlug]/page";
 import UnitPage from "@/app/subjects/[subjectSlug]/[moduleSlug]/[unitSlug]/page";
 import SubjectPage from "@/app/subjects/[subjectSlug]/page";
+import robots from "@/app/robots";
+import sitemap from "@/app/sitemap";
 import HomePage from "@/app/page";
 import { metadata } from "@/app/layout";
 
@@ -137,5 +139,22 @@ describe("semantic route pages", () => {
 
     expect(screen.getByRole("slider", { name: "a" })).toBeInTheDocument();
     expect(screen.getByText("开口方向与顶点变化")).toBeInTheDocument();
+  });
+});
+
+describe("delivery metadata", () => {
+  it("includes subject and unit routes in the sitemap", async () => {
+    const entries = await sitemap();
+
+    expect(entries.some((entry) => entry.url.endsWith("/subjects/math"))).toBe(true);
+    expect(
+      entries.some((entry) =>
+        entry.url.endsWith("/subjects/math/functions/quadratic-function"),
+      ),
+    ).toBe(true);
+  });
+
+  it("allows crawling public pages", () => {
+    expect(robots().rules).toEqual([{ userAgent: "*", allow: "/" }]);
   });
 });
