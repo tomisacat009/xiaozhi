@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "eslint app tests/integration next.config.ts eslint.config.mjs postcss.config.mjs vitest.config.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test": "vitest run"
   },
   "dependencies": {
     "next": "^16.2.10",

@@ -17,3 +17,5 @@ pnpm typecheck
 pnpm test
 pnpm build
 ```
+
+当前 `pnpm test` 仅覆盖这次 `Next.js` 正式脚手架新增的最小 smoke / integration 验证，不包含旧原型目录中的历史测试资产。
