@@ -6,12 +6,25 @@ import {
 } from "@/lib/content/registry";
 import type { Module, Subject } from "@/lib/content/types";
 
+function cloneSubject(subject: Subject): Subject {
+  return { ...subject };
+}
+
+function cloneModule(module: Module): Module {
+  return {
+    ...module,
+    highlights: [...module.highlights],
+  };
+}
+
 export function getAllSubjects(): Subject[] {
-  return [...subjectRegistry];
+  return subjectRegistry.map(cloneSubject);
 }
 
 export function getSubjectBySlug(subjectSlug: string): Subject | null {
-  return subjectsBySlug.get(subjectSlug) ?? null;
+  const subject = subjectsBySlug.get(subjectSlug);
+
+  return subject ? cloneSubject(subject) : null;
 }
 
 export function getModulesBySubject(subjectId: string): Module[] {
@@ -21,9 +34,9 @@ export function getModulesBySubject(subjectId: string): Module[] {
     return [];
   }
 
-  return [...modules];
+  return modules.map(cloneModule);
 }
 
 export function getAllModules(): Module[] {
-  return [...moduleRegistry];
+  return moduleRegistry.map(cloneModule);
 }
