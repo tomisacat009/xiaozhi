@@ -2,13 +2,13 @@ import type { KnowledgeUnitMeta } from "@/lib/content/types";
 
 export const knowledgeUnits: KnowledgeUnitMeta[] = [
   {
-    "id": "math-quadratic",
+    "id": "math-quadratic-function",
     "subjectId": "math",
     "moduleId": "math-functions",
-    "slug": "quadratic",
-    "title": "二次函数变化",
+    "slug": "quadratic-function",
+    "title": "二次函数",
     "titleEn": null,
-    "summary": "看懂 a、b、c 与顶点式参数如何共同改变图像、顶点、对称轴和开口。",
+    "summary": "理解二次函数的解析式、图像特征与解题观察角度。",
     "order": 1,
     "difficulty": "基础",
     "status": "migrating",

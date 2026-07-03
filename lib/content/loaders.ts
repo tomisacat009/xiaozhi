@@ -5,6 +5,7 @@ import {
   subjectsBySlug,
   unitRegistry,
   unitsByModuleId,
+  unitsBySlug,
 } from "@/lib/content/registry";
 import type { KnowledgeUnitMeta, Module, Subject } from "@/lib/content/types";
 
@@ -69,7 +70,40 @@ export function getUnitsByModuleId(moduleId: string): KnowledgeUnitMeta[] {
 }
 
 export function getUnitBySlug(unitSlug: string): KnowledgeUnitMeta | null {
-  const unit = unitRegistry.find((entry) => entry.slug === unitSlug);
+  const unit = unitsBySlug.get(unitSlug);
 
   return unit ? cloneUnit(unit) : null;
+}
+
+export function getUnitsByModuleRoute(
+  subjectSlug: string,
+  moduleSlug: string,
+): KnowledgeUnitMeta[] {
+  const subject = getSubjectBySlug(subjectSlug);
+
+  if (!subject) {
+    return [];
+  }
+
+  const moduleEntry = getModulesBySubject(subject.id).find(
+    (entry) => entry.slug === moduleSlug,
+  );
+
+  if (!moduleEntry) {
+    return [];
+  }
+
+  return getUnitsByModuleId(moduleEntry.id);
+}
+
+export function getUnitByRoute(
+  subjectSlug: string,
+  moduleSlug: string,
+  unitSlug: string,
+): KnowledgeUnitMeta | null {
+  return (
+    getUnitsByModuleRoute(subjectSlug, moduleSlug).find(
+      (entry) => entry.slug === unitSlug,
+    ) ?? null
+  );
 }

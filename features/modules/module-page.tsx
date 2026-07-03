@@ -63,10 +63,13 @@ export function ModulePageView({
               >
                 <div className="contentCard__meta">
                   <span>Unit</span>
-                  <span>{unit.unitSlug}</span>
+                  <span>
+                    {unit.status === "migrating" ? "迁移中" : "建设中"}
+                  </span>
                 </div>
                 <h3>{unit.title}</h3>
                 <p>{unit.summary}</p>
+                <p className="contentSection__summary">{unit.unitSlug}</p>
               </Link>
             ))}
           </div>
