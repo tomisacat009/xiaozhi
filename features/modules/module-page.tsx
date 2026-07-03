@@ -21,11 +21,11 @@ export function ModulePageView({
     notFound();
   }
 
-  const module = getModulesBySubject(subject.id).find(
+  const moduleEntry = getModulesBySubject(subject.id).find(
     (entry) => entry.slug === moduleSlug,
   );
 
-  if (!module) {
+  if (!moduleEntry) {
     notFound();
   }
 
@@ -38,13 +38,13 @@ export function ModulePageView({
           items={[
             { href: "/", label: "首页" },
             { href: `/subjects/${subject.slug}`, label: subject.nameZh },
-            { label: module.title },
+            { label: moduleEntry.title },
           ]}
         />
         <div className="contentSection__hero">
           <p className="sectionHeading__eyebrow">Module</p>
-          <h1>{module.title}</h1>
-          <p className="contentSection__summary">{module.summary}</p>
+          <h1>{moduleEntry.title}</h1>
+          <p className="contentSection__summary">{moduleEntry.summary}</p>
         </div>
       </section>
 

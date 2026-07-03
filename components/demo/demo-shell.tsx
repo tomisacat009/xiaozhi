@@ -23,7 +23,9 @@ export function DemoShell<TParams extends DemoParams>({
 }) {
   const storeRef = useRef<DemoStore<TParams>>(createDemoStore(definition));
   const definitionIdRef = useRef(definition.id);
-  const [state, setState] = useState(() => cloneState(storeRef.current));
+  const [state, setState] = useState(() => ({
+    params: { ...definition.defaultParams },
+  }));
 
   useEffect(() => {
     if (definitionIdRef.current === definition.id) {
@@ -55,20 +57,22 @@ export function DemoShell<TParams extends DemoParams>({
   }
 
   const explanation = definition.explanation(state.params);
+  const renderedStage = definition.renderStage?.(state.params);
 
   return (
     <section className="contentSection" aria-labelledby="demo-shell-title">
       <div className="contentSection__hero">
         <p className="sectionHeading__eyebrow">Demo Engine</p>
-        <h1 id="demo-shell-title">{definition.title}</h1>
+        <h2 id="demo-shell-title">{definition.title}</h2>
         <p className="contentSection__summary">
-          统一 demo shell 已就绪，当前展示基础参数状态与说明区域，具体可视化渲染留给后续任务接入。
+          {definition.description ??
+            "统一 demo shell 已就绪，当前展示基础参数状态与说明区域，具体可视化渲染留给后续任务接入。"}
         </p>
       </div>
 
-      <div className="contentGrid">
+      <div className="demoGrid">
         <DemoStage title={definition.title}>
-          <pre>{JSON.stringify(state.params, null, 2)}</pre>
+          {renderedStage ?? <pre>{JSON.stringify(state.params, null, 2)}</pre>}
         </DemoStage>
         <DemoControls
           definition={definition}

@@ -30,19 +30,19 @@ function indexModulesBySubject(
 ) {
   const modulesBySubject = new Map<string, Module[]>();
 
-  for (const module of items) {
-    if (!subjectIds.has(module.subjectId)) {
-      throw new Error(`Unknown module subjectId: ${module.subjectId}`);
+  for (const moduleEntry of items) {
+    if (!subjectIds.has(moduleEntry.subjectId)) {
+      throw new Error(`Unknown module subjectId: ${moduleEntry.subjectId}`);
     }
 
-    const bucket = modulesBySubject.get(module.subjectId);
+    const bucket = modulesBySubject.get(moduleEntry.subjectId);
 
     if (bucket) {
-      bucket.push(module);
+      bucket.push(moduleEntry);
       continue;
     }
 
-    modulesBySubject.set(module.subjectId, [module]);
+    modulesBySubject.set(moduleEntry.subjectId, [moduleEntry]);
   }
 
   for (const bucket of modulesBySubject.values()) {

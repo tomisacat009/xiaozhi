@@ -123,4 +123,19 @@ describe("semantic route pages", () => {
     expect(screen.getAllByText("a", { selector: "code" }).length).toBeGreaterThan(0);
     expect(screen.queryByText(/`y = ax\^2 \+ bx \+ c`/)).not.toBeInTheDocument();
   });
+
+  it("renders the quadratic demo controls on the unit page", async () => {
+    const view = await UnitPage({
+      params: Promise.resolve({
+        subjectSlug: "math",
+        moduleSlug: "functions",
+        unitSlug: "quadratic-function",
+      }),
+    });
+
+    render(view);
+
+    expect(screen.getByRole("slider", { name: "a" })).toBeInTheDocument();
+    expect(screen.getByText("开口方向与顶点变化")).toBeInTheDocument();
+  });
 });

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import { RichContent } from "@/components/content/rich-content";
+import { QuadraticFunctionDemo } from "@/components/demo/quadratic-function-demo";
 import { PageShell } from "@/components/layout/page-shell";
 import { getModulesBySubject, getSubjectBySlug } from "@/lib/content/loaders";
 
@@ -116,6 +117,22 @@ export function getAllUnitEntries() {
   return [...unitEntries];
 }
 
+function renderUnitDemo(
+  subjectSlug: string,
+  moduleSlug: string,
+  unitSlug: string,
+) {
+  if (
+    subjectSlug === "math" &&
+    moduleSlug === "functions" &&
+    unitSlug === "quadratic-function"
+  ) {
+    return <QuadraticFunctionDemo />;
+  }
+
+  return null;
+}
+
 export async function UnitPageView({
   subjectSlug,
   moduleSlug,
@@ -131,11 +148,11 @@ export async function UnitPageView({
     notFound();
   }
 
-  const module = getModulesBySubject(subject.id).find(
+  const moduleEntry = getModulesBySubject(subject.id).find(
     (entry) => entry.slug === moduleSlug,
   );
 
-  if (!module) {
+  if (!moduleEntry) {
     notFound();
   }
 
@@ -146,6 +163,7 @@ export async function UnitPageView({
   }
 
   const document = await readUnitDocument(unitEntry);
+  const demo = renderUnitDemo(subjectSlug, moduleSlug, unitSlug);
 
   return (
     <PageShell>
@@ -155,8 +173,8 @@ export async function UnitPageView({
             { href: "/", label: "首页" },
             { href: `/subjects/${subject.slug}`, label: subject.nameZh },
             {
-              href: `/subjects/${subject.slug}/${module.slug}`,
-              label: module.title,
+              href: `/subjects/${subject.slug}/${moduleEntry.slug}`,
+              label: moduleEntry.title,
             },
             { label: document.title },
           ]}
@@ -167,6 +185,8 @@ export async function UnitPageView({
           <p className="contentSection__summary">{document.summary}</p>
         </div>
       </section>
+
+      {demo}
 
       <article className="contentSection">
         <RichContent source={document.body} />

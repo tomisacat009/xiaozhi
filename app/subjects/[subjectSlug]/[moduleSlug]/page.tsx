@@ -11,11 +11,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { subjectSlug, moduleSlug } = await params;
   const subject = getSubjectBySlug(subjectSlug);
-  const module = subject
+  const moduleEntry = subject
     ? getModulesBySubject(subject.id).find((entry) => entry.slug === moduleSlug)
     : null;
 
-  if (!subject || !module) {
+  if (!subject || !moduleEntry) {
     return buildPageMetadata({
       title: "模块",
       description: "模块内容页",
@@ -24,9 +24,9 @@ export async function generateMetadata({
   }
 
   return buildPageMetadata({
-    title: `${subject.nameZh} · ${module.title}`,
-    description: module.summary,
-    path: `/subjects/${subject.slug}/${module.slug}`,
+    title: `${subject.nameZh} · ${moduleEntry.title}`,
+    description: moduleEntry.summary,
+    path: `/subjects/${subject.slug}/${moduleEntry.slug}`,
   });
 }
 

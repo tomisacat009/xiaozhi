@@ -201,6 +201,12 @@ h3 {
   gap: 16px;
 }
 
+.demoGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
 .contentCard {
   display: grid;
   gap: 14px;
@@ -234,6 +240,104 @@ h3 {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.contentCard__meta button {
+  padding: 0.55rem 0.95rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(234, 88, 12, 0.12);
+  color: #9a3412;
+  font: inherit;
+  cursor: pointer;
+}
+
+.demoStageCard {
+  overflow: hidden;
+}
+
+.demoStageCard__canvas {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.demoPanel {
+  align-content: start;
+}
+
+.demoControlsGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.demoControl {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.demoControl__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.demoControl__label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.demoControl__value {
+  font-size: 1.2rem;
+}
+
+.demoControl input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.quadraticViz {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 10px;
+}
+
+.quadraticViz__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.quadraticViz__axis {
+  stroke: rgba(71, 85, 105, 0.42);
+  stroke-width: 1.5;
+}
+
+.quadraticViz__curve {
+  fill: none;
+  stroke: #ea580c;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.quadraticViz__marker {
+  fill: #0f172a;
+}
+
+.quadraticViz__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .contentCard__chips,
@@ -422,6 +526,15 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .demoGrid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+    align-items: start;
+  }
+
+  .demoGrid > :first-child {
+    grid-row: span 2;
+  }
+
   .subjectGridSection {
     padding: 32px;
   }
@@ -437,6 +550,10 @@ h3 {
   .contentCard__meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .contentCard__meta button {
+    width: 100%;
   }
 
   .siteHeader__tagline {

@@ -1,6 +1,6 @@
 export function DemoExplanation({ lines }: { lines: string[] }) {
   return (
-    <section className="contentCard" aria-labelledby="demo-explanation-title">
+    <section className="contentCard demoPanel" aria-labelledby="demo-explanation-title">
       <div className="contentCard__meta">
         <span>Explanation</span>
         <span>{lines.length} 条观察</span>
