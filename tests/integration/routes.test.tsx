@@ -1,10 +1,17 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
+import ModulePage from "@/app/subjects/[subjectSlug]/[moduleSlug]/page";
+import UnitPage from "@/app/subjects/[subjectSlug]/[moduleSlug]/[unitSlug]/page";
+import SubjectPage from "@/app/subjects/[subjectSlug]/page";
 import HomePage from "@/app/page";
 import { metadata } from "@/app/layout";
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("root app metadata", () => {
   it("defines the Xiaozhi Chinese and English brand", () => {
@@ -35,5 +42,53 @@ describe("home page", () => {
       "href",
       "/subjects/english",
     );
+  });
+});
+
+describe("semantic route pages", () => {
+  it("renders a subject page", async () => {
+    const view = await SubjectPage({
+      params: Promise.resolve({ subjectSlug: "math" }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByRole("heading", { name: "数学", level: 1 }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders a module page", async () => {
+    const view = await ModulePage({
+      params: Promise.resolve({
+        subjectSlug: "math",
+        moduleSlug: "functions",
+      }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByRole("heading", { name: "函数", level: 1 }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders a unit page with breadcrumb trail", async () => {
+    const view = await UnitPage({
+      params: Promise.resolve({
+        subjectSlug: "math",
+        moduleSlug: "functions",
+        unitSlug: "quadratic-function",
+      }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByRole("heading", { name: "二次函数", level: 1 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "面包屑" }),
+    ).toBeInTheDocument();
   });
 });
