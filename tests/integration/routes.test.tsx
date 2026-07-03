@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+import { readFileSync } from "node:fs";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { generateMetadata as generateUnitMetadata } from "@/app/subjects/[subjectSlug]/[moduleSlug]/[unitSlug]/page";
 import ModulePage from "@/app/subjects/[subjectSlug]/[moduleSlug]/page";
 import UnitPage from "@/app/subjects/[subjectSlug]/[moduleSlug]/[unitSlug]/page";
 import SubjectPage from "@/app/subjects/[subjectSlug]/page";
@@ -16,6 +18,33 @@ afterEach(() => {
 describe("root app metadata", () => {
   it("defines the Xiaozhi Chinese and English brand", () => {
     expect(metadata.title).toBe("小智 Xiaozhi");
+  });
+
+  it("does not require generated .next type imports in tracked config", () => {
+    expect(readFileSync("next-env.d.ts", "utf8")).not.toContain(
+      ".next/types/routes.d.ts",
+    );
+    expect(readFileSync("tsconfig.json", "utf8")).not.toContain(
+      ".next/types/**/*.ts",
+    );
+    expect(readFileSync("tsconfig.json", "utf8")).not.toContain(
+      ".next/dev/types/**/*.ts",
+    );
+  });
+
+  it("builds absolute canonical metadata from a stable metadataBase", async () => {
+    const pageMetadata = await generateUnitMetadata({
+      params: Promise.resolve({
+        subjectSlug: "math",
+        moduleSlug: "functions",
+        unitSlug: "quadratic-function",
+      }),
+    });
+
+    expect(pageMetadata.metadataBase?.toString()).toBe("http://localhost:3000/");
+    expect(pageMetadata.alternates?.canonical?.toString()).toBe(
+      "http://localhost:3000/subjects/math/functions/quadratic-function",
+    );
   });
 });
 
@@ -90,5 +119,8 @@ describe("semantic route pages", () => {
     expect(
       screen.getByRole("navigation", { name: "面包屑" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("y = ax^2 + bx + c", { selector: "code" })).toBeInTheDocument();
+    expect(screen.getAllByText("a", { selector: "code" }).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/`y = ax\^2 \+ bx \+ c`/)).not.toBeInTheDocument();
   });
 });

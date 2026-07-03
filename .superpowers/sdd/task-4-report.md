@@ -56,3 +56,39 @@ Commits created
 Concerns
 - `.mdx` is currently used as a content source plus a constrained server-side rich-text parser, not full MDX JSX execution. This matches Task 4's "basic rich text rendering" scope but leaves advanced MDX semantics for a later task if needed.
 - `next build` required a non-sandbox rerun in this environment because Turbopack could not bind a port inside the sandbox.
+
+---
+
+Task 4 reviewer fixes
+
+Files changed
+- `app/globals.css`
+- `components/content/rich-content.tsx`
+- `lib/seo.ts`
+- `next-env.d.ts`
+- `tests/integration/routes.test.tsx`
+- `tsconfig.json`
+
+Commands run
+- `CI=true pnpm vitest tests/integration/routes.test.tsx`
+- `CI=true pnpm typecheck`
+- `CI=true pnpm build`
+
+Test results
+- `CI=true pnpm vitest tests/integration/routes.test.tsx`
+  - Red run failed on three expected findings:
+    - tracked config still referenced `.next` generated types
+    - metadata lacked `metadataBase` / absolute canonical
+    - inline code in `quadratic-function.mdx` still rendered as raw backticks
+  - Final run passed: `7 passed`.
+- `CI=true pnpm typecheck`
+  - Passed from clean tracked config without relying on `.next` includes.
+- `CI=true pnpm build`
+  - Sandboxed run failed with the same Turbopack permission error.
+  - Escalated rerun passed and generated the expected subject/module/unit routes.
+  - During build, Next.js still prints a suggestion about adding `.next/types/**/*.ts` and `.next/dev/types/**/*.ts`; the committed tracked files were kept clean afterward to preserve clean-checkout `typecheck`.
+  - After restoring the clean tracked config, `CI=true pnpm typecheck` and `CI=true pnpm vitest tests/integration/routes.test.tsx` were rerun successfully against the final commit state.
+
+Concerns
+- `next build` still requires a non-sandbox rerun in this environment because Turbopack cannot bind a port inside the sandbox.
+- The current markdown renderer intentionally covers the basic syntax already present in Task 4 content, especially headings, lists, paragraphs, and inline code. It is still not a full MDX/Markdown engine, which remains outside Task 4 scope.

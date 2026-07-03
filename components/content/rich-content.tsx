@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 type RichBlock =
   | {
       type: "heading";
@@ -12,6 +14,44 @@ type RichBlock =
       type: "list";
       items: string[];
     };
+
+type InlineToken =
+  | {
+      type: "text";
+      content: string;
+    }
+  | {
+      type: "code";
+      content: string;
+    };
+
+function parseInlineTokens(content: string): InlineToken[] {
+  const segments = content.split(/(`[^`]+`)/g).filter((segment) => segment.length > 0);
+
+  return segments.map((segment) => {
+    if (segment.startsWith("`") && segment.endsWith("`")) {
+      return {
+        type: "code" as const,
+        content: segment.slice(1, -1),
+      };
+    }
+
+    return {
+      type: "text" as const,
+      content: segment,
+    };
+  });
+}
+
+function renderInlineContent(content: string): ReactNode[] {
+  return parseInlineTokens(content).map((token, index) => {
+    if (token.type === "code") {
+      return <code key={`${token.content}-${index}`}>{token.content}</code>;
+    }
+
+    return <span key={`${token.content}-${index}`}>{token.content}</span>;
+  });
+}
 
 function parseRichContent(source: string): RichBlock[] {
   const blocks: RichBlock[] = [];
@@ -80,23 +120,23 @@ export function RichContent({ source }: { source: string }) {
       {blocks.map((block, index) => {
         if (block.type === "heading") {
           if (block.level === 2) {
-            return <h2 key={index}>{block.content}</h2>;
+            return <h2 key={index}>{renderInlineContent(block.content)}</h2>;
           }
 
-          return <h3 key={index}>{block.content}</h3>;
+          return <h3 key={index}>{renderInlineContent(block.content)}</h3>;
         }
 
         if (block.type === "list") {
           return (
             <ul key={index}>
               {block.items.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item}>{renderInlineContent(item)}</li>
               ))}
             </ul>
           );
         }
 
-        return <p key={index}>{block.content}</p>;
+        return <p key={index}>{renderInlineContent(block.content)}</p>;
       })}
     </div>
   );
