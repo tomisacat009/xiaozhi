@@ -20,12 +20,17 @@ describe("formal content cleanliness", () => {
     const root = path.join(process.cwd(), "content/units");
     const files = collectMdxFiles(root);
     const blockedHeadings = ["## 迁移说明", "## 交互演示迁移线索", "## 后续重构方向"];
+    const blockedPhrases = ["已上线“", "可做成", "适合做成", "后续很适合做成"];
 
     for (const file of files) {
       const source = readFileSync(file, "utf8");
 
       for (const heading of blockedHeadings) {
         expect(source).not.toContain(heading);
+      }
+
+      for (const phrase of blockedPhrases) {
+        expect(source).not.toContain(phrase);
       }
     }
   });
