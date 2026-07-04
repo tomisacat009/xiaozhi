@@ -98,8 +98,7 @@ export const learningPaths: LearningPath[] = [
     "summary": "先把串并联结构和欧姆定律看成变量关系，再去做综合电路判断。",
     "topics": [
       "串联与并联电路对比",
-      "欧姆定律与伏安关系",
-      "牛顿第二定律的变量关系"
+      "欧姆定律与伏安关系"
     ],
     "order": 5
   },
@@ -110,8 +109,7 @@ export const learningPaths: LearningPath[] = [
     "summary": "把振动和波传播重新放回图像与时间过程里，帮助孩子复盘抽象章节。",
     "topics": [
       "简谐振动的周期与图像",
-      "波的传播与相位感知",
-      "自由落体"
+      "波的传播与相位感知"
     ],
     "order": 6
   },

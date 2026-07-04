@@ -719,14 +719,27 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 8,
     "difficulty": "基础",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "理解两个力怎样合成为一个等效结果",
+      "区分合成与分解本质上是同一个力学对象的不同观察方式",
+      "把平行四边形法则重新连回图形直觉"
+    ],
+    "coreTakeaways": [
+      "夹角越小，两个力越同向，合力通常越大",
+      "合成先看方向关系，再谈大小计算",
+      "分解不是变出新力，而是为了顺着更合适的方向分析"
+    ],
     "keywords": [
       "力的合成与分解",
       "force"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-force-balance",
+      "physics-incline-motion"
+    ],
+    "demoIds": [
+      "力的合成示意图"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-force-composition.html"
   },
   {
@@ -761,14 +774,27 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 10,
     "difficulty": "基础",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "区分“合力为零”和“没有受力”",
+      "按方向分别判断平衡条件",
+      "把受力图重新连回运动状态判断"
+    ],
+    "coreTakeaways": [
+      "平衡的核心是每个方向上的合力都被抵消",
+      "静止和平衡、匀速和平衡都可能同时成立",
+      "先画受力图再列方程，比直接套结论更稳"
+    ],
     "keywords": [
       "共点力平衡与受力平衡",
       "force"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-force-composition",
+      "physics-newton-second-law"
+    ],
+    "demoIds": [
+      "共点力平衡图"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-force-balance.html"
   },
   {
@@ -958,14 +984,26 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 19,
     "difficulty": "基础",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "区分串联和并联的结构差异",
+      "理解结构如何决定电流和电压分配",
+      "减少只背规律不懂来源的断层"
+    ],
+    "coreTakeaways": [
+      "串联先抓一条通路，并联先抓多条支路",
+      "串联电流相等，并联各支路电压相等",
+      "结构看清后，分压与分流规律会自然很多"
+    ],
     "keywords": [
       "串联与并联电路对比",
       "electricity"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-ohms-law"
+    ],
+    "demoIds": [
+      "串联与并联电路对比图"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-series-parallel.html"
   },
   {
@@ -979,14 +1017,26 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 20,
     "difficulty": "中等",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "理解 U、I、R 的比例关系",
+      "从图像上读出电阻变化对斜率的影响",
+      "把公式变形重新连回物理意义"
+    ],
+    "coreTakeaways": [
+      "电压固定时，电阻越大电流越小",
+      "I-U 图像过原点，斜率大小反映电阻影响",
+      "欧姆定律不是只为计算，更是变量关系模型"
+    ],
     "keywords": [
       "欧姆定律与伏安关系",
       "electricity"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-series-parallel"
+    ],
+    "demoIds": [
+      "欧姆定律图像"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-ohms-law.html"
   },
   {
@@ -1000,14 +1050,27 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 21,
     "difficulty": "中等",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "把位移图像和真实往返过程对应起来",
+      "理解振幅和周期分别描述什么",
+      "从图像上判断物体此刻处于什么状态"
+    ],
+    "coreTakeaways": [
+      "一个周期对应一次完整往返",
+      "振幅决定离平衡位置最远能到哪",
+      "读振动图像时要同时关注位移大小和变化方向"
+    ],
     "keywords": [
       "简谐振动的周期与图像",
       "wave"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-wave-propagation",
+      "physics-motion-graphs"
+    ],
+    "demoIds": [
+      "简谐振动图像"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-vibration.html"
   },
   {
@@ -1021,14 +1084,27 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "order": 22,
     "difficulty": "进阶",
     "status": "migrating",
-    "learningGoals": [],
-    "coreTakeaways": [],
+    "learningGoals": [
+      "区分波形传播和质点振动",
+      "理解同一时刻不同位置的相位差",
+      "从波形快照上判断传播特征"
+    ],
+    "coreTakeaways": [
+      "波传播的是扰动和能量，不是介质整体搬走",
+      "相位差需要结合位置差和波长一起理解",
+      "先分清“波在走”还是“点在振”，读图才不容易错"
+    ],
     "keywords": [
       "波的传播与相位感知",
       "wave"
     ],
-    "relatedUnits": [],
-    "demoIds": [],
+    "relatedUnits": [
+      "physics-vibration",
+      "physics-motion-graphs"
+    ],
+    "demoIds": [
+      "波的传播图像"
+    ],
     "migrationSource": "legacy/prototype-v1/modules/unit-physics-wave-propagation.html"
   },
   {

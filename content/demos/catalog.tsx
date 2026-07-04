@@ -7,6 +7,12 @@ import { QuadraticSvg } from "@/engine/renderers/quadratic-svg";
 
 type NumericDemo = DemoDefinition<Record<string, number>>;
 type MixedDemo = DemoDefinition<Record<string, number | string>>;
+type CircuitDemo = DemoDefinition<{
+  circuit: string;
+  voltage: number;
+  r1: number;
+  r2: number;
+}>;
 
 function round(value: number) {
   return Number(value.toFixed(2));
@@ -40,6 +46,25 @@ function makeSeries(
   points: Array<{ x: number; y: number }>,
 ) {
   return { id, label, color, points };
+}
+
+function sampleSineWave(
+  fn: (value: number) => number,
+  range: { min: number; max: number },
+  step = 0.05,
+) {
+  const points: Array<{ x: number; y: number }> = [];
+
+  for (let value = range.min; value <= range.max + 1e-8; value += step) {
+    const safeValue = round(value);
+
+    points.push({
+      x: safeValue,
+      y: round(fn(safeValue)),
+    });
+  }
+
+  return points;
 }
 
 function createBoard(
@@ -1428,42 +1453,56 @@ const motionGraphsDemo: MixedDemo = {
   },
 };
 
-const forceBalanceDemo: MixedDemo = {
+const forceBalanceDemo: NumericDemo = {
   id: "physics-force-balance",
   title: "共点力平衡",
-  description: "把受力图和“合力为零”的判断放在同一个结构里。",
-  defaultParams: { focus: "resultant" },
+  description: "把四个方向的受力摆在同一个坐标里，直接看见“水平平衡 + 竖直平衡 = 合力为零”。",
+  defaultParams: { right: 4, left: 4, up: 3, down: 3 },
   presets: [
-    { id: "resultant", label: "合力为零", params: { focus: "resultant" } },
-    { id: "state", label: "运动状态", params: { focus: "state" } },
+    { id: "balanced", label: "完全平衡", params: { right: 4, left: 4, up: 3, down: 3 } },
+    { id: "right-heavy", label: "向右失衡", params: { right: 5.5, left: 3, up: 3, down: 3 } },
+    { id: "down-heavy", label: "向下失衡", params: { right: 4, left: 4, up: 2, down: 4.5 } },
   ],
   controls: {
-    focus: {
-      kind: "select",
-      label: "观察重点",
-      options: [
-        { label: "合力为零", value: "resultant" },
-        { label: "运动状态", value: "state" },
+    right: { label: "向右拉力", min: 0, max: 8, step: 0.5 },
+    left: { label: "向左拉力", min: 0, max: 8, step: 0.5 },
+    up: { label: "向上支持力", min: 0, max: 8, step: 0.5 },
+    down: { label: "向下重力", min: 0, max: 8, step: 0.5 },
+  },
+  explanation({ right, left, up, down }) {
+    const rx = round(right - left);
+    const ry = round(up - down);
+    const resultant = round(Math.sqrt(rx * rx + ry * ry));
+
+    return [
+      `当前水平合力约为 ${rx}，竖直合力约为 ${ry}。`,
+      resultant === 0
+        ? "两个方向都抵消后，合力为零，这才是真正的平衡。"
+        : `当前合力大小约为 ${resultant}，说明受力还没有完全抵消。`,
+      "平衡不是“没有力”，而是每个方向上的矢量和都被抵消了。",
+    ];
+  },
+  renderStage({ right, left, up, down }) {
+    const resultant = {
+      x: round(right - left),
+      y: round(up - down),
+    };
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "共点力平衡图",
+      bounds: { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+      series: [
+        makeSeries("right", "向右力", "#ea580c", [{ x: 0, y: 0 }, { x: right, y: 0 }]),
+        makeSeries("left", "向左力", "#2563eb", [{ x: 0, y: 0 }, { x: -left, y: 0 }]),
+        makeSeries("up", "向上力", "#0f766e", [{ x: 0, y: 0 }, { x: 0, y: up }]),
+        makeSeries("down", "向下力", "#7c3aed", [{ x: 0, y: 0 }, { x: 0, y: -down }]),
+        makeSeries("resultant", "合力", "#0f172a", [{ x: 0, y: 0 }, resultant]),
       ],
-    },
-  },
-  explanation({ focus }) {
-    return focus === "resultant"
-      ? ["平衡最核心的条件是合力为零。", "这并不等于“没有力”，而是各力相互抵消。"] 
-      : ["平衡状态下可以静止，也可以做匀速直线运动。", "关键看速度是否在改变。"];
-  },
-  renderStage({ focus }) {
-    return createBoard("平衡判断板", focus === "resultant"
-      ? [
-          { id: "forces", title: "受力情况", summary: "可能有多个力同时存在。", accent: "#93c5fd" },
-          { id: "resultant", title: "合力", summary: "所有力矢量和为零。", accent: "#fdba74" },
-          { id: "meaning", title: "含义", summary: "运动状态不改变。", accent: "#86efac" },
-        ]
-      : [
-          { id: "static", title: "静止平衡", summary: "速度为 0 且不变。", accent: "#93c5fd" },
-          { id: "uniform", title: "动态平衡", summary: "速度不为 0 但保持不变。", accent: "#fdba74" },
-          { id: "trap", title: "易错点", summary: "别把“速度不为零”误判成一定不平衡。", accent: "#86efac" },
-        ]);
+      markers: [
+        { id: "center", x: 0, y: 0, label: "受力点" },
+        { id: "result-end", x: resultant.x, y: resultant.y, label: "R", color: "#0f172a" },
+      ],
+    });
   },
 };
 
@@ -1730,14 +1769,14 @@ const mechanicalEnergyDemo: MixedDemo = {
   },
 };
 
-const seriesParallelDemo: MixedDemo = {
+const seriesParallelDemo: CircuitDemo = {
   id: "physics-series-parallel",
   title: "串联与并联电路",
-  description: "把电流路径和分配规律分开看，先抓结构再记结论。",
-  defaultParams: { circuit: "series" },
+  description: "先把电路结构画出来，再从结构上读出电流、电压和总电阻的分配规律。",
+  defaultParams: { circuit: "series", voltage: 12, r1: 2, r2: 4 },
   presets: [
-    { id: "series", label: "串联", params: { circuit: "series" } },
-    { id: "parallel", label: "并联", params: { circuit: "parallel" } },
+    { id: "series", label: "串联", params: { circuit: "series", voltage: 12, r1: 2, r2: 4 } },
+    { id: "parallel", label: "并联", params: { circuit: "parallel", voltage: 12, r1: 2, r2: 4 } },
   ],
   controls: {
     circuit: {
@@ -1748,24 +1787,73 @@ const seriesParallelDemo: MixedDemo = {
         { label: "并联", value: "parallel" },
       ],
     },
+    voltage: { label: "总电压 U", min: 3, max: 24, step: 1 },
+    r1: { label: "电阻 R1", min: 1, max: 8, step: 0.5 },
+    r2: { label: "电阻 R2", min: 1, max: 8, step: 0.5 },
   },
-  explanation({ circuit }) {
-    return circuit === "series"
-      ? ["串联只有一条电流路径。", "各处电流相等，总电压等于各部分电压之和。"] 
-      : ["并联有多条支路。", "各支路电压相等，总电流等于各支路电流之和。"];
+  explanation({ circuit, voltage, r1, r2 }) {
+    if (circuit === "series") {
+      const current = voltage / (r1 + r2);
+      const u1 = current * r1;
+      const u2 = current * r2;
+
+      return [
+        `串联时只有一条通路，电流约为 ${round(current)}。`,
+        `当前两个电阻上的分压约为 U1 = ${round(u1)}、U2 = ${round(u2)}。`,
+        "先抓“一条路”这个结构，再记“电流相等、分压相加”会更稳。",
+      ];
+    }
+
+    const i1 = voltage / r1;
+    const i2 = voltage / r2;
+
+    return [
+      `并联时两条支路电压都等于 ${round(voltage)}。`,
+      `当前支路电流约为 I1 = ${round(i1)}、I2 = ${round(i2)}，总电流约为 ${round(i1 + i2)}。`,
+      "先抓“同起点同终点”的结构，再记“电压相等、电流分流”就不容易混。",
+    ];
   },
-  renderStage({ circuit }) {
-    return createBoard("串并联判断板", circuit === "series"
-      ? [
-          { id: "path", title: "路径", summary: "只有一条。", accent: "#93c5fd" },
-          { id: "current", title: "电流规律", summary: "处处相等。", accent: "#fdba74" },
-          { id: "voltage", title: "电压规律", summary: "总电压分配到各元件。", accent: "#86efac" },
-        ]
-      : [
-          { id: "path", title: "路径", summary: "多条支路。", accent: "#93c5fd" },
-          { id: "voltage", title: "电压规律", summary: "各支路电压相等。", accent: "#fdba74" },
-          { id: "current", title: "电流规律", summary: "总电流由各支路电流相加。", accent: "#86efac" },
-        ]);
+  renderStage({ circuit, voltage, r1, r2 }) {
+    if (circuit === "series") {
+      const current = voltage / (r1 + r2);
+
+      return createElement(CartesianPlot, {
+        ariaLabel: "串联与并联电路对比图",
+        bounds: { xMin: 0, xMax: 10, yMin: 0, yMax: 6 },
+        series: [
+          makeSeries("wire-left", "导线", "#94a3b8", [{ x: 1, y: 3 }, { x: 3, y: 3 }]),
+          makeSeries("r1", "R1", "#ea580c", [{ x: 3, y: 3 }, { x: 5, y: 3 }]),
+          makeSeries("r2", "R2", "#2563eb", [{ x: 5, y: 3 }, { x: 7, y: 3 }]),
+          makeSeries("wire-right", "回路", "#94a3b8", [{ x: 7, y: 3 }, { x: 9, y: 3 }]),
+        ],
+        markers: [
+          { id: "source", x: 1, y: 3, label: `U=${round(voltage)}` },
+          { id: "current", x: 5, y: 3.8, label: `I=${round(current)}` },
+          { id: "r1-label", x: 4, y: 2.4, label: `R1=${round(r1)}` },
+          { id: "r2-label", x: 6, y: 2.4, label: `R2=${round(r2)}` },
+        ],
+      });
+    }
+
+    const i1 = voltage / r1;
+    const i2 = voltage / r2;
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "串联与并联电路对比图",
+      bounds: { xMin: 0, xMax: 10, yMin: 0, yMax: 6 },
+      series: [
+        makeSeries("left-rail", "左侧节点", "#94a3b8", [{ x: 2, y: 1.5 }, { x: 2, y: 4.5 }]),
+        makeSeries("right-rail", "右侧节点", "#94a3b8", [{ x: 8, y: 1.5 }, { x: 8, y: 4.5 }]),
+        makeSeries("top-branch", "上支路", "#ea580c", [{ x: 2, y: 4 }, { x: 8, y: 4 }]),
+        makeSeries("bottom-branch", "下支路", "#2563eb", [{ x: 2, y: 2 }, { x: 8, y: 2 }]),
+      ],
+      markers: [
+        { id: "voltage", x: 1.2, y: 3, label: `U=${round(voltage)}` },
+        { id: "i1", x: 5, y: 4.6, label: `I1=${round(i1)}` },
+        { id: "i2", x: 5, y: 1.4, label: `I2=${round(i2)}` },
+        { id: "total", x: 8.6, y: 3, label: `I总=${round(i1 + i2)}` },
+      ],
+    });
   },
 };
 
@@ -1800,81 +1888,110 @@ const ohmsLawDemo: NumericDemo = {
   },
 };
 
-const vibrationDemo: MixedDemo = {
+const vibrationDemo: NumericDemo = {
   id: "physics-vibration",
   title: "简谐振动的周期与图像",
-  description: "把一个周期里经历的位置变化说清楚，再谈图像与周期。",
-  defaultParams: { focus: "period" },
+  description: "让位移-时间图像和实际往返过程同步起来，帮助孩子把一个周期真正看成完整过程。",
+  defaultParams: { amplitude: 2, period: 4, time: 1 },
   presets: [
-    { id: "period", label: "周期", params: { focus: "period" } },
-    { id: "phase", label: "相位", params: { focus: "phase" } },
+    { id: "base", label: "标准节奏", params: { amplitude: 2, period: 4, time: 1 } },
+    { id: "fast", label: "周期更短", params: { amplitude: 2, period: 2.5, time: 1 } },
+    { id: "large", label: "振幅更大", params: { amplitude: 3, period: 4, time: 1 } },
   ],
   controls: {
-    focus: {
-      kind: "select",
-      label: "观察重点",
-      options: [
-        { label: "周期", value: "period" },
-        { label: "相位", value: "phase" },
+    amplitude: { label: "振幅 A", min: 1, max: 4, step: 0.2 },
+    period: { label: "周期 T", min: 2, max: 6, step: 0.2 },
+    time: { label: "观察时刻 t", min: 0, max: 8, step: 0.2 },
+  },
+  explanation({ amplitude, period, time }) {
+    const omega = (2 * Math.PI) / period;
+    const displacement = amplitude * Math.sin(omega * time);
+
+    return [
+      `当前位移约为 ${round(displacement)}，振幅保持在 ${round(amplitude)}。`,
+      `周期是 ${round(period)}，表示完成一次完整往返所需的时间。`,
+      "看图时要把“位移有多大”和“此刻正往哪边走”一起读出来，这样图像才真正连回过程。",
+    ];
+  },
+  renderStage({ amplitude, period, time }) {
+    const omega = (2 * Math.PI) / period;
+    const points = sampleSineWave(
+      (t) => amplitude * Math.sin(omega * t),
+      { min: 0, max: 8 },
+      0.05,
+    );
+    const displacement = amplitude * Math.sin(omega * time);
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "简谐振动图像",
+      bounds: { xMin: 0, xMax: 8, yMin: -4.5, yMax: 4.5 },
+      series: [
+        makeSeries("wave", "位移-时间图", "#7c3aed", points),
+        { ...makeSeries("equilibrium", "平衡位置", "#94a3b8", [{ x: 0, y: 0 }, { x: 8, y: 0 }]), strokeDasharray: "6 6" },
       ],
-    },
-  },
-  explanation({ focus }) {
-    return focus === "period"
-      ? ["周期表示完成一次完整往返所需的时间。", "周期变了，整条波形会变松或变紧。"] 
-      : ["相位帮助判断两个时刻或两个点是否同步。", "振动和波动里都要逐渐建立相位感。"];
-  },
-  renderStage({ focus }) {
-    return createBoard("振动观察板", focus === "period"
-      ? [
-          { id: "cycle", title: "周期 T", summary: "一次完整重复所需时间。", accent: "#93c5fd" },
-          { id: "graph", title: "图像表现", summary: "一个周期对应一段完整波形。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "先数“回到原状态”需要多久。", accent: "#86efac" },
-        ]
-      : [
-          { id: "same", title: "同相", summary: "状态变化一致。", accent: "#93c5fd" },
-          { id: "diff", title: "相位差", summary: "表示两个状态的时间或空间错位。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "先比较是否在同向通过平衡位置。", accent: "#86efac" },
-        ]);
+      markers: [
+        { id: "time", x: round(time), y: round(displacement), label: `t=${round(time)}` },
+        { id: "period", x: round(period), y: 0, label: "1T", color: "#0f766e" },
+      ],
+    });
   },
 };
 
-const wavePropagationDemo: MixedDemo = {
+const wavePropagationDemo: NumericDemo = {
   id: "physics-wave-propagation",
   title: "波的传播与相位感知",
-  description: "把“质点振动”和“波形前进”分开理解，避免把介质整体移动想错。",
-  defaultParams: { focus: "propagation" },
+  description: "把同一时刻的波形快照画出来，帮助孩子区分“波在走”和“点在振”。",
+  defaultParams: { amplitude: 2, wavelength: 4, speed: 1, time: 1 },
   presets: [
-    { id: "propagation", label: "传播", params: { focus: "propagation" } },
-    { id: "phase", label: "相位差", params: { focus: "phase" } },
+    { id: "snapshot", label: "基础波形", params: { amplitude: 2, wavelength: 4, speed: 1, time: 1 } },
+    { id: "faster", label: "传播更快", params: { amplitude: 2, wavelength: 4, speed: 1.8, time: 1 } },
+    { id: "longer", label: "波长更长", params: { amplitude: 2, wavelength: 6, speed: 1, time: 1 } },
   ],
   controls: {
-    focus: {
-      kind: "select",
-      label: "观察重点",
-      options: [
-        { label: "传播", value: "propagation" },
-        { label: "相位差", value: "phase" },
+    amplitude: { label: "振幅 A", min: 1, max: 4, step: 0.2 },
+    wavelength: { label: "波长 λ", min: 2, max: 8, step: 0.2 },
+    speed: { label: "波速 v", min: 0.5, max: 2.5, step: 0.1 },
+    time: { label: "观察时刻 t", min: 0, max: 4, step: 0.2 },
+  },
+  explanation({ amplitude, wavelength, speed, time }) {
+    const phaseShift = round(speed * time);
+    const pointA = round(amplitude * Math.sin((2 * Math.PI * (2 - phaseShift)) / wavelength));
+    const pointB = round(amplitude * Math.sin((2 * Math.PI * (5 - phaseShift)) / wavelength));
+
+    return [
+      `此刻波形整体向前平移了约 ${phaseShift} 个单位，但介质质点仍只在原位置附近振动。`,
+      `A 点位移约为 ${pointA}，B 点位移约为 ${pointB}，这就是同一时刻不同位置的相位差。`,
+      "读波形图时，先分清“整条波形怎样前进”，再分清“某个点此刻处在什么状态”。",
+    ];
+  },
+  renderStage({ amplitude, wavelength, speed, time }) {
+    const shift = speed * time;
+    const points = sampleSineWave(
+      (x) => amplitude * Math.sin((2 * Math.PI * (x - shift)) / wavelength),
+      { min: 0, max: 10 },
+      0.05,
+    );
+    const pointA = {
+      x: 2,
+      y: round(amplitude * Math.sin((2 * Math.PI * (2 - shift)) / wavelength)),
+    };
+    const pointB = {
+      x: 5,
+      y: round(amplitude * Math.sin((2 * Math.PI * (5 - shift)) / wavelength)),
+    };
+
+    return createElement(CartesianPlot, {
+      ariaLabel: "波的传播图像",
+      bounds: { xMin: 0, xMax: 10, yMin: -4.5, yMax: 4.5 },
+      series: [
+        makeSeries("wave", "同一时刻波形", "#2563eb", points),
+        { ...makeSeries("equilibrium", "平衡位置", "#94a3b8", [{ x: 0, y: 0 }, { x: 10, y: 0 }]), strokeDasharray: "6 6" },
       ],
-    },
-  },
-  explanation({ focus }) {
-    return focus === "propagation"
-      ? ["向前传播的是扰动和能量，不是介质整体搬走。", "每个质点只在原地附近振动。"] 
-      : ["相位差帮助比较不同位置质点此刻的振动状态。", "它是理解波动题的核心抓手之一。"];
-  },
-  renderStage({ focus }) {
-    return createBoard("波动理解板", focus === "propagation"
-      ? [
-          { id: "energy", title: "传播对象", summary: "扰动与能量。", accent: "#93c5fd" },
-          { id: "medium", title: "介质质点", summary: "各自在原地附近振动。", accent: "#fdba74" },
-          { id: "trap", title: "易错点", summary: "别误以为介质整体向前移动。", accent: "#86efac" },
-        ]
-      : [
-          { id: "same", title: "同相点", summary: "振动状态相同。", accent: "#93c5fd" },
-          { id: "shift", title: "相位差", summary: "不同位置的状态错位。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "先看是否同向通过平衡位置。", accent: "#86efac" },
-        ]);
+      markers: [
+        { id: "point-a", x: pointA.x, y: pointA.y, label: "A" },
+        { id: "point-b", x: pointB.x, y: pointB.y, label: "B", color: "#ea580c" },
+      ],
+    });
   },
 };
 
