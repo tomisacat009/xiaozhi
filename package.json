@@ -2,6 +2,14 @@
   "name": "xiaozhi",
   "description": "Xiaozhi is a high-school knowledge visualization and interactive learning project.",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomisacat009/xiaozhi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tomisacat009/xiaozhi/issues"
+  },
+  "homepage": "https://github.com/tomisacat009/xiaozhi",
   "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "next dev",

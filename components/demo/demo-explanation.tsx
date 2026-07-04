@@ -2,12 +2,12 @@ export function DemoExplanation({ lines }: { lines: string[] }) {
   return (
     <section className="contentCard demoPanel" aria-labelledby="demo-explanation-title">
       <div className="contentCard__meta">
-        <span>Explanation</span>
-        <span>{lines.length} 条观察</span>
+        <span>观察提示</span>
+        <span>{lines.length} 条线索</span>
       </div>
-      <h2 id="demo-explanation-title">观察要点</h2>
+      <h2 id="demo-explanation-title">理解线索</h2>
       {lines.length > 0 ? (
-        <ul className="breadcrumbs__list">
+        <ul className="demoExplanationList">
           {lines.map((line) => (
             <li key={line}>{line}</li>
           ))}

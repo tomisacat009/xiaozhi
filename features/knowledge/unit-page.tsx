@@ -225,9 +225,14 @@ export async function UnitPageView({
           ]}
         />
         <div className="contentSection__hero">
-          <p className="sectionHeading__eyebrow">Knowledge Unit</p>
+          <p className="sectionHeading__eyebrow">知识点</p>
           <h1>{document.title}</h1>
           <p className="contentSection__summary">{document.summary}</p>
+          <ul className="contentCard__chips">
+            <li>{unitMeta.difficulty}</li>
+            <li>{document.learningGoals.length} 个学习目标</li>
+            <li>{unitMeta.coreTakeaways.length} 条关键结论</li>
+          </ul>
         </div>
       </section>
 
@@ -246,6 +251,28 @@ export async function UnitPageView({
             <ul className="contentCard__chips">
               {document.learningGoals.map((goal) => (
                 <li key={goal}>{goal}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {unitMeta.coreTakeaways.length > 0 ? (
+          <div className="contentCard" style={{ marginBottom: "1.5rem" }}>
+            <h2>学完后要带走什么</h2>
+            <div className="richContent">
+              <ul>
+                {unitMeta.coreTakeaways.map((takeaway) => (
+                  <li key={takeaway}>{takeaway}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
+        {unitMeta.keywords.length > 0 ? (
+          <div className="contentCard" style={{ marginBottom: "1.5rem" }}>
+            <h2>关键词</h2>
+            <ul className="contentCard__chips">
+              {unitMeta.keywords.map((keyword) => (
+                <li key={keyword}>{keyword}</li>
               ))}
             </ul>
           </div>

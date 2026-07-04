@@ -2,7 +2,15 @@ import { createElement } from "react";
 
 import { sampleQuadratic } from "@/engine/core/math";
 import type { DemoDefinition, DemoParams } from "@/engine/core/types";
+import { EnglishSentenceDiagram } from "@/engine/renderers/english-sentence-diagram";
+import { FlowDiagram } from "@/engine/renderers/flow-diagram";
+import { NetworkDiagram } from "@/engine/renderers/network-diagram";
+import { ReadingLayerDiagram } from "@/engine/renderers/reading-layer-diagram";
+import { SemanticAxisDiagram } from "@/engine/renderers/semantic-axis-diagram";
+import { SetRelationDiagram } from "@/engine/renderers/set-relation-diagram";
 import { CartesianPlot, ConceptBoard } from "@/engine/renderers/cartesian-plot";
+import { TimelineDiagram } from "@/engine/renderers/timeline-diagram";
+import { VennDiagram } from "@/engine/renderers/venn-diagram";
 import { QuadraticSvg } from "@/engine/renderers/quadratic-svg";
 
 type NumericDemo = DemoDefinition<Record<string, number>>;
@@ -737,27 +745,28 @@ const solidSectionDemo: MixedDemo = {
     return map[String(plane)];
   },
   renderStage({ plane }) {
-    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       parallel: [
-        { id: "plane", title: "切面方向", summary: "平行底面。", accent: "#93c5fd" },
-        { id: "shape", title: "截面形状", summary: "通常与底面同形且相似。", accent: "#fdba74" },
-        { id: "focus", title: "观察重点", summary: "看比例缩放，不要只盯边数。", accent: "#86efac" },
+        { id: "plane", title: "先定切面方向", summary: "切面平行底面。", accent: "#60a5fa", detail: "先判断切面和底面是否保持同向。" },
+        { id: "shape", title: "再看截面形状", summary: "截面通常与底面同形且相似。", accent: "#f59e0b", detail: "重点不在边数，而在相似关系。" },
+        { id: "focus", title: "最后抓缩放", summary: "关注大小怎样随位置变化。", accent: "#34d399", detail: "看比例缩放，不要只盯边数。" },
       ],
       "through-vertex": [
-        { id: "plane", title: "切面方向", summary: "穿过顶点。", accent: "#93c5fd" },
-        { id: "shape", title: "截面形状", summary: "容易形成三角形。", accent: "#fdba74" },
-        { id: "focus", title: "观察重点", summary: "看它切到了哪些侧棱。", accent: "#86efac" },
+        { id: "plane", title: "先锁顶点", summary: "切面经过立体顶点。", accent: "#60a5fa", detail: "这会决定截线怎样从尖点发散出去。" },
+        { id: "shape", title: "再找被切棱", summary: "容易形成三角形一类的尖形截面。", accent: "#f59e0b", detail: "看它切到了哪些侧棱。" },
+        { id: "focus", title: "最后还原形状", summary: "把截线连起来判断最终图形。", accent: "#34d399", detail: "顶点型截面常比平行型更敏感。" },
       ],
       oblique: [
-        { id: "plane", title: "切面方向", summary: "斜着穿过立体。", accent: "#93c5fd" },
-        { id: "shape", title: "截面形状", summary: "边数和形状最容易变化。", accent: "#fdba74" },
-        { id: "focus", title: "观察重点", summary: "按面逐个追踪截线。", accent: "#86efac" },
+        { id: "plane", title: "先看斜切路线", summary: "切面斜着穿过多个面。", accent: "#60a5fa", detail: "斜切通常不会沿熟悉对称方向走。" },
+        { id: "shape", title: "再追截线顺序", summary: "边数和形状最容易变化。", accent: "#f59e0b", detail: "按面逐个追踪截线。" },
+        { id: "focus", title: "最后核对闭合", summary: "确认截线首尾如何围成完整图形。", accent: "#34d399", detail: "越是斜切，越要分面追踪。" },
       ],
     };
 
-    return createElement(ConceptBoard, {
-      title: "截面观察板",
-      items: boards[String(plane)],
+    return createElement(FlowDiagram, {
+      title: "截面变化流程图",
+      focus: plane === "parallel" ? "先看切面是否平行底面，再判断截面是不是底面的缩放版。" : plane === "through-vertex" ? "过顶点时先找尖点，再看截线怎样切过侧棱。" : "斜切时不要猜形状，要按切面经过的面逐个追踪。",
+      steps: flows[String(plane)],
     });
   },
 };
@@ -784,12 +793,13 @@ const solidRotationDemo: NumericDemo = {
     ];
   },
   renderStage({ radius, height }) {
-    return createElement(ConceptBoard, {
-      title: "旋转体生成板",
-      items: [
-        { id: "profile", title: `母线高度 ${round(height)}`, summary: "先看平面图形里哪条边在提供高度。", accent: "#93c5fd" },
-        { id: "axis", title: "旋转轴", summary: "绕轴旋转后，距离轴的最远处决定半径。", accent: "#fdba74" },
-        { id: "solid", title: `半径 ${round(radius)}`, summary: "最终空间形体由“高度 + 半径”共同决定。", accent: "#86efac" },
+    return createElement(FlowDiagram, {
+      title: "旋转体生成流程图",
+      focus: "先看哪条线在绕轴转，再看高度和半径怎样共同决定最终立体。",
+      steps: [
+        { id: "profile", title: `母线高度 ${round(height)}`, summary: "先看平面图形里哪条边在提供高度。", accent: "#60a5fa", detail: "高度通常来自离底面的竖直距离。" },
+        { id: "axis", title: "锁定旋转轴", summary: "绕轴旋转后，距离轴的最远处决定半径。", accent: "#f59e0b", detail: "距离轴的最远处决定半径。" },
+        { id: "solid", title: `形体半径 ${round(radius)}`, summary: "最终空间形体由“高度 + 半径”共同决定。", accent: "#34d399", detail: "先找轴，再看外轮廓怎样扫成曲面。" },
       ],
     });
   },
@@ -820,22 +830,24 @@ const setsBasicsDemo: MixedDemo = {
       : ["A 包含 B，谈的是集合和集合之间的关系。", "子集关系和元素关系的主语层级不同。"];
   },
   renderStage({ focus }) {
-    const items =
+    const notes =
       focus === "element"
         ? [
-            { id: "who", title: "对象层级", summary: "一个是元素，一个是集合。", accent: "#93c5fd" },
-            { id: "symbol", title: "符号", summary: "常写作 x ∈ A。", accent: "#fdba74" },
-            { id: "mistake", title: "易错点", summary: "别把单个元素说成子集。", accent: "#86efac" },
+            { id: "who", title: "对象层级", summary: "一个是元素，一个是集合。", accent: "#60a5fa" },
+            { id: "symbol", title: "符号判断", summary: "元素和集合之间谈的是属于关系。", accent: "#f59e0b" },
+            { id: "mistake", title: "高频误区", summary: "别把单个元素说成子集。", accent: "#34d399" },
           ]
         : [
-            { id: "who", title: "对象层级", summary: "两边都是集合。", accent: "#93c5fd" },
-            { id: "symbol", title: "符号", summary: "常写作 B ⊆ A。", accent: "#fdba74" },
-            { id: "mistake", title: "易错点", summary: "别把属于和包含混成一件事。", accent: "#86efac" },
+            { id: "who", title: "对象层级", summary: "两边都是集合。", accent: "#60a5fa" },
+            { id: "symbol", title: "符号判断", summary: "子集和真子集谈的是包含关系。", accent: "#f59e0b" },
+            { id: "mistake", title: "高频误区", summary: "别把属于和包含混成一件事。", accent: "#34d399" },
           ];
 
-    return createElement(ConceptBoard, {
-      title: "集合语言板",
-      items,
+    return createElement(SetRelationDiagram, {
+      title: "集合关系图",
+      focus: focus === "element" ? "先分清元素和集合不在同一层级，再判断属于关系。" : "先分清两边都是集合，再判断子集和包含关系。",
+      mode: focus === "element" ? "element" : "subset",
+      notes,
     });
   },
 };
@@ -871,27 +883,29 @@ const setOperationsDemo: MixedDemo = {
     return map[String(operation)];
   },
   renderStage({ operation }) {
-    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const notes: Record<string, Array<{ id: string; title: string; summary: string; accent: string }>> = {
       intersection: [
-        { id: "region", title: "区域", summary: "A 与 B 重叠的中间部分。", accent: "#93c5fd" },
-        { id: "logic", title: "逻辑词", summary: "同时满足。", accent: "#fdba74" },
-        { id: "symbol", title: "符号", summary: "A ∩ B。", accent: "#86efac" },
+        { id: "region", title: "区域判断", summary: "只看 A 与 B 重叠的中间部分。", accent: "#60a5fa" },
+        { id: "logic", title: "逻辑翻译", summary: "对应“同时满足”这类条件。", accent: "#f59e0b" },
+        { id: "symbol", title: "符号落点", summary: "A ∩ B 就是在圈重叠处找答案。", accent: "#34d399" },
       ],
       union: [
-        { id: "region", title: "区域", summary: "A 和 B 覆盖到的全部范围。", accent: "#93c5fd" },
-        { id: "logic", title: "逻辑词", summary: "至少满足一个。", accent: "#fdba74" },
-        { id: "symbol", title: "符号", summary: "A ∪ B。", accent: "#86efac" },
+        { id: "region", title: "区域判断", summary: "A 和 B 覆盖到的全部范围都要算。", accent: "#60a5fa" },
+        { id: "logic", title: "逻辑翻译", summary: "对应“至少满足一个”。", accent: "#f59e0b" },
+        { id: "symbol", title: "符号落点", summary: "并集不是只看重叠部分。", accent: "#34d399" },
       ],
       complement: [
-        { id: "region", title: "区域", summary: "全集里除去 A 的部分。", accent: "#93c5fd" },
-        { id: "logic", title: "逻辑词", summary: "不属于 A 但仍在全集中。", accent: "#fdba74" },
-        { id: "symbol", title: "符号", summary: "C_U A 或 A 的补集。", accent: "#86efac" },
+        { id: "region", title: "区域判断", summary: "全集里除去 A 之后剩下的区域。", accent: "#60a5fa" },
+        { id: "logic", title: "逻辑翻译", summary: "不属于 A，但仍然在全集 U 中。", accent: "#f59e0b" },
+        { id: "symbol", title: "符号落点", summary: "补集题如果全集没说清，就不能直接判断。", accent: "#34d399" },
       ],
     };
 
-    return createElement(ConceptBoard, {
-      title: "集合运算板",
-      items: boards[String(operation)],
+    return createElement(VennDiagram, {
+      title: "集合运算韦恩图",
+      focus: operation === "intersection" ? "交集只看重叠区，也就是同时满足两边条件的区域。" : operation === "union" ? "并集要把两边覆盖的区域全部纳入，不要只看中间。" : "补集一定要先说清全集，再看排除掉谁之后还剩什么。",
+      operation: String(operation) as "intersection" | "union" | "complement",
+      notes: notes[String(operation)],
     });
   },
 };
@@ -1243,12 +1257,20 @@ const newtonSecondLawDemo: NumericDemo = {
   renderStage({ force, mass }) {
     const acceleration = force / mass;
 
-    return createElement(ConceptBoard, {
-      title: "F-m-a 关系板",
-      items: [
-        { id: "force", title: `合力 F = ${round(force)}`, summary: "外界推动或拉动的总效果。", accent: "#fdba74" },
-        { id: "mass", title: `质量 m = ${round(mass)}`, summary: "惯性大小，决定同样受力时是否容易改变运动状态。", accent: "#93c5fd" },
-        { id: "acc", title: `加速度 a = ${round(acceleration)}`, summary: "真正被观察到的“快慢变化率”。", accent: "#86efac" },
+    return createElement(NetworkDiagram, {
+      title: "牛顿第二定律关系图",
+      focus: "先看合力往哪推，再看质量多大，最后才会落到加速度有多大。",
+      center: {
+        id: "formula",
+        title: `a = ${round(acceleration)}`,
+        summary: "加速度是合力推动结果和质量阻碍效果共同作用后的输出。",
+        accent: "#60a5fa",
+        note: "a = F / m",
+      },
+      branches: [
+        { id: "force", title: `合力 F = ${round(force)}`, summary: "合力越大，越能推动状态发生明显改变。", accent: "#f59e0b", note: "推动变化" },
+        { id: "mass", title: `质量 m = ${round(mass)}`, summary: "惯性大小会拉低加速度。", accent: "#34d399", note: "阻碍变化" },
+        { id: "result", title: "运动响应", summary: "真正被观察到的是快慢变化率，而不是受力本身。", accent: "#818cf8", note: "输出结果" },
       ],
     });
   },
@@ -1531,17 +1553,21 @@ const frictionDemo: MixedDemo = {
       : ["滑动摩擦出现在已经发生相对滑动后。", "这时大小通常按 μN 处理。"];
   },
   renderStage({ mode }) {
-    return createBoard("摩擦力判断板", mode === "static"
-      ? [
-          { id: "state", title: "状态", summary: "物体还没相对滑动。", accent: "#93c5fd" },
-          { id: "size", title: "大小", summary: "会随外力变化，直到最大静摩擦。", accent: "#fdba74" },
-          { id: "critical", title: "临界", summary: "刚要动时最值得单独分析。", accent: "#86efac" },
-        ]
-      : [
-          { id: "state", title: "状态", summary: "已经发生相对滑动。", accent: "#93c5fd" },
-          { id: "size", title: "大小", summary: "常按 μN 求解。", accent: "#fdba74" },
-          { id: "direction", title: "方向", summary: "总是阻碍相对运动方向。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "摩擦力状态图",
+      focus: mode === "static" ? "先判断还没动，再看静摩擦如何跟着外力变化。" : "已经滑动时，重点转向方向和滑动摩擦大小。",
+      steps: mode === "static"
+        ? [
+            { id: "trend", title: "看相对运动趋势", summary: "先判断物体想往哪边动。", accent: "#60a5fa", detail: "方向判断永远先于公式。" },
+            { id: "adapt", title: "静摩擦会调节", summary: "大小会跟着需要变化，直到最大静摩擦。", accent: "#f59e0b", detail: "没到临界前不必直接写成 μN。" },
+            { id: "critical", title: "盯临界状态", summary: "刚要动时最值得单独分析。", accent: "#34d399", detail: "这里常是受力题分界点。" },
+          ]
+        : [
+            { id: "state", title: "确认已滑动", summary: "只有发生相对滑动才进入滑动摩擦情形。", accent: "#60a5fa", detail: "状态切换最容易漏判。" },
+            { id: "size", title: "计算大小", summary: "这时通常才按 μN 处理。", accent: "#f59e0b", detail: "和静摩擦的处理方式不同。" },
+            { id: "direction", title: "判断方向", summary: "总是阻碍相对运动方向。", accent: "#34d399", detail: "别跟物体运动方向机械等同。" },
+          ],
+    });
   },
 };
 
@@ -1570,17 +1596,21 @@ const inclineMotionDemo: MixedDemo = {
       : ["沿斜面方向决定加速度，垂直斜面方向常用来求支持力。", "两条方向不要混在一起列式。"];
   },
   renderStage({ focus }) {
-    return createBoard("斜面分析板", focus === "decompose"
-      ? [
-          { id: "axis", title: "坐标选择", summary: "沿斜面 / 垂直斜面。", accent: "#93c5fd" },
-          { id: "gravity", title: "重力分解", summary: "分成沿斜面分力和垂直分力。", accent: "#fdba74" },
-          { id: "benefit", title: "好处", summary: "支持力和运动分析更直观。", accent: "#86efac" },
-        ]
-      : [
-          { id: "along", title: "沿斜面", summary: "决定是否上滑、下滑和加速度大小。", accent: "#93c5fd" },
-          { id: "normal", title: "垂直斜面", summary: "常用于求支持力。", accent: "#fdba74" },
-          { id: "trap", title: "易错点", summary: "别把分力方向写反。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "斜面受力分析图",
+      focus: focus === "decompose" ? "先选坐标，再分解重力，避免图一歪就乱分力。" : "把沿面运动和垂直斜面的平衡分开处理。",
+      steps: focus === "decompose"
+        ? [
+            { id: "axis", title: "先选坐标", summary: "沿斜面和垂直斜面最稳定。", accent: "#60a5fa", detail: "这样支持力会自然落在法向上。" },
+            { id: "gravity", title: "分解重力", summary: "拆成沿斜面分力和垂直斜面分力。", accent: "#f59e0b", detail: "沿斜面分力常决定会不会滑。" },
+            { id: "reason", title: "再看受力方程", summary: "支持力和运动分析都会更直观。", accent: "#34d399", detail: "先图像清楚，列式才不乱。" },
+          ]
+        : [
+            { id: "along", title: "沿斜面方向", summary: "决定上滑、下滑和加速度大小。", accent: "#60a5fa", detail: "这是运动方程主战场。" },
+            { id: "normal", title: "垂直斜面方向", summary: "常用来求支持力。", accent: "#f59e0b", detail: "这一方向通常不发生运动。" },
+            { id: "trap", title: "核对方向", summary: "别把摩擦力或分力方向写反。", accent: "#34d399", detail: "斜面题错很多都错在这里。" },
+          ],
+    });
   },
 };
 
@@ -1609,17 +1639,21 @@ const connectedBodiesDemo: MixedDemo = {
       : ["隔离法在已知整体结果后，适合回头求绳力或接触力。", "顺序常是先整体、再隔离。"];
   },
   renderStage({ method }) {
-    return createBoard("连接体分析板", method === "whole"
-      ? [
-          { id: "object", title: "对象", summary: "把多个物体视为一个整体。", accent: "#93c5fd" },
-          { id: "benefit", title: "好处", summary: "内力不必先算。", accent: "#fdba74" },
-          { id: "use", title: "适合求", summary: "整体加速度。", accent: "#86efac" },
-        ]
-      : [
-          { id: "object", title: "对象", summary: "把某一个物体单独拿出来。", accent: "#93c5fd" },
-          { id: "benefit", title: "好处", summary: "能求绳力、支持力等内部量。", accent: "#fdba74" },
-          { id: "use", title: "适合求", summary: "局部相互作用力。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "连接体分析流程图",
+      focus: method === "whole" ? "先把系统打包成一个整体，优先求共同加速度。" : "先拿到整体结果，再把单个物体拆出来追回内部力。",
+      steps: method === "whole"
+        ? [
+            { id: "pack", title: "先整体打包", summary: "把多个物体视为同一个研究对象。", accent: "#60a5fa", detail: "先藏起绳力或接触力。" },
+            { id: "external", title: "只看外力", summary: "内部相互作用先不单独展开。", accent: "#f59e0b", detail: "这样更容易先求共同加速度。" },
+            { id: "result", title: "先拿公共结果", summary: "优先求整个系统的加速度或整体受力结果。", accent: "#34d399", detail: "整体法常是连接体题的第一步。" },
+          ]
+        : [
+            { id: "split", title: "再隔离单体", summary: "把其中一个物体单独拿出来分析。", accent: "#60a5fa", detail: "隔离前通常先有整体结论。" },
+            { id: "internal", title: "追回内部力", summary: "这时绳力、支持力等量才真正显出来。", accent: "#f59e0b", detail: "局部相互作用力往往在这一步求。" },
+            { id: "check", title: "核对方向与方程", summary: "确认单体受力方向和整体结果一致。", accent: "#34d399", detail: "顺序通常是先整体、再隔离。" },
+          ],
+    });
   },
 };
 
@@ -1648,17 +1682,21 @@ const overweightWeightlessnessDemo: MixedDemo = {
       : ["失重时支持力小于重力，完全失重时支持力为零。", "常见于加速度方向向下。"];
   },
   renderStage({ state }) {
-    return createBoard("超重失重判断板", state === "overweight"
-      ? [
-          { id: "force", title: "支持力", summary: "大于重力。", accent: "#93c5fd" },
-          { id: "acc", title: "加速度方向", summary: "通常向上。", accent: "#fdba74" },
-          { id: "feeling", title: "体验", summary: "感觉更重。", accent: "#86efac" },
-        ]
-      : [
-          { id: "force", title: "支持力", summary: "小于重力，极端时可为零。", accent: "#93c5fd" },
-          { id: "acc", title: "加速度方向", summary: "通常向下。", accent: "#fdba74" },
-          { id: "feeling", title: "体验", summary: "感觉更轻或无重感。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "超重失重变化图",
+      focus: state === "overweight" ? "先盯支持力是不是被抬高，再看它如何带来“更重”的体感。" : "先看支持力是不是被削弱，再判断是否进入完全失重。",
+      steps: state === "overweight"
+        ? [
+            { id: "force", title: "支持力升高", summary: "支持力被抬高到重力之上。", accent: "#60a5fa", detail: "这时体感变化最直接。" },
+            { id: "acc", title: "加速度通常向上", summary: "电梯上升加速或减速下行都容易出现。", accent: "#f59e0b", detail: "关键是加速度方向，而不是运动方向。" },
+            { id: "feeling", title: "体验更重", summary: "人会感觉脚下压力变大。", accent: "#34d399", detail: "重力并没有变，只是支持力变了。" },
+          ]
+        : [
+            { id: "force", title: "支持力降低", summary: "支持力小于重力，极端时甚至降到零。", accent: "#60a5fa", detail: "完全失重的核心就是支持力归零。" },
+            { id: "acc", title: "加速度通常向下", summary: "自由下落或上升减速时都可能出现。", accent: "#f59e0b", detail: "方向判断仍然看加速度。" },
+            { id: "feeling", title: "体验变轻", summary: "人会感觉更轻，甚至短暂失去重量感。", accent: "#34d399", detail: "体感变化来自支持力削弱。" },
+          ],
+    });
   },
 };
 
@@ -1688,11 +1726,15 @@ const workPowerDemo: NumericDemo = {
   renderStage({ force, distance, time }) {
     const work = force * distance;
     const power = work / time;
-    return createBoard("功与功率关系板", [
-      { id: "work", title: `功 W = ${round(work)}`, summary: "反映总共转移了多少能量。", accent: "#93c5fd" },
-      { id: "time", title: `时间 t = ${round(time)}`, summary: "决定完成这些功用了多久。", accent: "#fdba74" },
-      { id: "power", title: `功率 P = ${round(power)}`, summary: "反映做功快慢。", accent: "#86efac" },
-    ]);
+    return createElement(FlowDiagram, {
+      title: "功与功率过程图",
+      focus: "先看总共传了多少能量，再看这些能量传得快不快。",
+      steps: [
+        { id: "force", title: `力和位移`, summary: `F = ${round(force)}，s = ${round(distance)}，先决定做功总量。`, accent: "#60a5fa", detail: "功描述的是能量转移总量。" },
+        { id: "work", title: `做功 W = ${round(work)}`, summary: "同样的功，不代表做功快慢也一样。", accent: "#f59e0b", detail: "功和功率千万别混成一个概念。" },
+        { id: "power", title: `平均功率 P = ${round(power)}`, summary: `时间 t = ${round(time)} 决定“做得快不快”。`, accent: "#34d399", detail: "功率反映单位时间内做了多少功。" },
+      ],
+    });
   },
 };
 
@@ -1722,11 +1764,15 @@ const kineticEnergyDemo: NumericDemo = {
   renderStage({ mass, v0, work }) {
     const ek0 = 0.5 * mass * v0 * v0;
     const ek1 = ek0 + work;
-    return createBoard("动能定理板", [
-      { id: "start", title: `初动能 ${round(ek0)}`, summary: "由质量和初速度决定。", accent: "#93c5fd" },
-      { id: "work", title: `合外力做功 ${round(work)}`, summary: "它决定动能改变量。", accent: "#fdba74" },
-      { id: "end", title: `末动能 ${round(ek1)}`, summary: "结果由“原来有多少 + 做功多少”得到。", accent: "#86efac" },
-    ]);
+    return createElement(FlowDiagram, {
+      title: "动能定理变化图",
+      focus: "把中间复杂受力过程整体打包，直接看动能前后怎么变。",
+      steps: [
+        { id: "start", title: `初动能 ${round(ek0)}`, summary: "由质量和初速度先确定起点。", accent: "#60a5fa", detail: `m = ${round(mass)}，v0 = ${round(v0)}` },
+        { id: "work", title: `合外力做功 ${round(work)}`, summary: "做功多少直接决定动能改变量。", accent: "#f59e0b", detail: "正功增加，负功减少。" },
+        { id: "end", title: `末动能 ${round(ek1)}`, summary: "末动能 = 初动能 + 合外力做功。", accent: "#34d399", detail: "这就是动能定理最直接的抓手。" },
+      ],
+    });
   },
 };
 
@@ -1755,17 +1801,21 @@ const mechanicalEnergyDemo: MixedDemo = {
       : ["上升与下降本质上仍是动能和势能互相转化。", "关键先确认有没有非保守力做功。"];
   },
   renderStage({ scene }) {
-    return createBoard("机械能守恒板", scene === "freefall"
-      ? [
-          { id: "potential", title: "重力势能", summary: "高度下降时减小。", accent: "#93c5fd" },
-          { id: "kinetic", title: "动能", summary: "速度增大时增加。", accent: "#fdba74" },
-          { id: "total", title: "机械能总量", summary: "若仅重力做功则保持不变。", accent: "#86efac" },
-        ]
-      : [
-          { id: "check", title: "先检查", summary: "是否只有保守力做功。", accent: "#93c5fd" },
-          { id: "convert", title: "再判断", summary: "动能与势能如何互相转换。", accent: "#fdba74" },
-          { id: "trap", title: "易错点", summary: "有摩擦时通常不能直接套守恒。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "机械能转化图",
+      focus: scene === "freefall" ? "看重力势能怎样持续转成动能，同时总机械能保持守恒。" : "先判有没有非保守力做功，再看动能和势能怎样互相换账。",
+      steps: scene === "freefall"
+        ? [
+            { id: "potential", title: "重力势能下降", summary: "高度下降时，重力势能持续减小。", accent: "#60a5fa", detail: "位置越低，剩余势能越少。" },
+            { id: "kinetic", title: "动能上升", summary: "速度增大时，动能同步增加。", accent: "#f59e0b", detail: "势能减少的部分转进动能。" },
+            { id: "total", title: "总机械能守恒", summary: "若仅重力做功，机械能总量保持不变。", accent: "#34d399", detail: "机械能总量保持不变" },
+          ]
+        : [
+            { id: "check", title: "先检查条件", summary: "先确认是否只有保守力做功。", accent: "#60a5fa", detail: "有摩擦时通常不能直接套守恒。" },
+            { id: "convert", title: "再看换账方向", summary: "动能与势能会随着位置和速度互相转化。", accent: "#f59e0b", detail: "本质是在做能量内部转移。" },
+            { id: "trap", title: "最后排除误用", summary: "一旦有非保守力参与，总机械能往往不再保持常量。", accent: "#34d399", detail: "守恒前提比公式本身更重要。" },
+          ],
+    });
   },
 };
 
@@ -2312,24 +2362,29 @@ const chemistryLabDevicesDemo: MixedDemo = {
     return map[String(device)];
   },
   renderStage({ device }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       heating: [
-        { id: "device", title: "装置", summary: "酒精灯、试管、铁架台等。", accent: "#93c5fd" },
-        { id: "focus", title: "重点", summary: "均匀受热、试管口略向下。", accent: "#fdba74" },
-        { id: "safety", title: "安全", summary: "防止液体倒流和暴沸。", accent: "#86efac" },
+        { id: "setup", title: "搭装置", summary: "固定试管、铁架台和酒精灯位置。", accent: "#60a5fa", detail: "试管口略向下，避免冷凝液倒流。" },
+        { id: "heat", title: "均匀加热", summary: "先预热，再集中加受热部位。", accent: "#f59e0b", detail: "防暴沸、防炸裂是关键安全点。" },
+        { id: "observe", title: "记录现象", summary: "同步关注颜色、气泡和沉淀变化。", accent: "#34d399", detail: "现象要和加热阶段一一对应。" },
       ],
       gas: [
-        { id: "basis", title: "选择依据", summary: "密度和溶解性。", accent: "#93c5fd" },
-        { id: "method", title: "常见方法", summary: "排水法、向上/向下排空气法。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "先看性质再选装置。", accent: "#86efac" },
+        { id: "property", title: "判断性质", summary: "先看气体密度与是否溶于水。", accent: "#60a5fa", detail: "这一步决定后面选排水还是排空气法。" },
+        { id: "collect", title: "收集气体", summary: "按性质选择排水法或排空气法。", accent: "#f59e0b", detail: "收集气体前先排尽装置内原有空气。" },
+        { id: "verify", title: "检验纯度", summary: "看满不满、纯不纯，再做后续检验。", accent: "#34d399", detail: "先收集，后验满，避免步骤颠倒。" },
       ],
       filtration: [
-        { id: "tool", title: "装置", summary: "漏斗、滤纸、烧杯、玻璃棒。", accent: "#93c5fd" },
-        { id: "step", title: "重点步骤", summary: "一贴二低三靠。", accent: "#fdba74" },
-        { id: "tip", title: "易错点", summary: "液面别高于滤纸边缘。", accent: "#86efac" },
+        { id: "prepare", title: "准备滤纸", summary: "先折好滤纸并紧贴漏斗内壁。", accent: "#60a5fa", detail: "一贴二低三靠是整套动作的抓手。" },
+        { id: "pour", title: "沿玻璃棒引流", summary: "液体顺玻璃棒流入滤纸中心。", accent: "#f59e0b", detail: "液面不能高于滤纸边缘。" },
+        { id: "wash", title: "过滤洗涤", summary: "先分离，再判断是否需要洗涤沉淀。", accent: "#34d399", detail: "洗涤的目标是除去附着杂质离子。" },
       ],
     };
-    return createBoard("实验装置流程板", items[String(device)]);
+
+    return createElement(FlowDiagram, {
+      title: "实验装置流程图",
+      focus: "把装置选择、步骤顺序和安全要点放回同一条实验流程里。",
+      steps: flows[String(device)],
+    });
   },
 };
 
@@ -2513,27 +2568,84 @@ const englishClauseDemo: MixedDemo = {
   },
   explanation({ clause }) {
     return clause === "object"
-      ? ["先问从句在回答谓语动词的什么内容。", "宾语从句最重要的是把它当成“名词性成分”来看。"] 
+      ? ["先问从句在回答谓语动词的什么内容。", "宾语从句最重要的是把它当成一个整体内容块来看。"]
       : ["先问它在补充时间、原因、条件还是让步。", "状语从句最重要的是看它和主句之间的逻辑关系。"];
   },
   renderStage({ clause }) {
-    const items =
-      clause === "object"
-        ? [
-            { id: "main", title: "主句谓语", summary: "say / know / believe 等动词抛出问题。", accent: "#93c5fd" },
-            { id: "linker", title: "连接词", summary: "that / whether 负责把从句挂进来。", accent: "#fdba74" },
-            { id: "clause", title: "宾语从句", summary: "整体充当“说了什么/知道什么”的内容。", accent: "#86efac" },
-          ]
-        : [
-            { id: "main", title: "主句动作", summary: "真正的核心事件仍在主句。", accent: "#93c5fd" },
-            { id: "linker", title: "逻辑词", summary: "because / if / when 等提醒逻辑关系。", accent: "#fdba74" },
-            { id: "clause", title: "状语从句", summary: "它在补充条件、时间、原因等背景。", accent: "#86efac" },
-          ];
-
-    return createElement(ConceptBoard, {
-      title: "从句层级板",
-      items,
-    });
+    return clause === "object"
+      ? createElement(EnglishSentenceDiagram, {
+          title: "从句层级例句拆解图",
+          sentence: "I know that the experiment needs more time.",
+          translation: "我知道这个实验还需要更多时间。",
+          focus: "先看主句谓语，再判断从句在整句中充当什么成分。",
+          layers: [
+            {
+              id: "main",
+              label: "主句骨架",
+              summary: "主句先立住说话者和认知动作。",
+              accent: "#60a5fa",
+              segments: [
+                { text: "I", role: "主语", accent: "#60a5fa" },
+                { text: "know", role: "谓语", accent: "#f59e0b" },
+              ],
+            },
+            {
+              id: "linker",
+              label: "挂接点",
+              summary: "that 把后面的完整内容块挂到 know 后面。",
+              accent: "#fb7185",
+              segments: [{ text: "that", role: "连接词", accent: "#fb7185" }],
+            },
+            {
+              id: "clause",
+              label: "从句内容",
+              summary: "整个从句一起回答“知道什么”。",
+              accent: "#34d399",
+              segments: [
+                { text: "the experiment", role: "从句主语", accent: "#60a5fa" },
+                { text: "needs", role: "从句谓语", accent: "#f59e0b" },
+                { text: "more time", role: "从句宾语", accent: "#34d399" },
+              ],
+            },
+          ],
+        })
+      : createElement(EnglishSentenceDiagram, {
+          title: "从句层级例句拆解图",
+          sentence: "When the bell rings, the students leave the lab quickly.",
+          translation: "当铃声响起时，学生们会很快离开实验室。",
+          focus: "先分清主句和背景从句，再看逻辑词提示的时间关系。",
+          layers: [
+            {
+              id: "clause",
+              label: "背景从句",
+              summary: "时间从句先交代主句发生的时机。",
+              accent: "#818cf8",
+              segments: [
+                { text: "When", role: "逻辑词", accent: "#818cf8" },
+                { text: "the bell", role: "从句主语", accent: "#60a5fa" },
+                { text: "rings", role: "从句谓语", accent: "#f59e0b" },
+              ],
+            },
+            {
+              id: "main",
+              label: "主句主干",
+              summary: "真正的核心事件仍然在主句里。",
+              accent: "#34d399",
+              segments: [
+                { text: "the students", role: "主语", accent: "#60a5fa" },
+                { text: "leave", role: "谓语", accent: "#f59e0b" },
+                { text: "the lab", role: "宾语", accent: "#34d399" },
+              ],
+            },
+            {
+              id: "modifier",
+              label: "附着修饰",
+              summary: "quickly 只是修饰离开的方式，不是新的主干。",
+              accent: "#fb7185",
+              segments: [{ text: "quickly", role: "状语", accent: "#fb7185" }],
+            },
+          ],
+        });
   },
 };
 
@@ -2568,27 +2680,112 @@ const englishSentenceStructureDemo: MixedDemo = {
     return map[String(pattern)];
   },
   renderStage({ pattern }) {
-    const boards: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      sv: [
-        { id: "s", title: "主语", summary: "谁/什么。", accent: "#93c5fd" },
-        { id: "v", title: "谓语", summary: "在做什么。", accent: "#fdba74" },
-        { id: "tip", title: "拆句抓手", summary: "先把这两块钉住。", accent: "#86efac" },
-      ],
-      svo: [
-        { id: "s", title: "主语", summary: "发出动作的一方。", accent: "#93c5fd" },
-        { id: "v", title: "谓语", summary: "核心动作。", accent: "#fdba74" },
-        { id: "o", title: "宾语", summary: "动作指向的对象。", accent: "#86efac" },
-      ],
-      svoc: [
-        { id: "s", title: "主语", summary: "动作发出者。", accent: "#93c5fd" },
-        { id: "vo", title: "谓语 + 宾语", summary: "先找到动作和承受对象。", accent: "#fdba74" },
-        { id: "c", title: "宾补", summary: "补充宾语状态或结果。", accent: "#86efac" },
-      ],
+    const diagrams: Record<string, {
+      sentence: string;
+      translation: string;
+      focus: string;
+      layers: Array<{
+        id: string;
+        label: string;
+        summary: string;
+        accent: string;
+        segments: Array<{ text: string; role: string; accent: string }>;
+      }>;
+    }> = {
+      sv: {
+        sentence: "The students laughed loudly after class.",
+        translation: "学生们下课后大声笑了起来。",
+        focus: "先钉住主语和谓语，再把状语挂回去。",
+        layers: [
+          {
+            id: "trunk",
+            label: "主干",
+            summary: "最短可成立句先保留谁在做什么。",
+            accent: "#60a5fa",
+            segments: [
+              { text: "The students", role: "主语", accent: "#60a5fa" },
+              { text: "laughed", role: "谓语", accent: "#f59e0b" },
+            ],
+          },
+          {
+            id: "modifier",
+            label: "修饰层",
+            summary: "方式和时间信息都附着在主干外面。",
+            accent: "#34d399",
+            segments: [
+              { text: "loudly", role: "方式状语", accent: "#34d399" },
+              { text: "after class", role: "时间状语", accent: "#818cf8" },
+            ],
+          },
+        ],
+      },
+      svo: {
+        sentence: "The students built a model in the physics club.",
+        translation: "学生们在物理社团里搭建了一个模型。",
+        focus: "主谓宾是骨架，地点信息后挂。",
+        layers: [
+          {
+            id: "trunk",
+            label: "主干",
+            summary: "先分出动作发出者、动作本身和动作对象。",
+            accent: "#60a5fa",
+            segments: [
+              { text: "student group", role: "主语", accent: "#60a5fa" },
+              { text: "built", role: "谓语", accent: "#f59e0b" },
+              { text: "a model", role: "宾语", accent: "#34d399" },
+            ],
+          },
+          {
+            id: "modifier",
+            label: "附着层",
+            summary: "地点短语补背景，不改变主干判断。",
+            accent: "#818cf8",
+            segments: [{ text: "in the physics club", role: "地点状语", accent: "#818cf8" }],
+          },
+        ],
+      },
+      svoc: {
+        sentence: "The teacher found the classroom quiet after the test.",
+        translation: "老师发现考试后教室很安静。",
+        focus: "宾补是在补足宾语状态，不是第二个动作。",
+        layers: [
+          {
+            id: "trunk",
+            label: "主干",
+            summary: "主谓宾先搭起来，找到动作的接受对象。",
+            accent: "#60a5fa",
+            segments: [
+              { text: "The teacher", role: "主语", accent: "#60a5fa" },
+              { text: "found", role: "谓语", accent: "#f59e0b" },
+              { text: "the classroom", role: "宾语", accent: "#34d399" },
+            ],
+          },
+          {
+            id: "complement",
+            label: "补足层",
+            summary: "quiet 在说明宾语处于什么状态。",
+            accent: "#fb7185",
+            segments: [{ text: "quiet", role: "宾语补足语", accent: "#fb7185" }],
+          },
+          {
+            id: "modifier",
+            label: "背景层",
+            summary: "时间短语继续外挂，不和宾补混在一起。",
+            accent: "#818cf8",
+            segments: [{ text: "after the test", role: "时间状语", accent: "#818cf8" }],
+          },
+        ],
+      },
     };
 
-    return createElement(ConceptBoard, {
-      title: "句子结构主干板",
-      items: boards[String(pattern)],
+    const diagram = diagrams[String(pattern)];
+
+    return createElement(EnglishSentenceDiagram, {
+      title: "句子成分例句拆解图",
+      sentence: diagram.sentence,
+      translation: diagram.translation,
+      focus: diagram.focus,
+      layers: diagram.layers,
     });
   },
 };
@@ -2624,27 +2821,52 @@ const englishTenseTimelineDemo: MixedDemo = {
     return map[String(tense)];
   },
   renderStage({ tense }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      present: [
-        { id: "time", title: "时间感", summary: "常态、习惯、事实。", accent: "#93c5fd" },
-        { id: "signal", title: "信号词", summary: "usually, often, every day。", accent: "#fdba74" },
-        { id: "focus", title: "判断重点", summary: "不是现在发生，而是经常如此。", accent: "#86efac" },
-      ],
-      past: [
-        { id: "time", title: "时间感", summary: "过去某一点或某段。", accent: "#93c5fd" },
-        { id: "signal", title: "信号词", summary: "yesterday, last year, ago。", accent: "#fdba74" },
-        { id: "focus", title: "判断重点", summary: "动作已离开现在。", accent: "#86efac" },
-      ],
-      "present-perfect": [
-        { id: "time", title: "时间感", summary: "从过去连到现在。", accent: "#93c5fd" },
-        { id: "signal", title: "信号词", summary: "since, for, already, yet。", accent: "#fdba74" },
-        { id: "focus", title: "判断重点", summary: "现在仍能看到结果或延续。", accent: "#86efac" },
-      ],
+    const timelines: Record<string, {
+      sentence: string;
+      translation: string;
+      focus: string;
+      points: Array<{ id: string; label: string; summary: string; accent: string }>;
+    }> = {
+      present: {
+        sentence: "She studies physics every evening.",
+        translation: "她每天晚上都学习物理。",
+        focus: "一般现在时看的是习惯或常态，不是某一个瞬间。",
+        points: [
+          { id: "habit", label: "重复发生", summary: "学习动作在很多天里反复出现。", accent: "#60a5fa" },
+          { id: "signal", label: "信号词", summary: "every evening 这种频率提示很关键。", accent: "#f59e0b" },
+          { id: "view", label: "当前视角", summary: "强调的是“经常如此”的常态。", accent: "#34d399" },
+        ],
+      },
+      past: {
+        sentence: "She studied physics last night.",
+        translation: "她昨晚学习了物理。",
+        focus: "一般过去时把动作钉在过去某个已经结束的时间点。",
+        points: [
+          { id: "past", label: "过去节点", summary: "动作发生在 last night。", accent: "#60a5fa" },
+          { id: "end", label: "动作结束", summary: "这件事已经离开现在。", accent: "#f59e0b" },
+          { id: "view", label: "当前视角", summary: "重点不是影响现在，而是过去发生过。", accent: "#34d399" },
+        ],
+      },
+      "present-perfect": {
+        sentence: "She has studied physics for three years.",
+        translation: "她学物理已经三年了。",
+        focus: "现在完成时要同时看到过去起点、持续过程和现在视角。",
+        points: [
+          { id: "start", label: "过去起点", summary: "三年前动作已经开始。", accent: "#60a5fa" },
+          { id: "process", label: "持续过程", summary: "has studied physics 一直延伸到现在。", accent: "#f59e0b" },
+          { id: "now", label: "当前关注点", summary: "现在仍能看到延续结果。", accent: "#34d399" },
+        ],
+      },
     };
 
-    return createElement(ConceptBoard, {
-      title: "时态时间轴板",
-      items: items[String(tense)],
+    const timeline = timelines[String(tense)];
+
+    return createElement(TimelineDiagram, {
+      title: "时态时间轴图",
+      sentence: timeline.sentence,
+      translation: timeline.translation,
+      focus: timeline.focus,
+      points: timeline.points,
     });
   },
 };
@@ -2680,27 +2902,45 @@ const englishReadingLayerDemo: MixedDemo = {
     return map[String(layer)];
   },
   renderStage({ layer }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      "main-idea": [
-        { id: "question", title: "核心问题", summary: "作者最想表达什么。", accent: "#93c5fd" },
-        { id: "position", title: "常见位置", summary: "标题、首段、尾段和主题句。", accent: "#fdba74" },
-        { id: "pitfall", title: "易错点", summary: "别被某个例子带跑。", accent: "#86efac" },
-      ],
-      support: [
-        { id: "question", title: "核心问题", summary: "作者如何证明主张。", accent: "#93c5fd" },
-        { id: "position", title: "常见位置", summary: "中间展开段。", accent: "#fdba74" },
-        { id: "pitfall", title: "易错点", summary: "支撑点不能直接等于主旨。", accent: "#86efac" },
-      ],
-      detail: [
-        { id: "question", title: "核心问题", summary: "具体信息是什么。", accent: "#93c5fd" },
-        { id: "position", title: "常见位置", summary: "需要关键词回文定位。", accent: "#fdba74" },
-        { id: "pitfall", title: "易错点", summary: "注意同义替换。", accent: "#86efac" },
-      ],
+    const diagrams: Record<string, {
+      excerpt: string;
+      translation: string;
+      layers: Array<{ id: string; label: string; summary: string; accent: string; examples: string[] }>;
+    }> = {
+      "main-idea": {
+        excerpt: "Students can learn physics more deeply when they build models instead of only memorizing formulas.",
+        translation: "当学生亲手搭建模型，而不只是背公式时，他们会更深入地理解物理。",
+        layers: [
+          { id: "main", label: "主旨层", summary: "整段最想强调的是“动手建模能加深理解”。", accent: "#60a5fa", examples: ["Students can learn physics more deeply", "build models instead of only memorizing formulas"] },
+          { id: "support", label: "支撑层", summary: "支撑句通常会解释为什么这种方式更有效。", accent: "#f59e0b", examples: ["because models make forces visible", "because students can test changes directly"] },
+        ],
+      },
+      support: {
+        excerpt: "Students can learn physics more deeply when they build models instead of only memorizing formulas.",
+        translation: "当学生亲手搭建模型，而不只是背公式时，他们会更深入地理解物理。",
+        layers: [
+          { id: "main", label: "主旨层", summary: "先锁定作者核心判断。", accent: "#60a5fa", examples: ["learn physics more deeply"] },
+          { id: "support", label: "论据层", summary: "论据负责解释主张为什么成立。", accent: "#f59e0b", examples: ["models make invisible ideas visible", "hands-on changes create feedback"] },
+          { id: "detail", label: "细节层", summary: "例子和数据继续给论据加证据。", accent: "#34d399", examples: ["a spring scale test", "a simple circuit activity"] },
+        ],
+      },
+      detail: {
+        excerpt: "Students can learn physics more deeply when they build models instead of only memorizing formulas.",
+        translation: "当学生亲手搭建模型，而不只是背公式时，他们会更深入地理解物理。",
+        layers: [
+          { id: "main", label: "主旨层", summary: "先知道文章总体在讲什么。", accent: "#60a5fa", examples: ["build models improve understanding"] },
+          { id: "detail", label: "细节层", summary: "细节题再回到具体词句定位。", accent: "#34d399", examples: ["which activity is mentioned", "what students compare during experiments"] },
+        ],
+      },
     };
 
-    return createElement(ConceptBoard, {
-      title: "阅读分层板",
-      items: items[String(layer)],
+    const diagram = diagrams[String(layer)];
+
+    return createElement(ReadingLayerDiagram, {
+      title: "阅读信息分层图",
+      excerpt: diagram.excerpt,
+      translation: diagram.translation,
+      layers: diagram.layers,
     });
   },
 };
@@ -2736,27 +2976,47 @@ const englishLogicConnectorDemo: MixedDemo = {
     return map[String(relation)];
   },
   renderStage({ relation }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      contrast: [
-        { id: "logic", title: "逻辑感", summary: "前后方向相反或不一致。", accent: "#93c5fd" },
-        { id: "words", title: "高频词", summary: "however, but, yet。", accent: "#fdba74" },
-        { id: "tip", title: "判断抓手", summary: "先看意思是不是拐弯。", accent: "#86efac" },
-      ],
-      cause: [
-        { id: "logic", title: "逻辑感", summary: "前因后果。", accent: "#93c5fd" },
-        { id: "words", title: "高频词", summary: "because, since, therefore。", accent: "#fdba74" },
-        { id: "tip", title: "判断抓手", summary: "先问哪一句解释哪一句。", accent: "#86efac" },
-      ],
-      addition: [
-        { id: "logic", title: "逻辑感", summary: "继续补充、继续加码。", accent: "#93c5fd" },
-        { id: "words", title: "高频词", summary: "moreover, besides, in addition。", accent: "#fdba74" },
-        { id: "tip", title: "判断抓手", summary: "看是不是在同方向继续堆料。", accent: "#86efac" },
-      ],
+    const networks: Record<string, {
+      focus: string;
+      center: { id: string; title: string; summary: string; accent: string; note: string };
+      branches: Array<{ id: string; title: string; summary: string; accent: string; note: string }>;
+    }> = {
+      contrast: {
+        focus: "先看到语义拐弯，再决定用 however、but 还是 yet。",
+        center: { id: "contrast", title: "转折关系", summary: "前后信息方向相反或不一致。", accent: "#60a5fa", note: "逻辑先于词面。" },
+        branches: [
+          { id: "however", title: "however", summary: "书面感更强，常用于句首或分号后。", accent: "#f59e0b", note: "正式转折" },
+          { id: "but", title: "but", summary: "最基础、最口语，也最常见。", accent: "#34d399", note: "高频基础词" },
+          { id: "yet", title: "yet", summary: "带一点“尽管如此仍然”的反差感。", accent: "#818cf8", note: "反差更明显" },
+        ],
+      },
+      cause: {
+        focus: "先分清哪一句是原因、哪一句是结果，再决定连接方向。",
+        center: { id: "cause", title: "因果关系", summary: "前后信息能组成原因和结果链。", accent: "#60a5fa", note: "方向一反，词就会选错。" },
+        branches: [
+          { id: "because", title: "because", summary: "把原因直接挂出来。", accent: "#f59e0b", note: "原因入口词" },
+          { id: "since", title: "since", summary: "也能引原因，但语气常更自然。", accent: "#34d399", note: "解释背景时常见" },
+          { id: "therefore", title: "therefore", summary: "把前面的原因推向结论。", accent: "#818cf8", note: "结果导向词" },
+        ],
+      },
+      addition: {
+        focus: "递进不是转弯，而是在同方向继续往上叠信息。",
+        center: { id: "addition", title: "递进关系", summary: "后句继续补充、加强前句信息。", accent: "#60a5fa", note: "逻辑方向保持一致。" },
+        branches: [
+          { id: "moreover", title: "moreover", summary: "更书面，常用于继续加强论证。", accent: "#f59e0b", note: "正式递进" },
+          { id: "besides", title: "besides", summary: "补充一个额外理由或角度。", accent: "#34d399", note: "顺手加一层" },
+          { id: "in-addition", title: "in addition", summary: "最稳的补充表达之一。", accent: "#818cf8", note: "中性高频" },
+        ],
+      },
     };
 
-    return createElement(ConceptBoard, {
-      title: "连接词逻辑板",
-      items: items[String(relation)],
+    const network = networks[String(relation)];
+
+    return createElement(NetworkDiagram, {
+      title: "逻辑连接词网络图",
+      focus: network.focus,
+      center: network.center,
+      branches: network.branches,
     });
   },
 };
@@ -2792,27 +3052,47 @@ const englishAffixNetworkDemo: MixedDemo = {
     return map[String(affix)];
   },
   renderStage({ affix }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      un: [
-        { id: "core", title: "方向", summary: "否定、反向。", accent: "#93c5fd" },
-        { id: "example", title: "例词", summary: "unhappy, unclear。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "先看原词，再看是否被翻转。", accent: "#86efac" },
-      ],
-      re: [
-        { id: "core", title: "方向", summary: "再次、回到。", accent: "#93c5fd" },
-        { id: "example", title: "例词", summary: "rewrite, return。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "看动作是不是被重复或回转。", accent: "#86efac" },
-      ],
-      ful: [
-        { id: "core", title: "方向", summary: "充满……的。", accent: "#93c5fd" },
-        { id: "example", title: "例词", summary: "helpful, useful。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "后缀经常顺手提示词性。", accent: "#86efac" },
-      ],
+    const networks: Record<string, {
+      focus: string;
+      center: { id: string; title: string; summary: string; accent: string; note: string };
+      branches: Array<{ id: string; title: string; summary: string; accent: string; note: string }>;
+    }> = {
+      un: {
+        focus: "看词缀怎样把原词义翻转成否定方向。",
+        center: { id: "un", title: "un-", summary: "常把原词推向否定、相反或缺失方向。", accent: "#60a5fa", note: "先看原词，再看方向是否被翻转。" },
+        branches: [
+          { id: "happy", title: "unhappy", summary: "happy 的正向情绪被翻成负向情绪。", accent: "#f59e0b", note: "情绪方向反转" },
+          { id: "clear", title: "unclear", summary: "clear 的清晰感被改成“不清楚”。", accent: "#34d399", note: "状态被否定" },
+          { id: "known", title: "unknown", summary: "known 的已知状态被改成未知。", accent: "#818cf8", note: "认知状态反转" },
+        ],
+      },
+      re: {
+        focus: "看前缀怎样给动作加上“再次、回到”的回环感。",
+        center: { id: "re", title: "re-", summary: "常给动作加上再次发生或回到原处的方向。", accent: "#60a5fa", note: "很适合扩展动作类词汇。" },
+        branches: [
+          { id: "write", title: "rewrite", summary: "把写这件事再做一遍。", accent: "#f59e0b", note: "重复动作" },
+          { id: "build", title: "rebuild", summary: "重新搭建原有结构。", accent: "#34d399", note: "回到再建" },
+          { id: "turn", title: "return", summary: "朝原来的地点或状态回去。", accent: "#818cf8", note: "方向回转" },
+        ],
+      },
+      ful: {
+        focus: "看后缀怎样把名词或动词推成“充满……的”形容词。",
+        center: { id: "ful", title: "-ful", summary: "常把词义推向“充满……的”描述方向。", accent: "#60a5fa", note: "后缀也常顺手提示词性变化。" },
+        branches: [
+          { id: "use", title: "useful", summary: "充满用途，表示有用。", accent: "#f59e0b", note: "名词转形容词" },
+          { id: "help", title: "helpful", summary: "能提供帮助，带出积极功能。", accent: "#34d399", note: "功能属性增强" },
+          { id: "care", title: "careful", summary: "充满注意与谨慎。", accent: "#818cf8", note: "状态描写更具体" },
+        ],
+      },
     };
 
-    return createElement(ConceptBoard, {
-      title: "前后缀变义板",
-      items: items[String(affix)],
+    const network = networks[String(affix)];
+
+    return createElement(NetworkDiagram, {
+      title: "前后缀作用网络图",
+      focus: network.focus,
+      center: network.center,
+      branches: network.branches,
     });
   },
 };
@@ -2842,23 +3122,27 @@ const englishWordFamilyDemo: MixedDemo = {
       : ["develop 可以扩成 development, developed, developing。", "别只记一个词，要把变形方向连起来。"];
   },
   renderStage({ family }) {
-    const items =
-      family === "act"
-        ? [
-            { id: "verb", title: "act", summary: "动词原点。", accent: "#93c5fd" },
-            { id: "noun", title: "action / activity", summary: "动作本身或活动。", accent: "#fdba74" },
-            { id: "adj", title: "active", summary: "主动的、积极的。", accent: "#86efac" },
-          ]
-        : [
-            { id: "verb", title: "develop", summary: "发展、开发。", accent: "#93c5fd" },
-            { id: "noun", title: "development", summary: "发展、成果。", accent: "#fdba74" },
-            { id: "adj", title: "developed / developing", summary: "已发展的 / 发展中的。", accent: "#86efac" },
-          ];
-
-    return createElement(ConceptBoard, {
-      title: "词族扩展图",
-      items,
-    });
+    return family === "act"
+      ? createElement(NetworkDiagram, {
+          title: "高频词族网络图",
+          focus: "看一个核心义怎样扩成动作、人物、性质和活动。",
+          center: { id: "act", title: "act", summary: "核心义是“行动、做出动作”。", accent: "#60a5fa", note: "先抓动作原点，再看词性扩展。" },
+          branches: [
+            { id: "action", title: "action", summary: "动作本身或采取的行动。", accent: "#f59e0b", note: "动作名词化" },
+            { id: "active", title: "active", summary: "带有主动、积极的状态特征。", accent: "#34d399", note: "动作性质化" },
+            { id: "actor", title: "actor", summary: "执行动作的人。", accent: "#818cf8", note: "动作人物化" },
+          ],
+        })
+      : createElement(NetworkDiagram, {
+          title: "高频词族网络图",
+          focus: "看 develop 家族怎样从动作扩展到结果和状态。",
+          center: { id: "develop", title: "develop", summary: "核心义是“发展、展开、逐步形成”。", accent: "#60a5fa", note: "核心动作决定整组词的共同方向。" },
+          branches: [
+            { id: "development", title: "development", summary: "发展的过程或成果。", accent: "#f59e0b", note: "动作结果化" },
+            { id: "developing", title: "developing", summary: "仍在发展中的状态。", accent: "#34d399", note: "过程进行中" },
+            { id: "developed", title: "developed", summary: "已经发展完成或较成熟。", accent: "#818cf8", note: "结果状态化" },
+          ],
+        });
   },
 };
 
@@ -2883,21 +3167,76 @@ const englishSentenceCompressionDemo: MixedDemo = {
   },
   explanation({ step }) {
     return step === "trunk"
-      ? ["先只保留主语、谓语、宾语等核心骨架。", "别一开始就试图把每个定语从句都解释清楚。"] 
+      ? ["先只保留主语、谓语、宾语等核心骨架。", "别一开始就试图把每个修饰层都解释清楚。"]
       : ["主干找稳之后，再把介词短语、从句、非谓语挂回去。", "这样复杂句会变得很有层次。"];
   },
   renderStage({ step }) {
-    return createBoard("长难句压缩板", step === "trunk"
-      ? [
-          { id: "goal", title: "目标", summary: "先找最短可成立句。", accent: "#93c5fd" },
-          { id: "items", title: "保留项", summary: "主语、谓语、宾语/表语。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "先别被长修饰干扰。", accent: "#86efac" },
-        ]
-      : [
-          { id: "first", title: "先后顺序", summary: "先主干，后修饰。", accent: "#93c5fd" },
-          { id: "modifier", title: "常见修饰", summary: "介词短语、从句、非谓语。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "一个修饰块一个修饰块地挂回去。", accent: "#86efac" },
-        ]);
+    return step === "trunk"
+      ? createElement(EnglishSentenceDiagram, {
+          title: "长难句压缩例句拆解图",
+          sentence: "Although the weather was terrible, the team completed the experiment on time.",
+          translation: "尽管天气很糟，团队还是按时完成了实验。",
+          focus: "先把让步从句拿开，再保留最短主干。",
+          layers: [
+            {
+              id: "background",
+              label: "外层背景",
+              summary: "although 引出的让步层先单独放一边。",
+              accent: "#818cf8",
+              segments: [
+                { text: "Although", role: "让步逻辑词", accent: "#818cf8" },
+                { text: "the weather", role: "从句主语", accent: "#60a5fa" },
+                { text: "was terrible", role: "从句表语结构", accent: "#f59e0b" },
+              ],
+            },
+            {
+              id: "trunk",
+              label: "压缩主干",
+              summary: "真正的核心信息只剩谁完成了什么。",
+              accent: "#34d399",
+              segments: [
+                { text: "the team", role: "主语", accent: "#60a5fa" },
+                { text: "completed", role: "谓语", accent: "#f59e0b" },
+                { text: "the experiment", role: "宾语", accent: "#34d399" },
+              ],
+            },
+          ],
+        })
+      : createElement(EnglishSentenceDiagram, {
+          title: "长难句压缩例句拆解图",
+          sentence: "Although the weather was terrible, the team completed the experiment on time.",
+          translation: "尽管天气很糟，团队还是按时完成了实验。",
+          focus: "主干找稳之后，再把逻辑层和时间层一块块挂回去。",
+          layers: [
+            {
+              id: "trunk",
+              label: "主干",
+              summary: "核心事件仍是 team completed the experiment。",
+              accent: "#34d399",
+              segments: [
+                { text: "the team", role: "主语", accent: "#60a5fa" },
+                { text: "completed", role: "谓语", accent: "#f59e0b" },
+                { text: "the experiment", role: "宾语", accent: "#34d399" },
+              ],
+            },
+            {
+              id: "logic",
+              label: "逻辑层",
+              summary: "让步从句告诉你主句是在什么反差下发生的。",
+              accent: "#818cf8",
+              segments: [
+                { text: "Although the weather was terrible", role: "让步状语从句", accent: "#818cf8" },
+              ],
+            },
+            {
+              id: "time",
+              label: "时间层",
+              summary: "on time 只补充结果发生的时间状态。",
+              accent: "#fb7185",
+              segments: [{ text: "on time", role: "时间状语", accent: "#fb7185" }],
+            },
+          ],
+        });
   },
 };
 
@@ -2926,17 +3265,29 @@ const englishSynonymMapDemo: MixedDemo = {
       : ["important、significant、vital 在正式程度和强调度上有差异。", "不要把近义词当成可无条件互换。"];
   },
   renderStage({ group }) {
-    return createBoard("近义词语义板", group === "happy"
-      ? [
-          { id: "mild", title: "glad", summary: "较轻、日常。", accent: "#93c5fd" },
-          { id: "base", title: "happy", summary: "基础高频词。", accent: "#fdba74" },
-          { id: "strong", title: "delighted", summary: "情绪更强、更正式。", accent: "#86efac" },
-        ]
-      : [
-          { id: "base", title: "important", summary: "基础范围最广。", accent: "#93c5fd" },
-          { id: "formal", title: "significant", summary: "更书面，常带“重要且有影响”。", accent: "#fdba74" },
-          { id: "strong", title: "vital", summary: "强度更高，接近“至关重要”。", accent: "#86efac" },
-        ]);
+    return group === "happy"
+      ? createElement(SemanticAxisDiagram, {
+          title: "近义词语义坐标图",
+          focus: "把情绪强弱和正式程度放到同一条轴上看差异。",
+          lowLabel: "较轻 / 日常",
+          highLabel: "更强 / 更正式",
+          entries: [
+            { id: "glad", word: "glad", summary: "更轻、更日常，常用于口语和即时反应。", accent: "#93c5fd" },
+            { id: "happy", word: "happy", summary: "基础高频词，范围最广。", accent: "#fdba74" },
+            { id: "delighted", word: "delighted", summary: "情绪更强，也更正式。", accent: "#34d399" },
+          ],
+        })
+      : createElement(SemanticAxisDiagram, {
+          title: "近义词语义坐标图",
+          focus: "看重要程度和正式感如何把近义词拉开层级。",
+          lowLabel: "基础 / 泛用",
+          highLabel: "更强 / 更正式",
+          entries: [
+            { id: "important", word: "important", summary: "最基础，范围最广。", accent: "#93c5fd" },
+            { id: "significant", word: "significant", summary: "更书面，常带“重要且有影响”。", accent: "#fdba74" },
+            { id: "vital", word: "vital", summary: "强度更高，接近“至关重要”。", accent: "#34d399" },
+          ],
+        });
   },
 };
 
@@ -2944,7 +3295,7 @@ const englishNonfiniteDemo: MixedDemo = {
   id: "english-nonfinite-structure",
   title: "非谓语结构关系图",
   description: "把 doing、done、to do 的判断拉回“主动被动 + 时间关系 + 句法功能”。",
-  defaultParams: { form: "doing" },
+  defaultParams: { form: "todo" },
   presets: [
     { id: "doing", label: "doing", params: { form: "doing" } },
     { id: "done", label: "done", params: { form: "done" } },
@@ -2970,24 +3321,115 @@ const englishNonfiniteDemo: MixedDemo = {
     return map[String(form)];
   },
   renderStage({ form }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
-      doing: [
-        { id: "voice", title: "常见语态", summary: "主动。", accent: "#93c5fd" },
-        { id: "time", title: "常见时间感", summary: "进行/伴随。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "先看功能，再看主动被动。", accent: "#86efac" },
-      ],
-      done: [
-        { id: "voice", title: "常见语态", summary: "被动。", accent: "#93c5fd" },
-        { id: "time", title: "常见时间感", summary: "完成或被处理后状态。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "逻辑主语常是动作承受者。", accent: "#86efac" },
-      ],
-      todo: [
-        { id: "voice", title: "常见语态", summary: "多见主动，但也能带被动结构。", accent: "#93c5fd" },
-        { id: "time", title: "常见时间感", summary: "将来/目的。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "很适合先问“是不是为了……”。", accent: "#86efac" },
-      ],
+    const diagrams: Record<string, {
+      sentence: string;
+      translation: string;
+      focus: string;
+      layers: Array<{
+        id: string;
+        label: string;
+        summary: string;
+        accent: string;
+        segments: Array<{ text: string; role: string; accent: string }>;
+      }>;
+    }> = {
+      doing: {
+        sentence: "Walking along the river, the students discussed the new experiment.",
+        translation: "沿着河边走时，学生们讨论了新的实验。",
+        focus: "先看 doing 和主句主语是不是同一个动作发出者。",
+        layers: [
+          {
+            id: "nonfinite",
+            label: "非谓语层",
+            summary: "walking 提供伴随背景，逻辑主语默认接到 the students 上。",
+            accent: "#818cf8",
+            segments: [
+              { text: "Walking", role: "现在分词", accent: "#818cf8" },
+              { text: "along the river", role: "伴随背景", accent: "#fb7185" },
+            ],
+          },
+          {
+            id: "main",
+            label: "主句层",
+            summary: "真正的核心动作仍在主句中。",
+            accent: "#34d399",
+            segments: [
+              { text: "the students", role: "主语", accent: "#60a5fa" },
+              { text: "discussed", role: "谓语", accent: "#f59e0b" },
+              { text: "the new experiment", role: "宾语", accent: "#34d399" },
+            ],
+          },
+        ],
+      },
+      done: {
+        sentence: "Surprised by the result, the students checked the data again.",
+        translation: "由于对结果感到惊讶，学生们又检查了一遍数据。",
+        focus: "先看 done 结构描述的是主语处于什么被动或完成状态。",
+        layers: [
+          {
+            id: "nonfinite",
+            label: "非谓语层",
+            summary: "过去分词短语说明主语所处的状态。",
+            accent: "#818cf8",
+            segments: [
+              { text: "Surprised", role: "过去分词", accent: "#818cf8" },
+              { text: "by the result", role: "状态来源", accent: "#fb7185" },
+            ],
+          },
+          {
+            id: "main",
+            label: "主句层",
+            summary: "核心事件仍是学生再次检查数据。",
+            accent: "#34d399",
+            segments: [
+              { text: "the students", role: "主语", accent: "#60a5fa" },
+              { text: "checked", role: "谓语", accent: "#f59e0b" },
+              { text: "the data", role: "宾语", accent: "#34d399" },
+              { text: "again", role: "副词", accent: "#fb7185" },
+            ],
+          },
+        ],
+      },
+      todo: {
+        sentence: "To finish the project on time, the team changed the schedule.",
+        translation: "为了按时完成项目，团队调整了时间安排。",
+        focus: "先问 to do 是否在表达目的或将要发生的动作。",
+        layers: [
+          {
+            id: "nonfinite",
+            label: "非谓语层",
+            summary: "不定式短语先交代主句动作的目的。",
+            accent: "#818cf8",
+            segments: [
+              { text: "To finish", role: "不定式", accent: "#818cf8" },
+              { text: "the project", role: "不定式宾语", accent: "#34d399" },
+              { text: "on time", role: "时间补充", accent: "#fb7185" },
+            ],
+          },
+          {
+            id: "main",
+            label: "主句层",
+            summary: "主句说的是团队为了达成目标采取了什么行动。",
+            accent: "#34d399",
+            segments: [
+              { text: "the team", role: "主语", accent: "#60a5fa" },
+              { text: "changed", role: "谓语", accent: "#f59e0b" },
+              { text: "the schedule", role: "宾语", accent: "#34d399" },
+            ],
+          },
+        ],
+      },
     };
-    return createBoard("非谓语判断板", items[String(form)]);
+
+    const diagram = diagrams[String(form)];
+
+    return createElement(EnglishSentenceDiagram, {
+      title: "非谓语结构例句拆解图",
+      sentence: diagram.sentence,
+      translation: diagram.translation,
+      focus: diagram.focus,
+      layers: diagram.layers,
+    });
   },
 };
 
@@ -3016,17 +3458,21 @@ const englishWritingUpgradeDemo: MixedDemo = {
       : ["好作文的连贯感很大一部分来自逻辑连接。", "先让读者看懂关系，再谈修辞。"];
   },
   renderStage({ strategy }) {
-    return createBoard("写作升级板", strategy === "variety"
-      ? [
-          { id: "base", title: "基础句", summary: "先把意思表达准确。", accent: "#93c5fd" },
-          { id: "upgrade", title: "升级点", summary: "适度加入从句、非谓语、倒装等。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "变化要服务表达，不是炫技。", accent: "#86efac" },
-        ]
-      : [
-          { id: "idea", title: "先定逻辑", summary: "并列、转折、因果、递进。", accent: "#93c5fd" },
-          { id: "connector", title: "再选连接", summary: "让句间关系清楚可见。", accent: "#fdba74" },
-          { id: "tip", title: "抓手", summary: "逻辑清楚比词更高级更重要。", accent: "#86efac" },
-        ]);
+    return createElement(FlowDiagram, {
+      title: "写作句型升级图",
+      focus: strategy === "variety" ? "从基础句出发，一步步加层次，不靠堆难词。" : "先定逻辑关系，再决定连接和句式变化。",
+      steps: strategy === "variety"
+        ? [
+            { id: "base", title: "写基础句", summary: "The activity is useful for students.", accent: "#60a5fa", detail: "先保证意思准确，不急着求复杂。" },
+            { id: "expand", title: "补原因层", summary: "Because it helps them test ideas, the activity becomes meaningful.", accent: "#f59e0b", detail: "加入从句，让信息有层次。" },
+            { id: "refine", title: "压缩升级", summary: "Helping students test ideas, the activity becomes far more meaningful.", accent: "#34d399", detail: "变化要服务表达，而不是炫技。" },
+          ]
+        : [
+            { id: "logic", title: "先定逻辑", summary: "并列、转折、因果、递进先分清。", accent: "#60a5fa", detail: "好句子先有清楚关系。" },
+            { id: "connector", title: "再选连接", summary: "therefore / however / moreover 各司其职。", accent: "#f59e0b", detail: "连接词是逻辑提示牌。" },
+            { id: "shape", title: "最后调句式", summary: "把重点放到句首或句尾，增强表达重心。", accent: "#34d399", detail: "结构服务观点，而不是反过来。" },
+          ],
+    });
   },
 };
 
@@ -3060,24 +3506,28 @@ const englishReadingQuestionDemo: MixedDemo = {
     return map[String(question)];
   },
   renderStage({ question }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       detail: [
-        { id: "goal", title: "目标", summary: "找到原文对应信息。", accent: "#93c5fd" },
-        { id: "method", title: "方法", summary: "关键词定位 + 同义替换。", accent: "#fdba74" },
-        { id: "trap", title: "易错点", summary: "只看选项表面词，不回文核对。", accent: "#86efac" },
+        { id: "type", title: "先判题型", summary: "看到 who / when / where 常先想到细节定位。", accent: "#60a5fa", detail: "题目在问具体信息，不是全文中心。" },
+        { id: "locate", title: "回文定位", summary: "带着关键词回到原文对应句。", accent: "#f59e0b", detail: "注意同义替换，不只盯原词。" },
+        { id: "check", title: "核选项", summary: "确认选项是否与原句完全一致。", accent: "#34d399", detail: "半对半错是最常见陷阱。" },
       ],
       inference: [
-        { id: "goal", title: "目标", summary: "基于证据做合理推断。", accent: "#93c5fd" },
-        { id: "method", title: "方法", summary: "看语气、态度、暗含关系。", accent: "#fdba74" },
-        { id: "trap", title: "易错点", summary: "越过原文证据范围。", accent: "#86efac" },
+        { id: "evidence", title: "先找证据", summary: "推断题先找支撑语气或事实。", accent: "#60a5fa", detail: "推断不是离开文本乱猜。" },
+        { id: "extend", title: "做合理延伸", summary: "根据证据往前迈半步。", accent: "#f59e0b", detail: "只做合逻辑的最小延伸。" },
+        { id: "avoid", title: "避开越界", summary: "排除超出证据范围的选项。", accent: "#34d399", detail: "感觉对不等于文本支持。" },
       ],
       main: [
-        { id: "goal", title: "目标", summary: "抓中心思想或最佳标题。", accent: "#93c5fd" },
-        { id: "method", title: "方法", summary: "优先看主题句和全文共同指向。", accent: "#fdba74" },
-        { id: "trap", title: "易错点", summary: "把例子或细节误当主旨。", accent: "#86efac" },
+        { id: "overview", title: "先看整体", summary: "主旨题先看全文共同在讲什么。", accent: "#60a5fa", detail: "不要被某个例子牵走。" },
+        { id: "anchor", title: "找主题句", summary: "首段、尾段和反复出现的对象最关键。", accent: "#f59e0b", detail: "主题句是最快的锚点。" },
+        { id: "compare", title: "压缩判断", summary: "选最能覆盖全文而不过窄的选项。", accent: "#34d399", detail: "正确答案通常最稳、最总括。" },
       ],
     };
-    return createBoard("阅读题型策略板", items[String(question)]);
+    return createElement(FlowDiagram, {
+      title: "阅读题型拆解图",
+      focus: "先分题型，再走对应的定位或推断步骤。",
+      steps: flows[String(question)],
+    });
   },
 };
 
@@ -3111,24 +3561,28 @@ const englishParagraphWritingDemo: MixedDemo = {
     return map[String(layer)];
   },
   renderStage({ layer }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       topic: [
-        { id: "goal", title: "作用", summary: "先亮观点。", accent: "#93c5fd" },
-        { id: "position", title: "常见位置", summary: "段首最清晰。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "一句话说清这一段想表达什么。", accent: "#86efac" },
+        { id: "topic", title: "主题句", summary: "To learn effectively, students need active practice.", accent: "#60a5fa", detail: "先用一句话把整段观点亮出来。" },
+        { id: "support", title: "支撑句", summary: "Practice helps them test ideas and find mistakes quickly.", accent: "#f59e0b", detail: "支撑句解释为什么观点成立。" },
+        { id: "ending", title: "收束句", summary: "That is why practice is more useful than passive review.", accent: "#34d399", detail: "段尾要回扣主旨，而不是另起新话题。" },
       ],
       support: [
-        { id: "goal", title: "作用", summary: "解释、扩展、论证。", accent: "#93c5fd" },
-        { id: "position", title: "常见内容", summary: "原因、影响、对比。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "始终围绕主题句服务。", accent: "#86efac" },
+        { id: "topic", title: "主题句", summary: "To learn effectively, students need active practice.", accent: "#60a5fa", detail: "先把观点立住。" },
+        { id: "support", title: "支撑句", summary: "When students build or explain something, they notice weak points faster.", accent: "#f59e0b", detail: "这里最适合补原因、影响或对比。" },
+        { id: "example", title: "例证句", summary: "For example, explaining a physics model often reveals what they truly understand.", accent: "#34d399", detail: "例子要直接服务前一句解释。" },
       ],
       example: [
-        { id: "goal", title: "作用", summary: "让观点更具体。", accent: "#93c5fd" },
-        { id: "position", title: "常见内容", summary: "个人经历、社会案例、事实。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "例子要和主题直接对应。", accent: "#86efac" },
+        { id: "topic", title: "主题句", summary: "To learn effectively, students need active practice.", accent: "#60a5fa", detail: "观点先行。" },
+        { id: "example", title: "例证句", summary: "For example, a student who redraws a circuit can find the real source of a mistake.", accent: "#f59e0b", detail: "例子让抽象观点落地。" },
+        { id: "ending", title: "收束句", summary: "This concrete process makes learning deeper and more reliable.", accent: "#34d399", detail: "用结尾把例子重新拉回观点。" },
       ],
     };
-    return createBoard("段落展开板", items[String(layer)]);
+    return createElement(FlowDiagram, {
+      title: "段落展开例句图",
+      focus: "把一段话怎样长出来，拆成主题、支撑、例证和回扣。",
+      steps: flows[String(layer)],
+    });
   },
 };
 
@@ -3162,24 +3616,28 @@ const englishListeningDemo: MixedDemo = {
     return map[String(stage)];
   },
   renderStage({ stage }) {
-    const items: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       before: [
-        { id: "predict", title: "先预测", summary: "看题干、选项、场景。", accent: "#93c5fd" },
-        { id: "prepare", title: "定关注点", summary: "人物、时间、地点、数字。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "带着问题去听。", accent: "#86efac" },
+        { id: "predict", title: "先看题干", summary: "预判场景、人物和可能出现的数字。", accent: "#60a5fa", detail: "带着问题去听，信息更容易抓住。" },
+        { id: "focus", title: "定关注点", summary: "人物、时间、地点和转折词优先。", accent: "#f59e0b", detail: "先知道自己要听什么。" },
+        { id: "ready", title: "准备速记", summary: "用缩写或符号记关键点。", accent: "#34d399", detail: "别边听边写完整句。" },
       ],
       during: [
-        { id: "focus", title: "抓关键信息", summary: "别强求逐词听懂。", accent: "#93c5fd" },
-        { id: "signal", title: "盯逻辑信号", summary: "转折、因果、比较、建议。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "先抓主信息，再补细节。", accent: "#86efac" },
+        { id: "catch", title: "抓主信息", summary: "先听懂谁、做什么、结果怎样。", accent: "#60a5fa", detail: "不要追逐每一个陌生词。" },
+        { id: "signal", title: "盯转折词", summary: "but, however, actually 常是答案转向点。", accent: "#f59e0b", detail: "很多干扰项死在这里。" },
+        { id: "note", title: "补细节", summary: "数字、态度、建议等再顺手补上。", accent: "#34d399", detail: "先主后细，效率最高。" },
       ],
       after: [
-        { id: "check", title: "回选项核对", summary: "看是否和听到的信息真正吻合。", accent: "#93c5fd" },
-        { id: "trap", title: "排干扰项", summary: "特别防止半对半错。", accent: "#fdba74" },
-        { id: "tip", title: "抓手", summary: "依据证据，不凭感觉。", accent: "#86efac" },
+        { id: "compare", title: "回选项核对", summary: "把听到的证据和选项逐一对照。", accent: "#60a5fa", detail: "不要靠印象直接选。" },
+        { id: "remove", title: "排干扰项", summary: "删掉只对一半或偷换对象的选项。", accent: "#f59e0b", detail: "半对半错是高频陷阱。" },
+        { id: "confirm", title: "确认答案", summary: "保留和听力证据最吻合的一项。", accent: "#34d399", detail: "依据证据，不凭感觉。" },
       ],
     };
-    return createBoard("听力捕捉流程板", items[String(stage)]);
+    return createElement(FlowDiagram, {
+      title: "听力信息捕捉图",
+      focus: "把听前预测、听中抓点、听后核对放在同一条执行流程里。",
+      steps: flows[String(stage)],
+    });
   },
 };
 
@@ -3208,23 +3666,27 @@ const englishRootsDemo: MixedDemo = {
       : ["struct 表示建造、结构。", "construct、destruction、infrastructure 可以沿着“搭建结构”的核心义串起来。"];
   },
   renderStage({ root }) {
-    const items =
-      root === "spect"
-        ? [
-            { id: "root", title: "spect", summary: "核心义：看。", accent: "#fdba74" },
-            { id: "inspect", title: "inspect", summary: "in + spect，向里看，检查。", accent: "#93c5fd" },
-            { id: "respect", title: "respect", summary: "re + spect，回头看，尊重。", accent: "#86efac" },
-          ]
-        : [
-            { id: "root", title: "struct", summary: "核心义：搭建。", accent: "#fdba74" },
-            { id: "construct", title: "construct", summary: "con + struct，一起搭建。", accent: "#93c5fd" },
-            { id: "destruction", title: "destruction", summary: "de + struct，把结构拆掉。", accent: "#86efac" },
-          ];
-
-    return createElement(ConceptBoard, {
-      title: "词根扩展网络",
-      items,
-    });
+    return root === "spect"
+      ? createElement(NetworkDiagram, {
+          title: "词根词缀网络图",
+          focus: "看一个核心词根怎样被前缀带向不同场景。",
+          center: { id: "spect", title: "spect", summary: "核心义是“看”。", accent: "#fb7185", note: "先抓住共同词义，再看方向变化。" },
+          branches: [
+            { id: "inspect", title: "inspect", summary: "in + spect，向里看，延伸为检查。", accent: "#60a5fa", note: "场景：检查细节" },
+            { id: "respect", title: "respect", summary: "re + spect，回头看，延伸为尊重。", accent: "#34d399", note: "场景：重视他人" },
+            { id: "spectator", title: "spectator", summary: "观看的人，保留“看”的核心义。", accent: "#f59e0b", note: "人物派生词" },
+          ],
+        })
+      : createElement(NetworkDiagram, {
+          title: "词根词缀网络图",
+          focus: "看 struct 家族怎样围绕“搭建、结构”扩展。",
+          center: { id: "struct", title: "struct", summary: "核心义是“搭建、结构化”。", accent: "#fb7185", note: "动作和结构感是同一个源头。" },
+          branches: [
+            { id: "construct", title: "construct", summary: "con + struct，一起搭建，形成建造义。", accent: "#60a5fa", note: "动作外扩" },
+            { id: "structure", title: "structure", summary: "搭建完成后形成的结构。", accent: "#34d399", note: "结果名词化" },
+            { id: "destruction", title: "destruction", summary: "de + struct，把结构拆掉。", accent: "#f59e0b", note: "方向反转" },
+          ],
+        });
   },
 };
 
@@ -3259,27 +3721,28 @@ const englishGrammarClozeDemo: MixedDemo = {
     return steps[String(blank)];
   },
   renderStage({ blank }) {
-    const flow: Record<string, Array<{ id: string; title: string; summary: string; accent?: string }>> = {
+    const flows: Record<string, Array<{ id: string; title: string; summary: string; accent: string; detail: string }>> = {
       verb: [
-        { id: "step1", title: "找谓语缺口", summary: "先看句子是不是少主要动作。", accent: "#93c5fd" },
-        { id: "step2", title: "判时态语态", summary: "再判断完成时、被动语态等。", accent: "#fdba74" },
-        { id: "step3", title: "核主谓一致", summary: "最后回头核对单复数。", accent: "#86efac" },
+        { id: "sentence", title: "看整句", summary: "When he arrived, he ____ that the lab was empty.", accent: "#60a5fa", detail: "先判断空格是不是主句谓语缺口。" },
+        { id: "tense", title: "判时态语态", summary: "到达在过去，后面多半也要过去时。", accent: "#f59e0b", detail: "再核有没有被动语态信号。" },
+        { id: "agreement", title: "回头核一致", summary: "最后再确认主谓一致和拼写形式。", accent: "#34d399", detail: "谓语题最后一眼很关键。" },
       ],
       nonfinite: [
-        { id: "step1", title: "谓语是否完整", summary: "若主句谓语已齐，多半要考虑非谓语。", accent: "#93c5fd" },
-        { id: "step2", title: "看逻辑主语", summary: "判断主动还是被动。", accent: "#fdba74" },
-        { id: "step3", title: "定功能", summary: "再决定 doing、done 还是 to do。", accent: "#86efac" },
+        { id: "predicate", title: "先看谓语是否完整", summary: "若主句谓语已齐，空格常转向非谓语。", accent: "#60a5fa", detail: "别还没判断结构就急着选 doing / done / to do。" },
+        { id: "logic", title: "看逻辑主语", summary: "判断空格动作是主动、被动还是目的。", accent: "#f59e0b", detail: "结构判断先于形式记忆。" },
+        { id: "function", title: "定句法功能", summary: "再决定作定语、状语还是宾补。", accent: "#34d399", detail: "功能稳了，形式就好选。" },
       ],
       connector: [
-        { id: "step1", title: "看前后逻辑", summary: "先判断转折、并列、因果还是条件。", accent: "#93c5fd" },
-        { id: "step2", title: "看句法位置", summary: "空前空后结构会限制可选词类。", accent: "#fdba74" },
-        { id: "step3", title: "再选词", summary: "最后才从 however、because、if 等里挑。", accent: "#86efac" },
+        { id: "relation", title: "先看前后关系", summary: "是转折、因果、并列还是条件。", accent: "#60a5fa", detail: "连接词题本质上在考逻辑。" },
+        { id: "position", title: "再看句法位置", summary: "空格在句首、句中还是从句入口。", accent: "#f59e0b", detail: "位置会限制可选词类。" },
+        { id: "choice", title: "最后选词", summary: "再从 however、because、if 等里精确落词。", accent: "#34d399", detail: "先定关系，再定词面。" },
       ],
     };
 
-    return createElement(ConceptBoard, {
-      title: "语法填空决策流",
-      items: flow[String(blank)],
+    return createElement(FlowDiagram, {
+      title: "语法填空决策图",
+      focus: "把词性判断、结构判断和落词顺序固定成可重复流程。",
+      steps: flows[String(blank)],
     });
   },
 };

@@ -3,9 +3,11 @@
 ## 发布前必查
 
 - `README.md` 已更新为当前正式状态
+- `CONTRIBUTING.md` 已补充并与当前工程结构一致
 - 项目名称统一为 `小智 / Xiaozhi`
 - 仓库描述与定位清晰
-- 旧原型目录说明清楚，不会让访问者误以为它仍是正式运行入口
+- 已明确说明旧原型目录已删除，仓库只保留正式工程
+- 已确认 `LICENSE` 与 README 中的许可证说明一致
 
 ## 代码质量检查
 
@@ -41,6 +43,8 @@ pnpm exec next build --webpack
 - Description：一句话说明小智是什么
 - Website：如果后续有线上地址可补上
 - Topics：`nextjs`、`typescript`、`education`、`high-school`、`interactive-learning`、`visualization`
+- Social preview：建议补一张首页或核心 demo 截图
+- About 区信息与 README 第一段保持一致
 
 ## 建议的 README 重点
 
@@ -51,7 +55,8 @@ pnpm exec next build --webpack
 3. 当前完成到什么程度
 4. 怎么运行
 5. 怎么验证
-6. 旧原型与正式站点的关系
+6. 怎么参与贡献
+7. 许可证状态
 
 ## 发布前资产建议
 
@@ -73,4 +78,6 @@ pnpm exec next build --webpack
 - `git status` 干净
 - 构建漂移已恢复
 - 没有把本地临时文件、截图缓存、`.next` 相关产物误提交
+- 没有把 `docs/superpowers/` 之类的本地临时目录误提交
 - commit message 可读、分层清楚
+- `LICENSE`、README 和仓库设置中的开源信息保持一致

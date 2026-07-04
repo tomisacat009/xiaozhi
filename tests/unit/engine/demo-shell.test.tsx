@@ -1,9 +1,14 @@
 // @vitest-environment jsdom
 
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import "@testing-library/jest-dom/vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { DemoShell } from "@/components/demo/demo-shell";
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("DemoShell", () => {
   it("keeps user params when rerendered with an equivalent definition that has the same id", () => {
@@ -61,5 +66,34 @@ describe("DemoShell", () => {
     );
 
     expect(screen.getByLabelText("从句类型").tagName).toBe("SELECT");
+  });
+
+  it("uses delivery-ready Chinese shell copy for the demo experience", () => {
+    render(
+      <DemoShell
+        definition={{
+          id: "physics-friction",
+          title: "摩擦力状态图",
+          defaultParams: { mode: "static" },
+          presets: [],
+          controls: {
+            mode: {
+              kind: "select",
+              label: "摩擦状态",
+              options: [
+                { label: "静摩擦", value: "static" },
+                { label: "滑动摩擦", value: "sliding" },
+              ],
+            },
+          },
+          explanation: () => ["先判断是否滑动。"],
+        }}
+      />,
+    );
+
+    expect(screen.getByText("交互演示")).toBeInTheDocument();
+    expect(screen.getByText("参数控制")).toBeInTheDocument();
+    expect(screen.getByText("观察提示")).toBeInTheDocument();
+    expect(screen.getByText("图形观察区")).toBeInTheDocument();
   });
 });

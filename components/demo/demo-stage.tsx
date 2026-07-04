@@ -10,13 +10,13 @@ export function DemoStage({
   return (
     <section className="contentCard demoStageCard" aria-labelledby="demo-stage-title">
       <div className="contentCard__meta">
-        <span>Demo Stage</span>
-        <span>Interactive Graph</span>
+        <span>交互演示</span>
+        <span>图形观察区</span>
       </div>
       <div>
         <h2 id="demo-stage-title">{title}</h2>
         <p className="contentSection__summary">
-          拖动参数后，观察图像形态、位置与关键性质如何一起变化。
+          拖动参数或切换场景后，观察结构、关系与关键量如何一起变化。
         </p>
       </div>
       <div className="demoStageCard__canvas">{children}</div>

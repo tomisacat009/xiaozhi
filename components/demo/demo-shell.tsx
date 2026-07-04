@@ -58,16 +58,23 @@ export function DemoShell<TParams extends DemoParams>({
 
   const explanation = definition.explanation(state.params);
   const renderedStage = definition.renderStage?.(state.params);
+  const controlCount = Object.keys(definition.defaultParams).length;
+  const presetCount = definition.presets.length;
 
   return (
     <section className="contentSection" aria-labelledby="demo-shell-title">
       <div className="contentSection__hero">
-        <p className="sectionHeading__eyebrow">Demo Engine</p>
+        <p className="sectionHeading__eyebrow">交互探索</p>
         <h2 id="demo-shell-title">{definition.title}</h2>
         <p className="contentSection__summary">
           {definition.description ??
-            "统一 demo shell 已就绪，当前展示基础参数状态与说明区域，具体可视化渲染留给后续任务接入。"}
+            "通过参数、场景与例句切换，把抽象知识点变成可观察、可推演的结构。"}
         </p>
+        <ul className="contentCard__chips">
+          <li>{controlCount} 个调节参数</li>
+          <li>{presetCount} 个典型场景</li>
+          <li>先调参数，再看图形和解释同步变化</li>
+        </ul>
       </div>
 
       <div className="demoGrid">

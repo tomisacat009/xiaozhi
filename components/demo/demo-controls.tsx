@@ -20,12 +20,12 @@ export function DemoControls<TParams extends DemoParams>({
   return (
     <section className="contentCard demoPanel" aria-labelledby="demo-controls-title">
       <div className="contentCard__meta">
-        <span>Controls</span>
+        <span>参数控制</span>
         <button type="button" onClick={onReset}>
           重置参数
         </button>
       </div>
-      <h2 id="demo-controls-title">参数面板</h2>
+      <h2 id="demo-controls-title">调节面板</h2>
       <div className="demoControlsGrid">
         {entries.map(([key, value]) => {
           const inputId = `demo-control-${definition.id}-${String(key)}`;
