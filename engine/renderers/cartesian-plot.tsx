@@ -44,11 +44,15 @@ export function CartesianPlot({
   bounds,
   series,
   markers = [],
+  xLabel,
+  yLabel,
 }: {
   ariaLabel: string;
   bounds: PlotBounds;
   series: PlotSeries[];
   markers?: PlotMarker[];
+  xLabel?: string;
+  yLabel?: string;
 }) {
   const xRange = clampRange(bounds.xMin, bounds.xMax);
   const yRange = clampRange(bounds.yMin, bounds.yMax);
@@ -136,6 +140,26 @@ export function CartesianPlot({
           />
         ) : null}
 
+        {xLabel ? (
+          <text
+            x={viewBoxWidth - padding}
+            y={viewBoxHeight - 8}
+            textAnchor="end"
+            className="plotFigure__axisTitle"
+          >
+            {xLabel}
+          </text>
+        ) : null}
+        {yLabel ? (
+          <text
+            x={14}
+            y={padding}
+            className="plotFigure__axisTitle"
+          >
+            {yLabel}
+          </text>
+        ) : null}
+
         {series.map((entry) => {
           const pathData = entry.points
             .map((point, index) => `${index === 0 ? "M" : "L"} ${mapX(point.x)} ${mapY(point.y)}`)
@@ -178,6 +202,8 @@ export function CartesianPlot({
       </svg>
 
       <figcaption className="plotFigure__legend">
+        {xLabel ? <span>横轴：{xLabel}</span> : null}
+        {yLabel ? <span>纵轴：{yLabel}</span> : null}
         <span>x: {roundLabel(xRange.min)} {"->"} {roundLabel(xRange.max)}</span>
         <span>y: {roundLabel(yRange.min)} {"->"} {roundLabel(yRange.max)}</span>
         {series.map((entry) => (

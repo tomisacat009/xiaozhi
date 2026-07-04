@@ -445,6 +445,12 @@ h3 {
   stroke-width: 1.5;
 }
 
+.plotFigure__axisTitle {
+  fill: rgba(15, 23, 42, 0.78);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .plotFigure__label {
   fill: #0f172a;
   font-size: 12px;
@@ -470,6 +476,11 @@ h3 {
   height: 12px;
   border-radius: 999px;
   display: inline-block;
+}
+
+.stackedPlots {
+  display: grid;
+  gap: 12px;
 }
 
 .conceptBoard {

@@ -1102,6 +1102,8 @@ const uniformMotionDemo: NumericDemo = {
     return createElement(CartesianPlot, {
       ariaLabel: "匀速直线运动图像",
       bounds: { xMin: 0, xMax: 6, yMin: -10, yMax: 15 },
+      xLabel: "t（时间）",
+      yLabel: "s（位移）",
       series: [makeSeries("motion", "s-t 图像", "#2563eb", line)],
       markers: [{ id: "current", x: t, y: s0 + v * t, label: "当前点", color: "#ea580c" }],
     });
@@ -1134,14 +1136,33 @@ const acceleratedMotionDemo: NumericDemo = {
     ];
   },
   renderStage({ s0, v0, a, t }) {
-    const line = sampleCurve((time) => s0 + v0 * time + 0.5 * a * time * time, { xMin: 0, xMax: 6 }, 0.1);
+    const sLine = sampleCurve(
+      (time) => s0 + v0 * time + 0.5 * a * time * time,
+      { xMin: 0, xMax: 6 },
+      0.1,
+    );
+    const vLine = sampleCurve((time) => v0 + a * time, { xMin: 0, xMax: 6 }, 0.1);
 
-    return createElement(CartesianPlot, {
-      ariaLabel: "匀变速直线运动图像",
-      bounds: { xMin: 0, xMax: 6, yMin: -10, yMax: 30 },
-      series: [makeSeries("accelerated", "s-t 曲线", "#0f766e", line)],
-      markers: [{ id: "current", x: t, y: s0 + v0 * t + 0.5 * a * t * t, label: "当前点", color: "#ea580c" }],
-    });
+    return createElement("div", { className: "stackedPlots" }, [
+      createElement(CartesianPlot, {
+        key: "st",
+        ariaLabel: "匀变速直线运动 s-t 图像",
+        bounds: { xMin: 0, xMax: 6, yMin: -10, yMax: 30 },
+        xLabel: "t（时间）",
+        yLabel: "s（位移）",
+        series: [makeSeries("accelerated-st", "s-t 曲线", "#0f766e", sLine)],
+        markers: [{ id: "current-st", x: t, y: s0 + v0 * t + 0.5 * a * t * t, label: "当前点", color: "#ea580c" }],
+      }),
+      createElement(CartesianPlot, {
+        key: "vt",
+        ariaLabel: "匀变速直线运动 v-t 图像",
+        bounds: { xMin: 0, xMax: 6, yMin: -8, yMax: 10 },
+        xLabel: "t（时间）",
+        yLabel: "v（速度）",
+        series: [makeSeries("accelerated-vt", "v-t 直线", "#2563eb", vLine)],
+        markers: [{ id: "current-vt", x: t, y: v0 + a * t, label: "当前点", color: "#ea580c" }],
+      }),
+    ]);
   },
 };
 
@@ -1347,6 +1368,8 @@ const uniformChaseDemo: NumericDemo = {
     return createElement(CartesianPlot, {
       ariaLabel: "匀速追及图像",
       bounds: { xMin: 0, xMax: 8, yMin: 0, yMax: 60 },
+      xLabel: "t（时间）",
+      yLabel: "s（位移）",
       series: [
         makeSeries("a", "前车", "#2563eb", carA),
         makeSeries("b", "后车", "#ea580c", carB),
@@ -1390,6 +1413,8 @@ const mixedChaseDemo: NumericDemo = {
     return createElement(CartesianPlot, {
       ariaLabel: "匀速与匀变速追及图像",
       bounds: { xMin: 0, xMax: 8, yMin: 0, yMax: 70 },
+      xLabel: "t（时间）",
+      yLabel: "s（位移）",
       series: [
         makeSeries("a", "前车", "#2563eb", carA),
         makeSeries("b", "后车", "#ea580c", carB),
@@ -1426,13 +1451,30 @@ const freeFallDemo: NumericDemo = {
     ];
   },
   renderStage({ h0, g, t }) {
-    const fall = sampleCurve((time) => h0 - 0.5 * g * time * time, { xMin: 0, xMax: Math.sqrt((2 * h0) / g) }, 0.05);
-    return createElement(CartesianPlot, {
-      ariaLabel: "自由落体图像",
-      bounds: { xMin: 0, xMax: 3, yMin: 0, yMax: Math.max(40, h0 + 5) },
-      series: [makeSeries("fall", "高度-时间", "#0f766e", fall)],
-      markers: [{ id: "current", x: t, y: Math.max(h0 - 0.5 * g * t * t, 0), label: "当前点" }],
-    });
+    const flightTime = Math.sqrt((2 * h0) / g);
+    const sLine = sampleCurve((time) => 0.5 * g * time * time, { xMin: 0, xMax: flightTime }, 0.05);
+    const vLine = sampleCurve((time) => g * time, { xMin: 0, xMax: flightTime }, 0.05);
+
+    return createElement("div", { className: "stackedPlots" }, [
+      createElement(CartesianPlot, {
+        key: "st",
+        ariaLabel: "自由落体 s-t 图像",
+        bounds: { xMin: 0, xMax: 3, yMin: 0, yMax: Math.max(40, h0 + 5) },
+        xLabel: "t（时间）",
+        yLabel: "s（位移）",
+        series: [makeSeries("freefall-st", "s-t 曲线", "#0f766e", sLine)],
+        markers: [{ id: "current-st", x: t, y: Math.min(0.5 * g * t * t, h0), label: "当前点" }],
+      }),
+      createElement(CartesianPlot, {
+        key: "vt",
+        ariaLabel: "自由落体 v-t 图像",
+        bounds: { xMin: 0, xMax: 3, yMin: 0, yMax: Math.max(24, g * 3 + 2) },
+        xLabel: "t（时间）",
+        yLabel: "v（速度）",
+        series: [makeSeries("freefall-vt", "v-t 直线", "#2563eb", vLine)],
+        markers: [{ id: "current-vt", x: t, y: g * t, label: "当前点", color: "#ea580c" }],
+      }),
+    ]);
   },
 };
 
@@ -1461,17 +1503,45 @@ const motionGraphsDemo: MixedDemo = {
       : ["v-t 图里斜率代表加速度。", "v-t 图下面的面积代表位移。"];
   },
   renderStage({ graph }) {
-    return createBoard("运动图像判读板", graph === "st"
-      ? [
-          { id: "axis", title: "坐标含义", summary: "横轴时间，纵轴位移。", accent: "#93c5fd" },
-          { id: "slope", title: "斜率", summary: "斜率 = 速度。", accent: "#fdba74" },
-          { id: "pitfall", title: "易错点", summary: "不要把图线形状误看成真实轨迹。", accent: "#86efac" },
-        ]
-      : [
-          { id: "axis", title: "坐标含义", summary: "横轴时间，纵轴速度。", accent: "#93c5fd" },
-          { id: "slope", title: "斜率", summary: "斜率 = 加速度。", accent: "#fdba74" },
-          { id: "area", title: "面积", summary: "图像下面的面积 = 位移。", accent: "#86efac" },
-        ]);
+    const stLine = sampleCurve((time) => 1 + 1.5 * time, { xMin: 0, xMax: 6 }, 0.1);
+    const vtLine = sampleCurve((time) => 0.8 + 0.6 * time, { xMin: 0, xMax: 6 }, 0.1);
+
+    return createElement("div", { className: "stackedPlots" }, [
+      createElement(CartesianPlot, {
+        key: "st",
+        ariaLabel: "运动图像综合判读 s-t 图像",
+        bounds: { xMin: 0, xMax: 6, yMin: 0, yMax: 12 },
+        xLabel: "t（时间）",
+        yLabel: "s（位移）",
+        series: [makeSeries("motion-graphs-st", "s-t 直线", graph === "st" ? "#2563eb" : "#94a3b8", stLine)],
+        markers: [{ id: "st-current", x: 3, y: 1 + 1.5 * 3, label: graph === "st" ? "当前关注" : "示例点" }],
+      }),
+      createElement(CartesianPlot, {
+        key: "vt",
+        ariaLabel: "运动图像综合判读 v-t 图像",
+        bounds: { xMin: 0, xMax: 6, yMin: 0, yMax: 6 },
+        xLabel: "t（时间）",
+        yLabel: "v（速度）",
+        series: [makeSeries("motion-graphs-vt", "v-t 直线", graph === "vt" ? "#ea580c" : "#94a3b8", vtLine)],
+        markers: [{ id: "vt-current", x: 3, y: 0.8 + 0.6 * 3, label: graph === "vt" ? "当前关注" : "示例点", color: "#ea580c" }],
+      }),
+      createElement(ConceptBoard, {
+        key: "focus-board",
+        title: graph === "st" ? "s-t 图判读焦点" : "v-t 图判读焦点",
+        items:
+          graph === "st"
+            ? [
+                { id: "axis", title: "坐标含义", summary: "横轴是 t（时间），纵轴是 s（位移）。", accent: "#93c5fd" },
+                { id: "slope", title: "斜率", summary: "斜率代表速度，越陡说明单位时间内位移变化越快。", accent: "#fdba74" },
+                { id: "pitfall", title: "易错点", summary: "图线的上升或下降，不等于物体在空间里“往上走”或“拐弯”。", accent: "#86efac" },
+              ]
+            : [
+                { id: "axis", title: "坐标含义", summary: "横轴是 t（时间），纵轴是 v（速度）。", accent: "#93c5fd" },
+                { id: "slope", title: "斜率", summary: "斜率代表加速度，越陡说明速度变化越快。", accent: "#fdba74" },
+                { id: "area", title: "面积", summary: "图线与时间轴围成的面积，对应这一段时间内的位移。", accent: "#86efac" },
+              ],
+      }),
+    ]);
   },
 };
 
