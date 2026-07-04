@@ -2,8 +2,11 @@ import type { MetadataRoute } from "next";
 
 import { getAllSubjects } from "@/lib/content/loaders";
 import { buildUnitPath } from "@/lib/routes";
+import { withBasePath } from "@/lib/site";
 
 import { getAllUnitEntries } from "@/features/knowledge/unit-page";
+
+export const dynamic = "force-static";
 
 function resolveSiteUrl() {
   const rawSiteUrl =
@@ -16,12 +19,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = resolveSiteUrl();
 
   const subjectEntries = getAllSubjects().map((subject) => ({
-    url: `${siteUrl}/subjects/${subject.slug}`,
+    url: `${siteUrl}${withBasePath(`/subjects/${subject.slug}`)}`,
   }));
 
   const unitEntries = getAllUnitEntries().map((unit) => ({
-    url: `${siteUrl}${buildUnitPath(unit)}`,
+    url: `${siteUrl}${withBasePath(buildUnitPath(unit))}`,
   }));
 
-  return [{ url: siteUrl }, ...subjectEntries, ...unitEntries];
+  return [{ url: `${siteUrl}${withBasePath("/")}` }, ...subjectEntries, ...unitEntries];
 }
