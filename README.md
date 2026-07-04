@@ -110,8 +110,6 @@ pnpm exec next build --webpack
 
 - 项目概览：[docs/project-overview.md](docs/project-overview.md)
 - GitHub 发布清单：[docs/github-release-checklist.md](docs/github-release-checklist.md)
-- 内容迁移台账：[docs/content-migration-inventory.md](docs/content-migration-inventory.md)
-- 旧原型清理说明：[docs/legacy-prototype-disposition.md](docs/legacy-prototype-disposition.md)
 
 ## Contributing
 
