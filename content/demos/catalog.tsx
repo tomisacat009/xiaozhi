@@ -1,5 +1,6 @@
 import { createElement } from "react";
 
+import { english3500WordBank } from "@/content/english-3500-word-bank";
 import { sampleQuadratic } from "@/engine/core/math";
 import type { DemoDefinition, DemoParams } from "@/engine/core/types";
 import { EnglishSentenceDiagram } from "@/engine/renderers/english-sentence-diagram";
@@ -3817,6 +3818,426 @@ const englishGrammarClozeDemo: MixedDemo = {
   },
 };
 
+const english3500OverviewDemo: MixedDemo = {
+  id: "english-3500-overview",
+  title: "3500 词总览与分类地图",
+  description: "先把 3500 词拆成 6 个记忆区，再决定高一阶段该先攻哪一部分。",
+  defaultParams: { focus: "framework" },
+  presets: [
+    { id: "framework", label: "总框架", params: { focus: "framework" } },
+    { id: "priority", label: "高一优先", params: { focus: "priority" } },
+  ],
+  controls: {
+    focus: {
+      kind: "select",
+      label: "查看方式",
+      options: [
+        { label: "总框架", value: "framework" },
+        { label: "高一优先", value: "priority" },
+      ],
+    },
+  },
+  explanation({ focus }) {
+    return String(focus) === "framework"
+      ? ["先看 6 个记忆区分别在解决什么问题。", "高一阶段最重要的是先把路线感建立起来。"]
+      : ["高一先抓高频核心词、词块和高频辨析，性价比最高。", "不是所有词都该在第一时间同权处理。"];
+  },
+  renderStage({ focus }) {
+    return createElement(
+      ConceptBoard,
+      {
+        title: "3500 词总框架",
+        items:
+          String(focus) === "framework"
+            ? english3500WordBank.categories.map((category) => ({
+                id: category.id,
+                title: `${category.title} · ${category.targetWordCount} 词`,
+                summary: category.summary,
+                accent: "#60a5fa",
+                detail: category.subcategories.join(" / "),
+              }))
+            : [
+                {
+                  id: "core",
+                  title: "第 1 优先级",
+                  summary: "高频核心词 + 学习词块，先解决课本、月考和完形陌生感。",
+                  accent: "#60a5fa",
+                  detail: "先见词能认，再谈扩展。",
+                },
+                {
+                  id: "expand",
+                  title: "第 2 优先级",
+                  summary: "词根词缀 + 主题词，让单词开始连成网络。",
+                  accent: "#34d399",
+                  detail: "从记一个词走向记一组词。",
+                },
+                {
+                  id: "fix",
+                  title: "第 3 优先级",
+                  summary: "近义易混词 + 一词多义词，专门减少考试里的“假熟词”失分。",
+                  accent: "#f59e0b",
+                  detail: "重点攻“认识却总错”的部分。",
+                },
+              ],
+      },
+    );
+  },
+};
+
+const english3500CoreDemo: MixedDemo = {
+  id: "english-3500-core-high-frequency",
+  title: "高频核心词起步",
+  description: "先抓高一阶段最常见的动作词、校园词和逻辑词，让孩子尽快背出第一层底盘。",
+  defaultParams: { lane: "actions" },
+  presets: [
+    { id: "actions", label: "动作词", params: { lane: "actions" } },
+    { id: "school", label: "校园词", params: { lane: "school" } },
+    { id: "logic", label: "逻辑词", params: { lane: "logic" } },
+  ],
+  controls: {
+    lane: {
+      kind: "select",
+      label: "优先组",
+      options: [
+        { label: "动作词", value: "actions" },
+        { label: "校园词", value: "school" },
+        { label: "逻辑词", value: "logic" },
+      ],
+    },
+  },
+  explanation({ lane }) {
+    const map: Record<string, string[]> = {
+      actions: ["动作词最值得先背，因为它们在阅读和写作里都非常高频。", "一开始就带搭配背，会比只记中文义更稳。"],
+      school: ["校园词离高一课内最近，最适合第一学期同步推进。", "先把 subject、review、score 这类词背熟。"],
+      logic: ["基础逻辑词是完形和阅读最常见的支架。", "先会 however、instead、among 这类词，读句子会顺很多。"],
+    };
+    return map[String(lane)];
+  },
+  renderStage({ lane }) {
+    const groups: Record<string, ReturnType<typeof createBoard>> = {
+      actions: createBoard("高频动作词起步组", [
+        { id: "develop", title: "develop", summary: "发展、形成，带搭配一起背。", accent: "#60a5fa" },
+        { id: "remain", title: "remain", summary: "保持、仍然是，适合和状态词一起背。", accent: "#34d399" },
+        { id: "prepare", title: "prepare", summary: "准备，和 for、a speech 等搭配一起记。", accent: "#f59e0b" },
+      ]),
+      school: createBoard("学校与考试起步组", [
+        { id: "subject", title: "subject", summary: "学科、主题，是高一阅读常见词。", accent: "#60a5fa" },
+        { id: "review", title: "review", summary: "复习，不只会认，还要会搭配 review notes。", accent: "#34d399" },
+        { id: "score", title: "score", summary: "分数、得分，月考和周测都高频。", accent: "#f59e0b" },
+      ]),
+      logic: createBoard("基础逻辑词起步组", [
+        { id: "however", title: "however", summary: "书面转折高频词。", accent: "#60a5fa" },
+        { id: "instead", title: "instead", summary: "替代、反向选择时常见。", accent: "#34d399" },
+        { id: "among", title: "among", summary: "表示在一群对象之间。", accent: "#f59e0b" },
+      ]),
+    };
+
+    return groups[String(lane)];
+  },
+};
+
+const english3500RootAffixDemo: MixedDemo = {
+  id: "english-3500-root-affix",
+  title: "词根词缀扩展路线",
+  description: "用最适合高一入门的词根和方向词缀，把背词从单点记忆推进到词族记忆。",
+  defaultParams: { root: "act-form" },
+  presets: [
+    { id: "act-form", label: "act / form", params: { root: "act-form" } },
+    { id: "spect-struct", label: "spect / struct", params: { root: "spect-struct" } },
+  ],
+  controls: {
+    root: {
+      kind: "select",
+      label: "词根路线",
+      options: [
+        { label: "act / form", value: "act-form" },
+        { label: "spect / struct", value: "spect-struct" },
+      ],
+    },
+  },
+  explanation({ root }) {
+    return String(root) === "act-form"
+      ? ["先从最容易长出词族的 act、form 入手。", "这条线最适合高一第一轮扩展。"]
+      : ["spect、struct 更适合往阅读和猜词里延伸。", "看核心义怎样推动场景变化。"];
+  },
+  renderStage({ root }) {
+    return String(root) === "act-form"
+      ? createElement(NetworkDiagram, {
+          title: "act / form 扩展图",
+          focus: "先抓核心义，再看动作、人物、性质和形式怎样长出来。",
+          center: { id: "core", title: "核心义", summary: "act 对应行动，form 对应形成与形式。", accent: "#60a5fa", note: "先抓原点，再看分支。" },
+          branches: [
+            { id: "action", title: "action", summary: "行动结果化。", accent: "#34d399", note: "动作名词化" },
+            { id: "active", title: "active", summary: "行动性质化。", accent: "#f59e0b", note: "人物或状态特征" },
+            { id: "formal", title: "formal", summary: "form 推向正式表达。", accent: "#818cf8", note: "词形变化带出语体差异" },
+          ],
+        })
+      : createElement(NetworkDiagram, {
+          title: "spect / struct 扩展图",
+          focus: "通过“看”和“结构”两条线练习由根猜词。",
+          center: { id: "core", title: "核心义", summary: "spect 表示看，struct 表示搭建与结构。", accent: "#60a5fa", note: "共同义比单词表更重要。" },
+          branches: [
+            { id: "inspect", title: "inspect", summary: "向里看，延伸为检查。", accent: "#34d399", note: "科学场景常见" },
+            { id: "respect", title: "respect", summary: "回头看，延伸为尊重。", accent: "#f59e0b", note: "人物关系常见" },
+            { id: "structure", title: "structure", summary: "搭建完成后的结构。", accent: "#818cf8", note: "阅读和写作都高频" },
+          ],
+        });
+  },
+};
+
+const english3500ConfusingWordsDemo: MixedDemo = {
+  id: "english-3500-confusing-words",
+  title: "近义易混词辨析",
+  description: "把高一最常混的表达类和问题类词拉到一张比较板上，减少“认识却总选错”。",
+  defaultParams: { set: "speech" },
+  presets: [
+    { id: "speech", label: "表达类", params: { set: "speech" } },
+    { id: "problem", label: "问题类", params: { set: "problem" } },
+  ],
+  controls: {
+    set: {
+      kind: "select",
+      label: "辨析组",
+      options: [
+        { label: "表达类", value: "speech" },
+        { label: "问题类", value: "problem" },
+      ],
+    },
+  },
+  explanation({ set }) {
+    return String(set) === "speech"
+      ? ["say、speak、talk、tell 的区别，核心在搭配和句法位置。", "辨析词一次只放少量，效果更稳。"]
+      : ["problem、question、trouble 都能翻成“问题”，但场景差别很大。", "中文相近，不代表英语能互换。"];
+  },
+  renderStage({ set }) {
+    return createBoard(
+      String(set) === "speech" ? "表达类高频混淆组" : "问题类高频混淆组",
+      String(set) === "speech"
+        ? [
+            { id: "say", title: "say", summary: "重在“说出内容”。", accent: "#60a5fa" },
+            { id: "speak", title: "speak", summary: "重在“说话/讲语言”。", accent: "#34d399" },
+            { id: "tell", title: "tell", summary: "重在“告诉某人”。", accent: "#f59e0b" },
+          ]
+        : [
+            { id: "problem", title: "problem", summary: "偏向需要被解决的难题。", accent: "#60a5fa" },
+            { id: "question", title: "question", summary: "偏向提问或待回答的问题。", accent: "#34d399" },
+            { id: "trouble", title: "trouble", summary: "偏向麻烦、困扰和困难感。", accent: "#f59e0b" },
+          ],
+    );
+  },
+};
+
+const english3500PolysemyDemo: MixedDemo = {
+  id: "english-3500-polysemy",
+  title: "一词多义词地图",
+  description: "把熟词拆成不同语境分支，帮助孩子在阅读里切到正确义项。",
+  defaultParams: { word: "develop" },
+  presets: [
+    { id: "develop", label: "develop", params: { word: "develop" } },
+    { id: "record", label: "record", params: { word: "record" } },
+    { id: "mean", label: "mean", params: { word: "mean" } },
+  ],
+  controls: {
+    word: {
+      kind: "select",
+      label: "多义词",
+      options: [
+        { label: "develop", value: "develop" },
+        { label: "record", value: "record" },
+        { label: "mean", value: "mean" },
+      ],
+    },
+  },
+  explanation({ word }) {
+    return [
+      `${String(word)} 最重要的不是背几个中文，而是知道当前语境该切到哪一支。`,
+      "高一阅读里最容易卡住的，恰恰是这种“假熟词”。",
+    ];
+  },
+  renderStage({ word }) {
+    const boards: Record<string, ReturnType<typeof createBoard>> = {
+      develop: createBoard("develop 义项分支图", [
+        { id: "form", title: "形成", summary: "develop an interest, develop a habit", accent: "#60a5fa" },
+        { id: "grow", title: "发展", summary: "develop quickly, develop industry", accent: "#34d399" },
+        { id: "film", title: "冲洗", summary: "develop film, 这是典型熟词新义。", accent: "#f59e0b" },
+      ]),
+      record: createBoard("record 义项分支图", [
+        { id: "write", title: "记录", summary: "record data, record results", accent: "#60a5fa" },
+        { id: "noun", title: "记录物", summary: "keep a record", accent: "#34d399" },
+        { id: "best", title: "纪录", summary: "break a record", accent: "#f59e0b" },
+      ]),
+      mean: createBoard("mean 义项分支图", [
+        { id: "meaning", title: "意思是", summary: "mean that ...", accent: "#60a5fa" },
+        { id: "intend", title: "打算", summary: "mean to do", accent: "#34d399" },
+        { id: "stingy", title: "吝啬的", summary: "a mean person", accent: "#f59e0b" },
+      ]),
+    };
+
+    return boards[String(word)];
+  },
+};
+
+const english3500CollocationsDemo: MixedDemo = {
+  id: "english-3500-collocations",
+  title: "固定搭配与词块",
+  description: "把高一最值得先掌握的词块按学习、写作和关系表达拆开，帮助孩子从会认走向会用。",
+  defaultParams: { lane: "study" },
+  presets: [
+    { id: "study", label: "学习词块", params: { lane: "study" } },
+    { id: "logic", label: "逻辑词块", params: { lane: "logic" } },
+  ],
+  controls: {
+    lane: {
+      kind: "select",
+      label: "词块组",
+      options: [
+        { label: "学习词块", value: "study" },
+        { label: "逻辑词块", value: "logic" },
+      ],
+    },
+  },
+  explanation({ lane }) {
+    return String(lane) === "study"
+      ? ["先把 hand in、take notes、make progress 这类块整块背下来。", "它们和高一学习生活最贴近。"]
+      : ["写作逻辑块能直接降低起句和衔接难度。", "最好一块一块地放回自己的句子里。"];
+  },
+  renderStage({ lane }) {
+    const steps =
+      String(lane) === "study"
+        ? [
+            { id: "notes", title: "take notes", summary: "记笔记，适合和课堂场景一起背。", accent: "#60a5fa", detail: "不拆开背。" },
+            { id: "handin", title: "hand in", summary: "上交作业，是学校高频块。", accent: "#34d399", detail: "常和 homework 搭配。" },
+            { id: "progress", title: "make progress", summary: "取得进步，是写作也高频的块。", accent: "#f59e0b", detail: "常和 in 搭配。" },
+          ]
+        : [
+            { id: "result", title: "as a result", summary: "结果导向的高频逻辑块。", accent: "#60a5fa", detail: "适合接结果句。" },
+            { id: "example", title: "for example", summary: "最稳的举例块之一。", accent: "#34d399", detail: "帮助观点落地。" },
+            { id: "contrast", title: "on the other hand", summary: "对照和补充另一面。", accent: "#f59e0b", detail: "适合并列讨论。" },
+          ];
+
+    return createElement(FlowDiagram, {
+      title: "高频词块起步图",
+      focus: "先整块背，再放回高一常见句子里。",
+      steps,
+    });
+  },
+};
+
+const english3500ThemeVocabularyDemo: MixedDemo = {
+  id: "english-3500-theme-vocabulary",
+  title: "主题场景词网络",
+  description: "把学校、科技、环境和人物品质这些高频主题拉成词域图，帮助孩子读文章前先有预判。",
+  defaultParams: { theme: "school" },
+  presets: [
+    { id: "school", label: "学校生活", params: { theme: "school" } },
+    { id: "science", label: "科技方法", params: { theme: "science" } },
+  ],
+  controls: {
+    theme: {
+      kind: "select",
+      label: "主题场景",
+      options: [
+        { label: "学校生活", value: "school" },
+        { label: "科技方法", value: "science" },
+      ],
+    },
+  },
+  explanation({ theme }) {
+    return String(theme) === "school"
+      ? ["学校生活主题最贴近高一课文和月考。", "场景词最适合读前预判和读后回收。"]
+      : ["科技与方法主题在英语阅读里出镜率很高。", "先看到词域，读文章会更快进状态。"];
+  },
+  renderStage({ theme }) {
+    return String(theme) === "school"
+      ? createElement(NetworkDiagram, {
+          title: "学校生活主题词网络",
+          focus: "让学校场景里的词先连成一个小网络。",
+          center: { id: "school", title: "学校生活", summary: "高一阅读和月考最常见主题之一。", accent: "#60a5fa", note: "先有场景，再挂词。" },
+          branches: [
+            { id: "subject", title: "subject", summary: "学科与课程。", accent: "#34d399", note: "课内高频" },
+            { id: "schedule", title: "schedule", summary: "作息与复习安排。", accent: "#f59e0b", note: "学习规划常见" },
+            { id: "assignment", title: "assignment", summary: "作业与任务。", accent: "#818cf8", note: "学校任务高频词" },
+          ],
+        })
+      : createElement(NetworkDiagram, {
+          title: "科技方法主题词网络",
+          focus: "进入科技阅读前，先把实验、设备和方法词连成图。",
+          center: { id: "science", title: "科技与方法", summary: "高一英语阅读里非常常见。", accent: "#60a5fa", note: "先看词域预判文章方向。" },
+          branches: [
+            { id: "experiment", title: "experiment", summary: "实验与验证。", accent: "#34d399", note: "科学类高频核心词" },
+            { id: "device", title: "device", summary: "设备与工具。", accent: "#f59e0b", note: "科技场景常见" },
+            { id: "efficient", title: "efficient", summary: "方法效率。", accent: "#818cf8", note: "方法类文章高频评价词" },
+          ],
+        });
+  },
+};
+
+const english3500RoadmapDemo: MixedDemo = {
+  id: "english-3500-grade-one-roadmap",
+  title: "高一上学期背诵路线",
+  description: "把高一上背词拆成四个阶段，让孩子先知道每个阶段在解决什么问题。",
+  defaultParams: { stage: "all" },
+  presets: [
+    { id: "all", label: "整学期", params: { stage: "all" } },
+    { id: "fix", label: "纠错期", params: { stage: "fix" } },
+  ],
+  controls: {
+    stage: {
+      kind: "select",
+      label: "查看阶段",
+      options: [
+        { label: "整学期", value: "all" },
+        { label: "纠错期", value: "fix" },
+      ],
+    },
+  },
+  explanation({ stage }) {
+    return String(stage) === "all"
+      ? ["高一上最重要的是顺序感：先地基，再扩展，再纠错，再表达。", "路线比单日新词量更重要。"]
+      : ["纠错期是很多孩子最容易忽略的一段。", "这时应该集中处理易混词和多义词，而不是继续盲目加新词。"];
+  },
+  renderStage({ stage }) {
+    const steps =
+      String(stage) === "all"
+        ? english3500WordBank.stages.map((entry, index) => ({
+            id: entry.id,
+            title: `${index + 1}. ${entry.title}`,
+            summary: `${entry.targetWordCount} 词 · ${entry.summary}`,
+            accent: index % 2 === 0 ? "#60a5fa" : "#34d399",
+            detail: entry.focusGroupIds.join(" / "),
+          }))
+        : [
+            {
+              id: "fix",
+              title: "纠错期重点",
+              summary: "集中处理近义易混词和一词多义词。",
+              accent: "#60a5fa",
+              detail: "这一步最能减少“认识却总错”的情况。",
+            },
+            {
+              id: "compare",
+              title: "小组辨析",
+              summary: "一次只放 3 到 5 个最常混词。",
+              accent: "#34d399",
+              detail: "比较搭配、位置和语气差别。",
+            },
+            {
+              id: "review",
+              title: "高频回收",
+              summary: "第 2 天、第 4 天、第 7 天和第 14 天回收复习。",
+              accent: "#f59e0b",
+              detail: "纠错词必须靠复现，而不是一遍过。",
+            },
+          ];
+
+    return createElement(FlowDiagram, {
+      title: "高一上学期路线",
+      focus: "把 3500 词拆成高一真正能执行的四个阶段。",
+      steps,
+    });
+  },
+};
+
 export const demoRegistry = {
   "math/functions/linear": linearDemo,
   "math/functions/reciprocal": reciprocalDemo,
@@ -3890,6 +4311,14 @@ export const demoRegistry = {
   "english/roots-vocabulary-network/english-grammar-cloze-strategy": englishGrammarClozeDemo,
   "english/roots-vocabulary-network/english-writing-upgrade-workshop": englishWritingUpgradeDemo,
   "english/roots-vocabulary-network/english-writing-paragraph-workshop": englishParagraphWritingDemo,
+  "english/high-school-3500-words/english-3500-overview": english3500OverviewDemo,
+  "english/high-school-3500-words/english-3500-core-high-frequency": english3500CoreDemo,
+  "english/high-school-3500-words/english-3500-root-affix": english3500RootAffixDemo,
+  "english/high-school-3500-words/english-3500-confusing-words": english3500ConfusingWordsDemo,
+  "english/high-school-3500-words/english-3500-polysemy": english3500PolysemyDemo,
+  "english/high-school-3500-words/english-3500-collocations": english3500CollocationsDemo,
+  "english/high-school-3500-words/english-3500-theme-vocabulary": english3500ThemeVocabularyDemo,
+  "english/high-school-3500-words/english-3500-grade-one-roadmap": english3500RoadmapDemo,
 } as const;
 
 export function getDemoDefinition(

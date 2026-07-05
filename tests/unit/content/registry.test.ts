@@ -42,7 +42,7 @@ describe("content registry", () => {
     expect(getModulesBySubject(subject!.id).length).toBe(6);
     expect(getModulesBySubject("physics").length).toBe(5);
     expect(getModulesBySubject("chemistry").length).toBe(4);
-    expect(getModulesBySubject("english").length).toBe(2);
+    expect(getModulesBySubject("english").length).toBe(3);
   });
 
   it("returns null for an unknown subject slug", () => {
@@ -74,7 +74,7 @@ describe("content registry", () => {
   });
 
   it("returns all migrated units and module-scoped unit lists", () => {
-    expect(getAllUnits()).toHaveLength(72);
+    expect(getAllUnits()).toHaveLength(80);
     expect(getUnitsByModuleId("math-functions").length).toBe(6);
     expect(getUnitsByModuleId("physics-motion").length).toBe(7);
   });

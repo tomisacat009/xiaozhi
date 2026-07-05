@@ -11,7 +11,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "理解二次函数的解析式、图像特征与解题观察角度。",
     "order": 1,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "参数与图像联动",
       "一般式和顶点式切换",
@@ -42,7 +42,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "理解斜率与截距，建立参数变化驱动图像变化的第一层感觉。",
     "order": 2,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能看懂斜率如何控制直线的倾斜方向与陡峭程度",
       "能看懂截距变化如何带动图像上下平移",
@@ -73,7 +73,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把象限、渐近线和双曲线开口变化放到一张图里，建立反比例函数的整体感觉。",
     "order": 3,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断 k 的正负如何决定图像所在象限",
       "能理解 |k| 变化如何影响曲线离坐标轴的远近",
@@ -104,7 +104,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "看懂底数变化、增长速度和互逆关系。",
     "order": 4,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分指数函数和对数函数各自的增长变化特点",
       "能理解底数变化如何影响图像陡缓与位置",
@@ -133,7 +133,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "对比奇次幂、偶次幂和分数指数，建立幂函数图像的第一层整体感。",
     "order": 5,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分奇次幂、偶次幂和分数指数函数的图像差异",
       "能理解指数大小如何影响图像开口和弯曲程度",
@@ -164,7 +164,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把上下平移、左右平移和伸缩变化放到一张图里统一理解。",
     "order": 6,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分上下平移、左右平移和伸缩变化的图像效果",
       "能判断参数写在括号内外时各自控制什么",
@@ -193,7 +193,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把单位圆上的点、正弦值和图像生成过程连起来。",
     "order": 7,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把单位圆上的点和正弦函数值对应起来",
       "能看懂正弦图像如何由圆周运动生成",
@@ -222,7 +222,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "看懂振幅、周期、相位和平移变化。",
     "order": 8,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断振幅、周期、相位和平移各自带来的图像变化",
       "能把参数写法和图像拉伸压缩效果一一对应",
@@ -253,7 +253,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把单位圆横坐标和余弦图像连起来，看清它与正弦函数的差异。",
     "order": 9,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把单位圆横坐标和余弦函数值对应起来",
       "能区分余弦图像与正弦图像的相位差关系",
@@ -284,7 +284,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "直观看到渐近线、间断点和正切函数的周期变化。",
     "order": 10,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能识别正切函数的间断点和渐近线位置",
       "能理解周期变化与定义域限制之间的关系",
@@ -315,7 +315,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "用逐项生成展示线性增长和指数增长的差别。",
     "order": 11,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分等差数列和等比数列的生成规律",
       "能用逐项变化理解线性增长和倍数增长差别",
@@ -344,7 +344,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把后一项由前一项推出来的过程直接画出来，帮助孩子形成递推数列的生成感。",
     "order": 12,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解后一项如何由前一项或前几项生成",
       "能从递推过程判断数列的变化趋势",
@@ -375,7 +375,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把相交、相切、相离和方程条件连接起来。",
     "order": 13,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分直线与圆的相交、相切、相离三种位置关系",
       "能把位置关系与方程判别条件对应起来",
@@ -406,7 +406,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "让圆心、半径和标准方程同步变化，建立方程到图像的直接映射。",
     "order": 14,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能从标准方程快速读出圆心和半径",
       "能理解圆心平移如何带动图像整体移动",
@@ -437,7 +437,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把开口方向、焦点、准线和标准方程同步展示，帮助孩子形成抛物线的图像语言。",
     "order": 15,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分抛物线四种开口方向及对应标准式",
       "能理解焦点、准线与开口方向之间的关系",
@@ -468,7 +468,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把长轴、短轴、焦点和离心率一起联动，帮助孩子形成椭圆整体结构感。",
     "order": 16,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分椭圆长轴、短轴与焦点的位置关系",
       "能理解 a、b、c 之间的约束关系",
@@ -499,7 +499,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把开口方向、焦点、渐近线和标准方程同步展示，帮助孩子形成双曲线的整体图像语言。",
     "order": 17,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分双曲线的实轴方向和开口方向",
       "能理解渐近线在图像判断中的作用",
@@ -530,7 +530,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把抛物线、椭圆、双曲线放到同一套视角里统一比较，帮助孩子搭建圆锥曲线整体框架。",
     "order": 18,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能从整体上区分抛物线、椭圆、双曲线的图像与方程特点",
       "能用统一视角比较焦点、开口和离心率差异",
@@ -561,7 +561,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "用一条水平直线统一比较它与抛物线、椭圆、双曲线的相离、相切、相交变化。",
     "order": 19,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能比较直线与不同圆锥曲线的位置关系变化",
       "能理解交点个数变化和判别式之间的联系",
@@ -592,7 +592,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "用垂足和最短线段把距离公式背后的图形意义讲清楚。",
     "order": 20,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解点到直线距离为什么要看垂线段",
       "能把距离公式和几何最短路径对应起来",
@@ -623,7 +623,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "通过空间旋转和切割，帮助孩子建立几何体的内部想象。",
     "order": 21,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断常见立体切割后可能出现的截面形状",
       "能借助旋转和视角切换建立空间想象",
@@ -652,7 +652,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把平面图形旋转生成圆柱、圆锥、球的过程直接展示出来，帮助孩子建立二维到三维的过渡直觉。",
     "order": 22,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解平面图形旋转后如何生成常见旋转体",
       "能把旋转轴位置和生成图形形态对应起来",
@@ -683,7 +683,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "用对象归类和集合框高亮，把元素、属于、不属于、子集、真子集和空集先看懂。",
     "order": 23,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解元素、集合、子集、真子集和空集的含义",
       "能区分属于关系和包含关系",
@@ -714,7 +714,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把交集、并集、补集和韦恩图区域一一对应起来，先建立图像直觉再过渡到符号表达。",
     "order": 24,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分交集、并集、补集各自表示的区域含义",
       "能把符号运算和韦恩图区域一一对应起来",
@@ -745,7 +745,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把位移、速度和时间放回同一张图里，帮助孩子建立匀速运动的最基础过程感。",
     "order": 1,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把位移、速度和时间的关系放回同一运动过程理解",
       "能从图像上判断匀速运动的快慢和位置变化",
@@ -776,7 +776,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把速度变化、斜率含义和位移积累连起来，帮助孩子看懂匀变速运动不是“多一个公式”。",
     "order": 2,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解速度均匀变化意味着什么",
       "能从 v-t 图像斜率和面积中读出加速度与位移",
@@ -807,7 +807,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把前车、后车、起点差和速度差放回同一张图里，让孩子真正看懂什么时候追上、为什么追上。",
     "order": 3,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能用起点差和速度差解释追及条件",
       "能判断什么时候两车会相遇或永远追不上",
@@ -838,7 +838,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把前车匀速与后车加速放回同一张图像里，让孩子看懂后车为什么可能“先慢后追上”。",
     "order": 4,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解加速一方为什么前期可能仍追不上",
       "能把匀速和匀变速对象放进同一时间轴比较",
@@ -869,7 +869,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把速度变化、位移累计和剩余高度统一到同一张图里，帮助孩子把自由落体看成连续过程。",
     "order": 5,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解自由落体是仅受重力作用的理想模型",
       "能把速度增加和位移累积联系起来",
@@ -900,7 +900,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把水平方向匀速、竖直方向自由落体和合成轨迹放回同一视角，帮助孩子看懂平抛不是“两套公式硬拼”。",
     "order": 6,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把平抛运动拆成水平和竖直两个独立过程",
       "能理解合成轨迹为什么是曲线",
@@ -931,7 +931,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把 s-t 图像、v-t 图像和现实运动过程重新对应起来，帮助孩子减少“看图不会讲过程”的断层。",
     "order": 7,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分 s-t 图像和 v-t 图像各自在表达什么",
       "能从图像斜率、面积和拐点判断运动过程",
@@ -962,7 +962,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把多个力的方向与大小重新变成图形叠加关系，减少纯向量符号带来的抽象感。",
     "order": 8,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "理解两个力怎样合成为一个等效结果",
       "区分合成与分解本质上是同一个力学对象的不同观察方式",
@@ -996,7 +996,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把合力、质量、加速度三者如何联动说清楚，帮助孩子建立最关键的因果框架。",
     "order": 9,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理解合力、质量、加速度三者之间的因果关系",
       "能判断哪个量变化会直接改变加速度大小",
@@ -1025,7 +1025,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把多个力的方向与大小重新放回同一张受力图里，让孩子看懂“平衡”到底意味着什么。",
     "order": 10,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "区分“合力为零”和“没有受力”",
       "按方向分别判断平衡条件",
@@ -1059,7 +1059,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把静摩擦、滑动摩擦和临界将动未动放回同一过程里，降低“总记不住方向和大小”的门槛。",
     "order": 11,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能根据相对运动趋势判断摩擦力方向",
       "能区分静摩擦、滑动摩擦和临界状态",
@@ -1094,7 +1094,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把重力分解、支持力、摩擦力和沿斜面运动结果放回一张图里，帮助孩子把斜面题重新讲顺。",
     "order": 12,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能用沿斜面和垂直斜面方向稳定分解重力",
       "能分清支持力、摩擦力和沿面运动方程的分工",
@@ -1129,7 +1129,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把整体法与隔离法放回同一组连接体场景里，帮助孩子看懂什么时候该一起看、什么时候该拆开看。",
     "order": 13,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断什么时候该先整体分析，什么时候该隔离分析",
       "能把共同加速度和内部拉力分步骤求解",
@@ -1160,7 +1160,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把支持力变化、加速度方向和体感变化重新连起来，帮助孩子真正理解“重力没变，为什么感觉变了”。",
     "order": 14,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把支持力变化和超重失重现象联系起来",
       "能根据加速度方向判断是超重还是失重",
@@ -1191,7 +1191,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把力、位移、时间和能量转移关系放回同一过程里，帮助孩子理解“做功不是单纯乘法”。",
     "order": 15,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分做功总量和做功快慢",
       "能把力、位移、时间和能量转移过程对应起来",
@@ -1226,7 +1226,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把合外力做功和速度变化重新连起来，让孩子看懂动能定理为什么能跨过复杂受力过程。",
     "order": 16,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把合外力做功和动能改变量直接对应起来",
       "能理解动能定理为什么适合跨过程求解",
@@ -1261,7 +1261,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把重力势能、动能和转化过程放回同一视角，帮助孩子理解“守恒”不是一句口号。",
     "order": 17,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断什么时候可以使用机械能守恒",
       "能把动能和势能的转化过程看成内部换账",
@@ -1292,7 +1292,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把功、动能定理、机械能守恒放到同一框架里比较，帮助孩子判断综合题该优先选哪种能量方法。",
     "order": 18,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能比较功、动能定理和机械能守恒各自适用的题型",
       "能根据过程复杂度选择更省力的能量方法",
@@ -1323,7 +1323,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把电流、电压、电阻在串并联里的分配差异放在同一视角中比较。",
     "order": 19,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "区分串联和并联的结构差异",
       "理解结构如何决定电流和电压分配",
@@ -1356,7 +1356,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把电压、电流、电阻之间的定量关系拉回到图像和变化过程里理解。",
     "order": 20,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "理解 U、I、R 的比例关系",
       "从图像上读出电阻变化对斜率的影响",
@@ -1389,7 +1389,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "帮助孩子把位移、振幅、周期和往返过程对应起来，而不是只记定义。",
     "order": 21,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "把位移图像和真实往返过程对应起来",
       "理解振幅和周期分别描述什么",
@@ -1423,7 +1423,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把波峰、波谷、传播方向和相位差放回动态过程里，降低“看图不会读”的门槛。",
     "order": 22,
     "difficulty": "进阶",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "区分波形传播和质点振动",
       "理解同一时刻不同位置的相位差",
@@ -1457,7 +1457,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把纯净物、混合物、单质、化合物、酸碱盐等分类重新变成结构图和转化图，帮助孩子建立化学语言底座。",
     "order": 1,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分纯净物、混合物、单质、化合物等基本类别",
       "能把酸碱盐等常见化学语言放回分类结构理解",
@@ -1488,7 +1488,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把溶液、浊液、胶体及其微粒尺度差异重新放回同一视角里，帮助孩子看懂“为什么看起来像但本质不同”。",
     "order": 2,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分溶液、胶体和浊液的微粒尺度差异",
       "能理解丁达尔效应为什么能帮助判断胶体",
@@ -1519,7 +1519,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把物质的量、微粒数、质量、气体体积这些量重新连成一张关系网，帮助孩子减少机械套算。",
     "order": 3,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能在物质的量、微粒数、质量和体积之间完成换算",
       "能理解摩尔作为“计数桥梁”的作用",
@@ -1550,7 +1550,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把电解质、离子拆分、离子共存和反应实质重新放回粒子层面理解。",
     "order": 4,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断物质在水中是否电离以及电离后形成什么粒子",
       "能理解离子反应为什么要写成离子方程式",
@@ -1581,7 +1581,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把化合价变化、电子得失和氧化剂还原剂关系放回同一过程图里，帮助孩子看懂“谁变了、怎么变”。",
     "order": 5,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能根据化合价变化判断氧化和还原",
       "能从电子得失过程识别氧化剂和还原剂",
@@ -1612,7 +1612,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把金属钠、氧化钠、过氧化钠、氢氧化钠之间的转化、现象和用途串成一条主线。",
     "order": 6,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能说清金属钠及其常见化合物之间的转化关系",
       "能把实验现象与钠元素活泼性的本质联系起来",
@@ -1643,7 +1643,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把氯气、盐酸、次氯酸和漂白作用等内容重新连成现象与微观变化对应链路。",
     "order": 7,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能理清氯气、盐酸、次氯酸和含氯漂白物之间的关系",
       "能解释氯及其化合物的典型实验现象",
@@ -1674,7 +1674,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把铁、亚铁、铁离子的颜色、转化和检验重新放到同一张关系图中，降低零散记忆负担。",
     "order": 8,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分铁、亚铁、铁离子的常见颜色和转化关系",
       "能根据实验现象判断价态变化方向",
@@ -1705,7 +1705,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把常见仪器、实验装置、操作顺序和注意事项放回同一流程图中，帮助孩子建立实验过程感。",
     "order": 9,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能根据实验目的判断装置选择依据",
       "能按流程说清气体收集、过滤和加热的关键步骤",
@@ -1740,7 +1740,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把常见离子检验步骤、现象和结论放回同一张判断链路中，帮助孩子看懂“现象为什么能说明问题”。",
     "order": 10,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能根据实验步骤判断常见离子的检验思路",
       "能把现象、试剂和结论连成完整判断链",
@@ -1771,7 +1771,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把句子的主干、修饰成分和层级关系拆成可观察结构，帮助孩子真正理解每个成分在句子里做什么。",
     "order": 1,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能先找出句子的主语、谓语和核心宾语或表语",
       "能把修饰成分和主干成分分层观察",
@@ -1806,7 +1806,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把高频词根、前后缀和同根词串成网络，帮助孩子从“记一个词”升级为“连一组词”。",
     "order": 2,
     "difficulty": "基础",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能从词根判断一组单词的大致共同含义",
       "能结合前后缀解释词义为什么发生变化",
@@ -1841,7 +1841,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把主句、从句、连接词和句法作用拆成层级结构，帮助孩子看懂“这个从句在整句里到底相当于什么”。",
     "order": 3,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断一个从句在整句中充当什么成分",
       "能根据连接词识别从句和主句之间的关系",
@@ -1876,7 +1876,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把前缀、后缀与词根的组合变化做成可观察网络，帮助孩子看懂单词为什么会沿不同方向变义或变词性。",
     "order": 4,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能看懂常见前后缀如何改变词义方向",
       "能判断词缀变化带来的词性变化",
@@ -1911,7 +1911,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把让步、条件、时间和超长主语拆成附着层，帮助孩子先抓主干，再回挂修饰结构。",
     "order": 5,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把长难句先压缩成最短主干",
       "能识别让步、条件、时间等外挂修饰层",
@@ -1946,7 +1946,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把 act、form 这类教材高频词族做成核心义扩展图，帮助孩子把零散单词重新归到同一词义家族。",
     "order": 6,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把同一核心义扩展成不同词性的高频词族",
       "能在做词形转换题时快速定位所需词性",
@@ -1981,7 +1981,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把主旨、理由、细节和例子拆成信息层级，帮助孩子读文章时先抓重点，再处理支撑信息。",
     "order": 7,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把主旨、论据、细节和例子分层阅读",
       "能根据题型回到对应的信息层定位",
@@ -2016,7 +2016,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把近义词放进语气、时间、力度与对象差异的坐标里，帮助孩子真正看懂它们为什么“像但不一样”。",
     "order": 8,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分近义词在强度、语气和正式程度上的差异",
       "能避免把中文相近的词机械互换",
@@ -2051,7 +2051,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把时态放回时间轴，帮助孩子看懂动作发生在哪里、关注点停在什么时候。",
     "order": 9,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把时态判断重新放回时间关系理解",
       "能区分动作发生点、持续段和当前观察点",
@@ -2086,7 +2086,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把转折、因果等高频逻辑连接词做成关系网，帮助孩子写作和阅读时先抓逻辑再选词。",
     "order": 10,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能先判断逻辑关系，再选连接词",
       "能区分转折、因果和递进类连接词的分工",
@@ -2121,7 +2121,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把不定式、分词这些非谓语结构放回主句挂接关系里，帮助孩子看懂它是在补目的、伴随还是背景。",
     "order": 11,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能判断非谓语是在句中补什么功能",
       "能检查非谓语和逻辑主语之间的主动被动关系",
@@ -2156,7 +2156,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把基础句一步步升级为更清楚、更自然的书面表达，帮助孩子从会写走向写得更好。",
     "order": 12,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能把基础句逐步升级成更有层次的表达",
       "能根据逻辑关系选择合适连接与句式变化",
@@ -2191,7 +2191,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把主旨题、细节题的解题路径拆成步骤图，帮助孩子先分题型再走定位和排除流程。",
     "order": 13,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能区分主旨题、细节题、推断题等常见阅读题型",
       "能按题型选择对应的定位和排除路径",
@@ -2222,7 +2222,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把一段话拆成主题句、支撑句、例子句和收束句，帮助孩子从会写句子走向会展开段落。",
     "order": 14,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能按主题句、支撑句、例证句和收束句展开段落",
       "能避免段落只堆句子却没有中心",
@@ -2257,7 +2257,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把听力里的场景判断、关键词、数字信息和速记路径拆成流程图，帮助孩子先抓点再补细节。",
     "order": 15,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能先抓场景词、人物关系和关键词再补细节",
       "能识别数字、时间、地点等高价值听力信息",
@@ -2288,7 +2288,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "summary": "把语法填空里的词性判断、句法分析和时态语态决策拆成步骤图，帮助孩子稳定做题路径。",
     "order": 16,
     "difficulty": "中等",
-    "status": "migrating",
+    "status": "available",
     "learningGoals": [
       "能先判断空格考查的是词性、结构还是逻辑连接",
       "能按顺序完成谓语、非谓语和连接词空的判断",
@@ -2312,5 +2312,285 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
       "语法填空策略演示器"
     ],
     "migrationSource": "legacy/prototype-v1/modules/unit-english-grammar-cloze-strategy.html"
+  },
+  {
+    "id": "english-english-3500-overview",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-overview",
+    "title": "3500 词总览与分类地图",
+    "titleEn": null,
+    "summary": "先把 3500 词整体拆成 6 大记忆区，帮助高一孩子从一上来就建立“不是乱背，是按规律背”的整体感。",
+    "order": 1,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能看懂 3500 词为什么要按记忆规律而不是按字母顺序来背",
+      "能区分高频核心词、词根词缀词和固定词块各自承担的任务",
+      "能建立高一阶段的整体背词路线图"
+    ],
+    "coreTakeaways": [
+      "背词先建框架，再逐组推进，会比平铺词表更稳",
+      "3500 词不是一个整块，而是几个不同记忆任务的组合",
+      "高一先抓高频核心词和常用词块，效率最高"
+    ],
+    "keywords": [
+      "3500 词总览与分类地图",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-core-high-frequency",
+      "english-3500-root-affix",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-overview"
+    ],
+    "migrationSource": "product/english-3500-framework/overview"
+  },
+  {
+    "id": "english-english-3500-core-high-frequency",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-core-high-frequency",
+    "title": "高频核心词起步",
+    "titleEn": null,
+    "summary": "先解决课本、月考和完形里最常见的一批基础词，让孩子在高一阶段先做到“见词不慌”。",
+    "order": 2,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能优先识别高一最常见的动作词、校园词和逻辑词",
+      "能把高频词和常见搭配一起背，而不是只记一个中文义",
+      "能把高频词作为后续阅读和写作的最基础底盘"
+    ],
+    "coreTakeaways": [
+      "高频核心词是高一背词的地基，不宜跳过",
+      "同一个高频词往往要连搭配和场景一起记",
+      "高频词熟练后，月考阅读和完形压力会明显下降"
+    ],
+    "keywords": [
+      "高频核心词起步",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-overview",
+      "english-3500-collocations",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-core-high-frequency"
+    ],
+    "migrationSource": "product/english-3500-framework/core-high-frequency"
+  },
+  {
+    "id": "english-english-3500-root-affix",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-root-affix",
+    "title": "词根词缀扩展路线",
+    "titleEn": null,
+    "summary": "把能长出一串词的词根词缀拉成网络，让孩子从记一个词升级为记一个家族。",
+    "order": 3,
+    "difficulty": "中等",
+    "status": "available",
+    "learningGoals": [
+      "能从 act、form、spect、struct 等高频词根看出共同词义",
+      "能用 un-、re- 这类词缀判断词义方向变化",
+      "能把零散词重新归回同一个词义家族"
+    ],
+    "coreTakeaways": [
+      "词根是核心义，词缀负责推动方向和词性",
+      "从词族入手，背词速度和猜词能力都会提升",
+      "词根词缀最适合放在高频词之后做第二层扩展"
+    ],
+    "keywords": [
+      "词根词缀扩展路线",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-overview",
+      "english-word-roots",
+      "english-affix-network"
+    ],
+    "demoIds": [
+      "english-3500-root-affix"
+    ],
+    "migrationSource": "product/english-3500-framework/root-affix"
+  },
+  {
+    "id": "english-english-3500-confusing-words",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-confusing-words",
+    "title": "近义易混词辨析",
+    "titleEn": null,
+    "summary": "把 say、speak、talk、tell 这类高频混淆组拆开，帮助孩子减少“明明见过却总做错”的情况。",
+    "order": 4,
+    "difficulty": "中等",
+    "status": "available",
+    "learningGoals": [
+      "能区分表达类、问题类等高频近义易混词的核心差别",
+      "能把近义词辨析和常见搭配、句子位置联系起来",
+      "能在完形和单选里减少凭感觉乱选的情况"
+    ],
+    "coreTakeaways": [
+      "近义词题先看关系和位置，再看中文意思",
+      "同样一个中文义，英语里常常对应不同使用场景",
+      "辨析训练最怕一组塞太多，应该小组高频反复"
+    ],
+    "keywords": [
+      "近义易混词辨析",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-polysemy",
+      "english-synonym-semantic-map",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-confusing-words"
+    ],
+    "migrationSource": "product/english-3500-framework/confusing-words"
+  },
+  {
+    "id": "english-english-3500-polysemy",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-polysemy",
+    "title": "一词多义词地图",
+    "titleEn": null,
+    "summary": "把 develop、record、mean 这类多义词拆成分支图，帮助孩子在阅读里更快切换到正确义项。",
+    "order": 5,
+    "difficulty": "中等",
+    "status": "available",
+    "learningGoals": [
+      "能看懂多义词不是多个孤立意思，而是围绕核心义展开",
+      "能在阅读语境里判断当前应该调用哪一个义项",
+      "能减少“这个词我认识但句子还是看不懂”的情况"
+    ],
+    "coreTakeaways": [
+      "多义词最稳的记法是核心义 + 场景分支",
+      "阅读里真正考的是语境切换，不是孤立词义记忆",
+      "高频多义词值得单独拆出来反复练"
+    ],
+    "keywords": [
+      "一词多义词地图",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-confusing-words",
+      "english-3500-overview",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-polysemy"
+    ],
+    "migrationSource": "product/english-3500-framework/polysemy"
+  },
+  {
+    "id": "english-english-3500-collocations",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-collocations",
+    "title": "固定搭配与词块",
+    "titleEn": null,
+    "summary": "把高一最值得先掌握的学习表达、人际关系和写作逻辑块整理成可背、可用的整块表达。",
+    "order": 6,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能把 hand in、take notes、make progress 这类高频词块整块记住",
+      "能在写作和阅读里快速识别常用逻辑表达块",
+      "能从“会认单词”进一步走向“会用表达”"
+    ],
+    "coreTakeaways": [
+      "真正实用的背词，必须把词块一起带上",
+      "高频词块能显著降低写作起句和阅读识别难度",
+      "词块比单词更接近真实语言使用"
+    ],
+    "keywords": [
+      "固定搭配与词块",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-core-high-frequency",
+      "english-3500-theme-vocabulary",
+      "english-logic-connector-map"
+    ],
+    "demoIds": [
+      "english-3500-collocations"
+    ],
+    "migrationSource": "product/english-3500-framework/collocations"
+  },
+  {
+    "id": "english-english-3500-theme-vocabulary",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-theme-vocabulary",
+    "title": "主题场景词网络",
+    "titleEn": null,
+    "summary": "把学校生活、科技方法等高频主题场景拉成词域网络，帮助孩子在读文章前先建立语义预判。",
+    "order": 7,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能按学校、科技、环境、人物品质等主题组织高频词",
+      "能在进入阅读前先预判一篇文章会出现哪些词域",
+      "能把零散词回收到更稳定的场景网里"
+    ],
+    "coreTakeaways": [
+      "主题词能提高阅读中的预判能力",
+      "同一主题下的词更容易在脑子里连成场景",
+      "场景词适合和高频词、词块穿插复习"
+    ],
+    "keywords": [
+      "主题场景词网络",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-core-high-frequency",
+      "english-3500-collocations",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-theme-vocabulary"
+    ],
+    "migrationSource": "product/english-3500-framework/theme-vocabulary"
+  },
+  {
+    "id": "english-english-3500-grade-one-roadmap",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-grade-one-roadmap",
+    "title": "高一上学期背诵路线",
+    "titleEn": null,
+    "summary": "把高一上学期该先背什么、后背什么、每个阶段大概背多少词整理成一条可执行路线。",
+    "order": 8,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能看懂高一上学期四个背词阶段分别解决什么问题",
+      "能把 3500 词拆成高一阶段真正能执行的小步路线",
+      "能建立复习节奏，而不是只顾每天背新词"
+    ],
+    "coreTakeaways": [
+      "高一背词最怕平铺和断复习，路线比总量更重要",
+      "先地基、再扩展、再纠错、再表达，是更稳的顺序",
+      "真正记住单词，靠的是分组和复现，而不是一次性猛背"
+    ],
+    "keywords": [
+      "高一上学期背诵路线",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-overview",
+      "english-3500-core-high-frequency",
+      "english-3500-confusing-words"
+    ],
+    "demoIds": [
+      "english-3500-grade-one-roadmap"
+    ],
+    "migrationSource": "product/english-3500-framework/grade-one-roadmap"
   }
 ];

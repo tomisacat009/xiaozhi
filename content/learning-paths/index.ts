@@ -346,5 +346,31 @@ export const learningPaths: LearningPath[] = [
       "语法填空策略演示器"
     ],
     "order": 16
+  },
+  {
+    "id": "english-path-17",
+    "subjectId": "english",
+    "title": "高一 3500 词起步",
+    "summary": "先把 3500 词拆成高频核心词、词块和高一上路线，帮助孩子从第一学期就按规律背词。",
+    "topics": [
+      "3500 词总览与分类地图",
+      "高频核心词起步",
+      "固定搭配与词块",
+      "高一上学期背诵路线"
+    ],
+    "order": 17
+  },
+  {
+    "id": "english-path-18",
+    "subjectId": "english",
+    "title": "3500 词辨析与扩展",
+    "summary": "在高频核心词基础上继续补词根词缀、近义易混词和多义词，帮助记忆真正连成网络。",
+    "topics": [
+      "词根词缀扩展路线",
+      "近义易混词辨析",
+      "一词多义词地图",
+      "主题场景词网络"
+    ],
+    "order": 18
   }
 ];

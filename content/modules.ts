@@ -15,7 +15,7 @@ export const modules: Module[] = [
       "函数变换"
     ],
     "order": 1,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "math-trigonometry",
@@ -30,7 +30,7 @@ export const modules: Module[] = [
       "振幅与周期"
     ],
     "order": 2,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "math-sequences",
@@ -44,7 +44,7 @@ export const modules: Module[] = [
       "递推生成"
     ],
     "order": 3,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "math-analytic-geometry",
@@ -63,7 +63,7 @@ export const modules: Module[] = [
       "直线与圆锥曲线"
     ],
     "order": 4,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "math-solid-geometry",
@@ -77,7 +77,7 @@ export const modules: Module[] = [
       "空间关系"
     ],
     "order": 5,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "math-sets-logic",
@@ -92,7 +92,7 @@ export const modules: Module[] = [
       "子集与真子集"
     ],
     "order": 6,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "physics-motion",
@@ -108,7 +108,7 @@ export const modules: Module[] = [
       "平抛运动"
     ],
     "order": 1,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "physics-force",
@@ -125,7 +125,7 @@ export const modules: Module[] = [
       "牛顿第二定律"
     ],
     "order": 2,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "physics-electricity",
@@ -140,7 +140,7 @@ export const modules: Module[] = [
       "变量联动"
     ],
     "order": 3,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "physics-energy",
@@ -156,7 +156,7 @@ export const modules: Module[] = [
       "综合应用"
     ],
     "order": 4,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "physics-wave",
@@ -171,7 +171,7 @@ export const modules: Module[] = [
       "相位差"
     ],
     "order": 5,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "chemistry-chemical-language",
@@ -186,7 +186,7 @@ export const modules: Module[] = [
       "物质的量"
     ],
     "order": 1,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "chemistry-reaction-principles",
@@ -201,7 +201,7 @@ export const modules: Module[] = [
       "电子转移"
     ],
     "order": 2,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "chemistry-elements-compounds",
@@ -216,7 +216,7 @@ export const modules: Module[] = [
       "转化关系"
     ],
     "order": 3,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "chemistry-experiments",
@@ -231,7 +231,7 @@ export const modules: Module[] = [
       "现象解释"
     ],
     "order": 4,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "english-sentence-structure",
@@ -246,7 +246,7 @@ export const modules: Module[] = [
       "题型路径"
     ],
     "order": 1,
-    "status": "migrating"
+    "status": "available"
   },
   {
     "id": "english-roots-vocabulary-network",
@@ -261,6 +261,21 @@ export const modules: Module[] = [
       "段落展开"
     ],
     "order": 2,
-    "status": "migrating"
+    "status": "available"
+  },
+  {
+    "id": "english-high-school-3500-words",
+    "subjectId": "english",
+    "slug": "high-school-3500-words",
+    "title": "高中英语 3500 词背诵体系",
+    "summary": "把高一阶段最需要掌握的 3500 词按记忆规律重新拆成高频核心词、词根词缀、近义易混词、一词多义词、固定搭配和主题场景词，帮助孩子背得更快、忘得更慢、用得出来。",
+    "highlights": [
+      "高频核心词",
+      "词根词缀扩展",
+      "近义易混词",
+      "高一上背诵路线"
+    ],
+    "order": 3,
+    "status": "available"
   }
 ];
