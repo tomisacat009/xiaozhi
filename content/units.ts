@@ -2339,6 +2339,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
       "high-school-3500-words"
     ],
     "relatedUnits": [
+      "english-3500-full-bank",
       "english-3500-core-high-frequency",
       "english-3500-root-affix",
       "english-3500-grade-one-roadmap"
@@ -2349,6 +2350,41 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "migrationSource": "product/english-3500-framework/overview"
   },
   {
+    "id": "english-english-3500-full-bank",
+    "subjectId": "english",
+    "moduleId": "english-high-school-3500-words",
+    "slug": "english-3500-full-bank",
+    "title": "3500 词全量词库",
+    "titleEn": null,
+    "summary": "把高中常见 3500 词整理成一个可搜索、可分类、可筛选的正式词库入口，适合高一同步课内和月考复习。",
+    "order": 2,
+    "difficulty": "基础",
+    "status": "available",
+    "learningGoals": [
+      "能通过搜索、分类和筛选快速定位要背的单词",
+      "能把高频重点词和整合索引词放到同一个词库里统一管理",
+      "能把 3500 词从散乱词表转成可执行的背诵入口"
+    ],
+    "coreTakeaways": [
+      "先有全量词库入口，再谈分组记忆和复习节奏，效率会高很多",
+      "高频重点词适合精记，整合索引词适合先做场景挂接和重复曝光",
+      "搜索、筛选和分类是背 3500 词时最重要的三个底层工具"
+    ],
+    "keywords": [
+      "3500 词全量词库",
+      "high-school-3500-words"
+    ],
+    "relatedUnits": [
+      "english-3500-overview",
+      "english-3500-core-high-frequency",
+      "english-3500-grade-one-roadmap"
+    ],
+    "demoIds": [
+      "english-3500-full-bank"
+    ],
+    "migrationSource": "product/english-3500-framework/full-bank"
+  },
+  {
     "id": "english-english-3500-core-high-frequency",
     "subjectId": "english",
     "moduleId": "english-high-school-3500-words",
@@ -2356,7 +2392,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "高频核心词起步",
     "titleEn": null,
     "summary": "先解决课本、月考和完形里最常见的一批基础词，让孩子在高一阶段先做到“见词不慌”。",
-    "order": 2,
+    "order": 3,
     "difficulty": "基础",
     "status": "available",
     "learningGoals": [
@@ -2391,7 +2427,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "词根词缀扩展路线",
     "titleEn": null,
     "summary": "把能长出一串词的词根词缀拉成网络，让孩子从记一个词升级为记一个家族。",
-    "order": 3,
+    "order": 4,
     "difficulty": "中等",
     "status": "available",
     "learningGoals": [
@@ -2426,7 +2462,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "近义易混词辨析",
     "titleEn": null,
     "summary": "把 say、speak、talk、tell 这类高频混淆组拆开，帮助孩子减少“明明见过却总做错”的情况。",
-    "order": 4,
+    "order": 5,
     "difficulty": "中等",
     "status": "available",
     "learningGoals": [
@@ -2461,7 +2497,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "一词多义词地图",
     "titleEn": null,
     "summary": "把 develop、record、mean 这类多义词拆成分支图，帮助孩子在阅读里更快切换到正确义项。",
-    "order": 5,
+    "order": 6,
     "difficulty": "中等",
     "status": "available",
     "learningGoals": [
@@ -2496,7 +2532,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "固定搭配与词块",
     "titleEn": null,
     "summary": "把高一最值得先掌握的学习表达、人际关系和写作逻辑块整理成可背、可用的整块表达。",
-    "order": 6,
+    "order": 7,
     "difficulty": "基础",
     "status": "available",
     "learningGoals": [
@@ -2531,7 +2567,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "主题场景词网络",
     "titleEn": null,
     "summary": "把学校生活、科技方法等高频主题场景拉成词域网络，帮助孩子在读文章前先建立语义预判。",
-    "order": 7,
+    "order": 8,
     "difficulty": "基础",
     "status": "available",
     "learningGoals": [
@@ -2566,7 +2602,7 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "title": "高一上学期背诵路线",
     "titleEn": null,
     "summary": "把高一上学期该先背什么、后背什么、每个阶段大概背多少词整理成一条可执行路线。",
-    "order": 8,
+    "order": 9,
     "difficulty": "基础",
     "status": "available",
     "learningGoals": [

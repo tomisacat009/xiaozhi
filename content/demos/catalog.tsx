@@ -1,5 +1,6 @@
 import { createElement } from "react";
 
+import { EnglishWordBankExplorer } from "@/components/content/english-word-bank-explorer";
 import { english3500WordBank } from "@/content/english-3500-word-bank";
 import { sampleQuadratic } from "@/engine/core/math";
 import type { DemoDefinition, DemoParams } from "@/engine/core/types";
@@ -3884,6 +3885,27 @@ const english3500OverviewDemo: MixedDemo = {
   },
 };
 
+const english3500FullBankDemo: MixedDemo = {
+  id: "english-3500-full-bank",
+  title: "3500 词全量词库",
+  description: "把高中常见 3500 词正式整理成一个可搜索、可分类、可筛选的产品级词库入口。",
+  defaultParams: {},
+  presets: [],
+  explanation() {
+    return [
+      "先用搜索和筛选快速定位单词，再进入右侧详情卡片做分组记忆。",
+      "高频重点词已经补入更完整的搭配和例句，其余词条也都已经纳入全量索引。",
+    ];
+  },
+  renderStage() {
+    return createElement(EnglishWordBankExplorer, {
+      categories: english3500WordBank.categories,
+      stages: english3500WordBank.stages,
+      words: english3500WordBank.allWords,
+    });
+  },
+};
+
 const english3500CoreDemo: MixedDemo = {
   id: "english-3500-core-high-frequency",
   title: "高频核心词起步",
@@ -4312,6 +4334,7 @@ export const demoRegistry = {
   "english/roots-vocabulary-network/english-writing-upgrade-workshop": englishWritingUpgradeDemo,
   "english/roots-vocabulary-network/english-writing-paragraph-workshop": englishParagraphWritingDemo,
   "english/high-school-3500-words/english-3500-overview": english3500OverviewDemo,
+  "english/high-school-3500-words/english-3500-full-bank": english3500FullBankDemo,
   "english/high-school-3500-words/english-3500-core-high-frequency": english3500CoreDemo,
   "english/high-school-3500-words/english-3500-root-affix": english3500RootAffixDemo,
   "english/high-school-3500-words/english-3500-confusing-words": english3500ConfusingWordsDemo,

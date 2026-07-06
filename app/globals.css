@@ -1130,6 +1130,414 @@ h3 {
   border-radius: 24px;
 }
 
+.wordBankExplorer {
+  display: grid;
+  gap: 16px;
+}
+
+.wordBankExplorer__toolbar {
+  gap: 18px;
+}
+
+.wordBankExplorer__searchRow,
+.wordBankExplorer__filters {
+  display: grid;
+  gap: 12px;
+}
+
+.wordBankExplorer__focusFilters,
+.wordBankExplorer__stageFilters,
+.wordBankExplorer__dayPlanner,
+.wordBankExplorer__coverageList,
+.wordBankExplorer__stageList {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__queueSummary,
+.wordBankExplorer__queueColumns,
+.wordBankExplorer__queueList,
+.wordBankExplorer__queueReview {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__focusFilters button,
+.wordBankExplorer__stageFilters button,
+.wordBankExplorer__dayPlanner button {
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  background: rgba(255, 247, 237, 0.92);
+  color: #9a3412;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+.wordBankExplorer__focusFilters button[aria-pressed="true"],
+.wordBankExplorer__stageFilters button[aria-pressed="true"],
+.wordBankExplorer__dayPlanner button[aria-pressed="true"] {
+  border-color: rgba(194, 65, 12, 0.4);
+  background: linear-gradient(135deg, rgba(255, 237, 213, 0.98), rgba(255, 247, 237, 0.98));
+  box-shadow: 0 14px 28px rgba(249, 115, 22, 0.12);
+}
+
+.wordBankExplorer__coveragePanel,
+.wordBankExplorer__stagePanel {
+  display: grid;
+  gap: 12px;
+}
+
+.wordBankExplorer__progressStats {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__progressCard,
+.wordBankExplorer__drillCard {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(14, 116, 144, 0.14);
+  background: rgba(240, 249, 255, 0.82);
+}
+
+.wordBankExplorer__progressCard strong,
+.wordBankExplorer__drillCard strong,
+.wordBankExplorer__drillCard span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.wordBankExplorer__progressCard span,
+.wordBankExplorer__drillCard p,
+.wordBankExplorer__drillCard h4 {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.wordBankExplorer__drillCard h4 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.wordBankExplorer__memoryWorkbench {
+  display: grid;
+  gap: 12px;
+}
+
+.wordBankExplorer__memoryBoard {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(249, 115, 22, 0.16);
+  background: linear-gradient(135deg, rgba(255, 247, 237, 0.92), rgba(255, 255, 255, 0.92));
+}
+
+.wordBankExplorer__memoryHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.wordBankExplorer__modeActions {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__daySummary {
+  display: grid;
+  gap: 8px;
+}
+
+.wordBankExplorer__coveragePanel h3,
+.wordBankExplorer__stagePanel h3,
+.wordBankExplorer__memoryBoard h3 {
+  font-size: 1rem;
+}
+
+.wordBankExplorer__coverageCard,
+.wordBankExplorer__stageCard,
+.wordBankExplorer__queueCard,
+.wordBankExplorer__queueColumn {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.wordBankExplorer__coverageCard strong {
+  font-size: 0.98rem;
+}
+
+.wordBankExplorer__coverageCard p,
+.wordBankExplorer__stageCard p,
+.wordBankExplorer__queueCard p,
+.wordBankExplorer__coverageCard span,
+.wordBankExplorer__stageCard span,
+.wordBankExplorer__queueCard span,
+.wordBankExplorer__queueColumnHead span,
+.wordBankExplorer__queueItem span {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.wordBankExplorer__filters {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.wordBankExplorer__field {
+  display: grid;
+  gap: 8px;
+}
+
+.wordBankExplorer__field span {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wordBankExplorer__field input,
+.wordBankExplorer__field select {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
+  font: inherit;
+  padding: 12px 14px;
+}
+
+.wordBankExplorer__layout {
+  display: grid;
+  gap: 16px;
+}
+
+.wordBankExplorer__results,
+.wordBankExplorer__detail {
+  gap: 16px;
+}
+
+.wordBankExplorer__resultList {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__resultItem {
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.wordBankExplorer__resultItem:hover,
+.wordBankExplorer__resultItem:focus-visible,
+.wordBankExplorer__resultItem.is-active {
+  transform: translateY(-1px);
+  border-color: rgba(249, 115, 22, 0.38);
+  box-shadow: 0 16px 32px rgba(249, 115, 22, 0.12);
+}
+
+.wordBankExplorer__resultHead,
+.wordBankExplorer__resultMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wordBankExplorer__resultHead strong {
+  font-size: 1.02rem;
+}
+
+.wordBankExplorer__resultHead span,
+.wordBankExplorer__resultMeta span {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.wordBankExplorer__resultItem p,
+.wordBankExplorer__detailBlock p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.wordBankExplorer__studyPack,
+.wordBankExplorer__anchorGrid,
+.wordBankExplorer__recoveryList {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__studyCard,
+.wordBankExplorer__anchorCard,
+.wordBankExplorer__recoveryItem,
+.wordBankExplorer__queueItem {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.wordBankExplorer__studyCard {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.wordBankExplorer__recoveryItem {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.wordBankExplorer__queueColumn {
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.wordBankExplorer__queueColumnHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wordBankExplorer__queueItem {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: rgba(255, 247, 237, 0.58);
+}
+
+.wordBankExplorer__queueItem strong {
+  font-size: 0.98rem;
+}
+
+.wordBankExplorer__queueReview {
+  gap: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(249, 115, 22, 0.22);
+}
+
+.wordBankExplorer__queueReview p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+
+.wordBankExplorer__queueReview p strong {
+  color: #9a3412;
+}
+
+.wordBankExplorer__studyCard span,
+.wordBankExplorer__anchorCard strong {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.wordBankExplorer__studyCard strong {
+  font-size: 1rem;
+}
+
+.wordBankExplorer__studyCard p,
+.wordBankExplorer__anchorCard p,
+.wordBankExplorer__rhythmList li {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.wordBankExplorer__studyCard.is-active {
+  border-color: rgba(249, 115, 22, 0.35);
+  box-shadow: 0 14px 28px rgba(249, 115, 22, 0.1);
+}
+
+.wordBankExplorer__modeButton {
+  border: 1px solid rgba(194, 65, 12, 0.24);
+  background: rgba(255, 255, 255, 0.94);
+  color: #9a3412;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wordBankExplorer__modeButton[aria-pressed="true"] {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(255, 237, 213, 0.98));
+  border-color: rgba(194, 65, 12, 0.4);
+}
+
+.wordBankExplorer__recoveryButton {
+  border: 1px solid rgba(249, 115, 22, 0.28);
+  background: rgba(255, 247, 237, 0.9);
+  color: #9a3412;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.wordBankExplorer__recoveryButton[aria-pressed="true"] {
+  border-color: rgba(194, 65, 12, 0.4);
+  background: linear-gradient(135deg, rgba(255, 237, 213, 0.98), rgba(255, 247, 237, 0.98));
+}
+
+.wordBankExplorer__rhythmList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.wordBankExplorer__loadMore {
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  background: rgba(255, 247, 237, 0.9);
+  color: #9a3412;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.wordBankExplorer__detailBlock {
+  display: grid;
+  gap: 10px;
+}
+
+.wordBankExplorer__detailBlock h3 {
+  font-size: 1rem;
+}
+
 @media (min-width: 768px) {
   .siteHeader {
     padding-top: 28px;
@@ -1188,6 +1596,38 @@ h3 {
   .vennDiagram__body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .wordBankExplorer__filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .wordBankExplorer__focusFilters,
+  .wordBankExplorer__stageFilters,
+  .wordBankExplorer__dayPlanner,
+  .wordBankExplorer__progressStats,
+  .wordBankExplorer__coverageList,
+  .wordBankExplorer__stageList,
+  .wordBankExplorer__queueSummary,
+  .wordBankExplorer__queueColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wordBankExplorer__memoryWorkbench,
+  .wordBankExplorer__studyPack,
+  .wordBankExplorer__anchorGrid,
+  .wordBankExplorer__recoveryList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wordBankExplorer__layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    align-items: start;
+  }
+
+  .wordBankExplorer__detail {
+    position: sticky;
+    top: 20px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1199,6 +1639,18 @@ h3 {
   }
 
   .contentCard__meta button {
+    width: 100%;
+  }
+
+  .wordBankExplorer__memoryHead {
+    flex-direction: column;
+  }
+
+  .wordBankExplorer__modeActions {
+    width: 100%;
+  }
+
+  .wordBankExplorer__modeButton {
     width: 100%;
   }
 
@@ -1237,6 +1689,8 @@ h3 {
   .networkDiagram__header,
   .flowDiagram__header,
   .semanticAxisDiagram__header,
+  .wordBankExplorer__resultHead,
+  .wordBankExplorer__resultMeta,
   .setRelationDiagram__header,
   .vennDiagram__header {
     flex-direction: column;

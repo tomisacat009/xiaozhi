@@ -14,8 +14,8 @@ afterEach(() => {
 
 describe("expanded content routes", () => {
   it("generates static unit entries for the full migrated skeleton", () => {
-    expect(getAllUnits()).toHaveLength(80);
-    expect(getAllUnitEntries()).toHaveLength(80);
+    expect(getAllUnits()).toHaveLength(81);
+    expect(getAllUnitEntries()).toHaveLength(81);
   });
 
   it("lists full module unit entries for migrated modules", async () => {

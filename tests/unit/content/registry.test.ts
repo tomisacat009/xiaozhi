@@ -74,7 +74,7 @@ describe("content registry", () => {
   });
 
   it("returns all migrated units and module-scoped unit lists", () => {
-    expect(getAllUnits()).toHaveLength(80);
+    expect(getAllUnits()).toHaveLength(81);
     expect(getUnitsByModuleId("math-functions").length).toBe(6);
     expect(getUnitsByModuleId("physics-motion").length).toBe(7);
   });
