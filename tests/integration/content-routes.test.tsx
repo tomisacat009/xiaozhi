@@ -14,8 +14,8 @@ afterEach(() => {
 
 describe("expanded content routes", () => {
   it("generates static unit entries for the full migrated skeleton", () => {
-    expect(getAllUnits()).toHaveLength(81);
-    expect(getAllUnitEntries()).toHaveLength(81);
+    expect(getAllUnits()).toHaveLength(82);
+    expect(getAllUnitEntries()).toHaveLength(82);
   });
 
   it("lists full module unit entries for migrated modules", async () => {
@@ -58,5 +58,27 @@ describe("expanded content routes", () => {
     expect(screen.queryByText("交互演示迁移线索")).not.toBeInTheDocument();
     expect(screen.queryByText("后续重构方向")).not.toBeInTheDocument();
     expect(screen.queryByText(/当前状态：/)).not.toBeInTheDocument();
+  });
+
+  it("renders the chemistry nuclear charge unit with an interactive electron arrangement demo", async () => {
+    const view = await UnitPage({
+      params: Promise.resolve({
+        subjectSlug: "chemistry",
+        moduleSlug: "chemical-language",
+        unitSlug: "chemistry-nuclear-charge-electron-arrangement",
+      }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByRole("heading", { name: "核电荷数与核外电子排布", level: 1 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { name: "核电荷数与电子排布演示器", level: 2 }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByRole("combobox", { name: "示例元素" })).toBeInTheDocument();
+    expect(screen.getAllByText(/核电荷数 = 质子数 = 原子序数/).length).toBeGreaterThan(0);
+    expect(screen.queryByText("迁移说明")).not.toBeInTheDocument();
   });
 });

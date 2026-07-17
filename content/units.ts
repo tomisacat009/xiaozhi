@@ -1541,6 +1541,37 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "migrationSource": "legacy/prototype-v1/modules/unit-chemistry-mole.html"
   },
   {
+    "id": "chemistry-chemistry-nuclear-charge-electron-arrangement",
+    "subjectId": "chemistry",
+    "moduleId": "chemistry-chemical-language",
+    "slug": "chemistry-nuclear-charge-electron-arrangement",
+    "title": "核电荷数与核外电子排布",
+    "titleEn": null,
+    "summary": "把核电荷数、质子数、电子数和电子层排布放进同一张示意图里，帮助孩子真正看懂原子结构的底层规律。",
+    "order": 4,
+    "difficulty": "中等",
+    "status": "available",
+    "learningGoals": [
+      "能说清核电荷数、质子数和原子序数之间的对应关系",
+      "能判断中性原子的电子数并写出前二十号元素的常见电子层排布",
+      "能从最外层电子数出发理解主族元素化学性质的相似性"
+    ],
+    "coreTakeaways": [
+      "核电荷数本质上反映原子核对核外电子的吸引核心，它的数值等于质子数",
+      "中性原子里电子总数等于核电荷数，但电子必须按层分布而不是随意堆放",
+      "最外层电子数常常决定元素在化学反应中更容易失去电子还是得到电子"
+    ],
+    "keywords": [
+      "核电荷数与核外电子排布",
+      "chemical-language"
+    ],
+    "relatedUnits": [],
+    "demoIds": [
+      "核电荷数与电子排布演示器"
+    ],
+    "migrationSource": "production/original-content"
+  },
+  {
     "id": "chemistry-chemistry-ionic-reaction",
     "subjectId": "chemistry",
     "moduleId": "chemistry-reaction-principles",

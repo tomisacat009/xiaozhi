@@ -2155,6 +2155,399 @@ const chemistryMoleDemo: NumericDemo = {
   },
 };
 
+const chemistryElectronArrangementExamples = [
+  {
+    id: "H",
+    symbol: "H",
+    name: "氢",
+    atomicNumber: 1,
+    shells: [1],
+    family: "非金属起点",
+    tendency: "最外层只有 1 个电子，但第一层容量很小，常以共用电子来趋向稳定。",
+  },
+  {
+    id: "He",
+    symbol: "He",
+    name: "氦",
+    atomicNumber: 2,
+    shells: [2],
+    family: "稀有气体",
+    tendency: "第一层已排满，结构稳定，化学性质很不活泼。",
+  },
+  {
+    id: "Li",
+    symbol: "Li",
+    name: "锂",
+    atomicNumber: 3,
+    shells: [2, 1],
+    family: "碱金属",
+    tendency: "最外层 1 个电子，较容易失去，表现出金属性。",
+  },
+  {
+    id: "C",
+    symbol: "C",
+    name: "碳",
+    atomicNumber: 6,
+    shells: [2, 4],
+    family: "主族非金属",
+    tendency: "最外层 4 个电子，常通过共用电子形成稳定结构。",
+  },
+  {
+    id: "O",
+    symbol: "O",
+    name: "氧",
+    atomicNumber: 8,
+    shells: [2, 6],
+    family: "活泼非金属",
+    tendency: "距离 8 电子稳定层还差 2 个，常表现出较强得电子倾向。",
+  },
+  {
+    id: "Na",
+    symbol: "Na",
+    name: "钠",
+    atomicNumber: 11,
+    shells: [2, 8, 1],
+    family: "碱金属",
+    tendency: "最外层 1 个电子，很容易失去，因此化学性质活泼。",
+  },
+  {
+    id: "Cl",
+    symbol: "Cl",
+    name: "氯",
+    atomicNumber: 17,
+    shells: [2, 8, 7],
+    family: "卤素",
+    tendency: "最外层有 7 个电子，常通过得到 1 个电子达到稳定结构。",
+  },
+  {
+    id: "K",
+    symbol: "K",
+    name: "钾",
+    atomicNumber: 19,
+    shells: [2, 8, 8, 1],
+    family: "碱金属",
+    tendency: "第四层出现第 1 个电子，最外层仍只有 1 个，极易失去。",
+  },
+  {
+    id: "Ca",
+    symbol: "Ca",
+    name: "钙",
+    atomicNumber: 20,
+    shells: [2, 8, 8, 2],
+    family: "碱土金属",
+    tendency: "最外层 2 个电子，常失去 2 个电子形成稳定离子。",
+  },
+] as const;
+
+const chemistryNuclearChargeDemo: MixedDemo = {
+  id: "chemistry-nuclear-charge-electron-arrangement",
+  title: "核电荷数与电子排布演示器",
+  description: "切换典型元素，观察核电荷数、电子层分布和最外层电子数怎样共同决定原子结构规律。",
+  defaultParams: { element: "Na", focus: "shells" },
+  presets: [
+    { id: "starter", label: "基础对照", params: { element: "O", focus: "core" } },
+    { id: "metal", label: "金属倾向", params: { element: "Na", focus: "valence" } },
+    { id: "nonmetal", label: "非金属倾向", params: { element: "Cl", focus: "valence" } },
+    { id: "period4", label: "第四层开启", params: { element: "K", focus: "shells" } },
+  ],
+  controls: {
+    element: {
+      kind: "select",
+      label: "示例元素",
+      options: chemistryElectronArrangementExamples.map((element) => ({
+        label: `${element.symbol} ${element.name}`,
+        value: element.id,
+      })),
+    },
+    focus: {
+      kind: "select",
+      label: "观察重点",
+      options: [
+        { label: "核电荷数", value: "core" },
+        { label: "电子层分布", value: "shells" },
+        { label: "最外层电子", value: "valence" },
+      ],
+    },
+  },
+  explanation({ element, focus }) {
+    const current =
+      chemistryElectronArrangementExamples.find((item) => item.id === String(element)) ??
+      chemistryElectronArrangementExamples[0];
+    const shellText = current.shells.join(", ");
+    const lastShell = current.shells[current.shells.length - 1] ?? 0;
+    const focusLines: Record<string, string> = {
+      core: `核电荷数 = 质子数 = 原子序数 = ${current.atomicNumber}，中性原子时电子数也等于 ${current.atomicNumber}。`,
+      shells: `该元素核外电子按层排布为 ${shellText}，说明电子要先排内层，再逐层向外扩展。`,
+      valence: `最外层电子数是 ${lastShell}，它直接影响元素更容易失电子、得电子，还是通过共用电子趋向稳定。`,
+    };
+
+    return [
+      `${current.symbol}（${current.name}）属于${current.family}。`,
+      focusLines[String(focus)],
+      current.tendency,
+    ];
+  },
+  renderStage({ element, focus }) {
+    const current =
+      chemistryElectronArrangementExamples.find((item) => item.id === String(element)) ??
+      chemistryElectronArrangementExamples[0];
+    const maxElectrons = 8;
+    const ringGap = 34;
+    const center = 160;
+    const rings = [48, 48 + ringGap, 48 + ringGap * 2, 48 + ringGap * 3];
+    const focusKey = String(focus);
+
+    const shellNodes = current.shells.flatMap((count, shellIndex) => {
+      const radius = rings[shellIndex] ?? rings[rings.length - 1];
+      return Array.from({ length: count }, (_, electronIndex) => {
+        const angle = (Math.PI * 2 * electronIndex) / count - Math.PI / 2;
+        const x = center + Math.cos(angle) * radius;
+        const y = center + Math.sin(angle) * radius;
+        const isValenceShell = shellIndex === current.shells.length - 1;
+        const fill =
+          focusKey === "valence" && isValenceShell
+            ? "#f97316"
+            : focusKey === "shells"
+              ? "#38bdf8"
+              : "#fde68a";
+
+        return createElement("g", { key: `${current.id}-${shellIndex}-${electronIndex}` }, [
+          createElement("circle", {
+            key: `electron-${current.id}-${shellIndex}-${electronIndex}`,
+            cx: x,
+            cy: y,
+            r: 7,
+            fill,
+            stroke: "#0f172a",
+            strokeWidth: 1.5,
+          }),
+          createElement(
+            "text",
+            {
+              key: `electron-label-${current.id}-${shellIndex}-${electronIndex}`,
+              x,
+              y: y + 3,
+              textAnchor: "middle",
+              fontSize: 8,
+              fill: "#0f172a",
+            },
+            "e-",
+          ),
+        ]);
+      });
+    });
+
+    const shellSummary = current.shells.map((count, index) => ({
+      id: `shell-${index + 1}`,
+      title: `第 ${index + 1} 层`,
+      summary: `${count} / ${index === 0 ? 2 : maxElectrons} 个电子`,
+      accent:
+        focusKey === "shells" || (focusKey === "valence" && index === current.shells.length - 1)
+          ? "#fdba74"
+          : "#bfdbfe",
+    }));
+
+    return createElement(
+      "div",
+      {
+        style: {
+          display: "grid",
+          gap: "1rem",
+        },
+      },
+      [
+        createElement(
+          "div",
+          {
+            key: "stats",
+            style: {
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+              gap: "0.75rem",
+            },
+          },
+          [
+            ["核电荷数", String(current.atomicNumber)],
+            ["质子数", String(current.atomicNumber)],
+            ["中性原子电子数", String(current.atomicNumber)],
+            ["电子层排布", current.shells.join(", ")],
+          ].map(([label, value]) =>
+            createElement(
+              "div",
+              {
+                key: label,
+                style: {
+                  borderRadius: "18px",
+                  padding: "0.9rem 1rem",
+                  background: "#f8fafc",
+                  border: "1px solid #cbd5e1",
+                },
+              },
+              [
+                createElement(
+                  "div",
+                  {
+                    key: `${label}-label`,
+                    style: { fontSize: "0.82rem", color: "#475569", marginBottom: "0.35rem" },
+                  },
+                  label,
+                ),
+                createElement(
+                  "strong",
+                  {
+                    key: `${label}-value`,
+                    style: { fontSize: "1rem", color: "#0f172a" },
+                  },
+                  value,
+                ),
+              ],
+            ),
+          ),
+        ),
+        createElement(
+          "div",
+          {
+            key: "stage",
+            style: {
+              display: "grid",
+              gap: "1rem",
+              gridTemplateColumns: "minmax(0, 1.25fr) minmax(240px, 0.95fr)",
+              alignItems: "start",
+            },
+          },
+          [
+            createElement(
+              "div",
+              {
+                key: "atom",
+                style: {
+                  borderRadius: "24px",
+                  padding: "1rem",
+                  background:
+                    focusKey === "core"
+                      ? "linear-gradient(135deg, #fff7ed, #ffedd5)"
+                      : "linear-gradient(135deg, #eff6ff, #f8fafc)",
+                  border: "1px solid #cbd5e1",
+                  overflowX: "auto",
+                },
+              },
+              createElement(
+                "svg",
+                {
+                  viewBox: "0 0 320 320",
+                  role: "img",
+                  "aria-label": `${current.name}原子结构示意图`,
+                  style: { width: "100%", height: "auto", minWidth: "260px" },
+                },
+                [
+                  createElement("text", {
+                    key: "x-axis",
+                    x: 284,
+                    y: 304,
+                    textAnchor: "end",
+                    fontSize: 11,
+                    fill: "#475569",
+                  }, "最外层越向外"),
+                  rings.map((radius, index) =>
+                    createElement("circle", {
+                      key: `ring-${index + 1}`,
+                      cx: center,
+                      cy: center,
+                      r: radius,
+                      fill: "none",
+                      stroke:
+                        focusKey === "shells" || (focusKey === "valence" && index === current.shells.length - 1)
+                          ? "#fb923c"
+                          : "#94a3b8",
+                      strokeWidth:
+                        focusKey === "shells" || (focusKey === "valence" && index === current.shells.length - 1)
+                          ? 2.5
+                          : 1.5,
+                      strokeDasharray: index >= current.shells.length ? "6 8" : undefined,
+                      opacity: index < current.shells.length ? 1 : 0.45,
+                    }),
+                  ),
+                  createElement("circle", {
+                    key: "nucleus",
+                    cx: center,
+                    cy: center,
+                    r: 34,
+                    fill: focusKey === "core" ? "#fb923c" : "#1d4ed8",
+                  }),
+                  createElement(
+                    "text",
+                    {
+                      key: "nucleus-top",
+                      x: center,
+                      y: center - 6,
+                      textAnchor: "middle",
+                      fontSize: 13,
+                      fill: "#ffffff",
+                    },
+                    `${current.symbol} 核`,
+                  ),
+                  createElement(
+                    "text",
+                    {
+                      key: "nucleus-bottom",
+                      x: center,
+                      y: center + 14,
+                      textAnchor: "middle",
+                      fontSize: 16,
+                      fill: "#ffffff",
+                    },
+                    `+${current.atomicNumber}`,
+                  ),
+                  ...shellNodes,
+                  current.shells.map((count, index) => {
+                    const radius = rings[index] ?? rings[rings.length - 1];
+                    return createElement(
+                      "text",
+                      {
+                        key: `shell-label-${index + 1}`,
+                        x: center + radius + 10,
+                        y: center - 4,
+                        fontSize: 11,
+                        fill: "#334155",
+                      },
+                      `第${index + 1}层：${count}`,
+                    );
+                  }),
+                ],
+              ),
+            ),
+            createElement(ConceptBoard, {
+              key: "board",
+              title: `${current.name} 的结构规律`,
+              items: [
+                {
+                  id: "rule-core",
+                  title: "编号规则",
+                  summary: `核电荷数 = 质子数 = 原子序数 = ${current.atomicNumber}`,
+                  accent: focusKey === "core" ? "#fdba74" : "#bfdbfe",
+                },
+                {
+                  id: "rule-shells",
+                  title: "排布规则",
+                  summary: `核外电子按层分布：${current.shells.join(", ")}`,
+                  accent: focusKey === "shells" ? "#fdba74" : "#bfdbfe",
+                },
+                {
+                  id: "rule-valence",
+                  title: "性质抓手",
+                  summary: `最外层 ${current.shells[current.shells.length - 1]} 个电子，${current.tendency}`,
+                  accent: focusKey === "valence" ? "#fdba74" : "#bfdbfe",
+                },
+                ...shellSummary,
+              ],
+            }),
+          ],
+        ),
+      ],
+    );
+  },
+};
+
 const chemistryMaterialClassificationDemo: MixedDemo = {
   id: "chemistry-material-classification",
   title: "物质分类关系",
@@ -4310,6 +4703,7 @@ export const demoRegistry = {
   "chemistry/chemical-language/chemistry-material-classification": chemistryMaterialClassificationDemo,
   "chemistry/chemical-language/chemistry-dispersion-colloid": chemistryDispersionDemo,
   "chemistry/chemical-language/chemistry-mole": chemistryMoleDemo,
+  "chemistry/chemical-language/chemistry-nuclear-charge-electron-arrangement": chemistryNuclearChargeDemo,
   "chemistry/reaction-principles/chemistry-ionic-reaction": chemistryIonicDemo,
   "chemistry/reaction-principles/chemistry-redox": chemistryRedoxDemo,
   "chemistry/elements-compounds/chemistry-sodium": chemistrySodiumDemo,

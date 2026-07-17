@@ -74,9 +74,10 @@ describe("content registry", () => {
   });
 
   it("returns all migrated units and module-scoped unit lists", () => {
-    expect(getAllUnits()).toHaveLength(81);
+    expect(getAllUnits()).toHaveLength(82);
     expect(getUnitsByModuleId("math-functions").length).toBe(6);
     expect(getUnitsByModuleId("physics-motion").length).toBe(7);
+    expect(getUnitsByModuleId("chemistry-chemical-language").length).toBe(4);
   });
 
   it("provides a formal demo definition for every registered knowledge unit", () => {
