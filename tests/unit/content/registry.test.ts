@@ -70,12 +70,13 @@ describe("content registry", () => {
       "反比例函数",
       "幂函数",
       "函数变换",
+      "复合与组合函数",
     ]);
   });
 
   it("returns all migrated units and module-scoped unit lists", () => {
-    expect(getAllUnits()).toHaveLength(82);
-    expect(getUnitsByModuleId("math-functions").length).toBe(6);
+    expect(getAllUnits()).toHaveLength(83);
+    expect(getUnitsByModuleId("math-functions").length).toBe(7);
     expect(getUnitsByModuleId("physics-motion").length).toBe(7);
     expect(getUnitsByModuleId("chemistry-chemical-language").length).toBe(4);
   });

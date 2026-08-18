@@ -24,6 +24,7 @@ const VIEW_HEIGHT = 390;
 const CIRCLE_CENTER = { x: 150, y: 180 };
 const CIRCLE_RADIUS = 104;
 const GRAPH = { left: 330, right: 770, top: 56, bottom: 320 };
+const ANIMATION_FRAME_INTERVAL = 1000 / 30;
 
 const modeCopy = {
   sin: {
@@ -175,10 +176,24 @@ export function TrigonometryLab({
     }
 
     function animate(time: number) {
-      const previous = previousTimeRef.current ?? time;
-      const elapsed = Math.min(time - previous, 40);
-      previousTimeRef.current = time;
-      setMotionAngle((current) => current + (elapsed / 1000) * 48 * speed);
+      if (previousTimeRef.current === null) {
+        previousTimeRef.current = time;
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const previous = previousTimeRef.current;
+      const elapsed = time - previous;
+
+      if (document.hidden || elapsed < ANIMATION_FRAME_INTERVAL) {
+        if (document.hidden) previousTimeRef.current = time;
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      previousTimeRef.current = time - (elapsed % ANIMATION_FRAME_INTERVAL);
+      const stepSeconds = Math.min(elapsed, 100) / 1000;
+      setMotionAngle((current) => current + stepSeconds * 48 * speed);
       frameRef.current = requestAnimationFrame(animate);
     }
 
@@ -345,13 +360,6 @@ export function TrigonometryLab({
       <div className="trigLab__viewport">
         <svg viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`} className="trigLab__svg" role="img" aria-label={`${copy.title}：单位圆与函数图像同步变化`}>
         <defs>
-          <filter id={`trig-glow-${mode}`} x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
           <clipPath id={`trig-graph-clip-${mode}`}>
             <rect x={GRAPH.left} y={GRAPH.top} width={GRAPH.right - GRAPH.left} height={GRAPH.bottom - GRAPH.top} rx="16" />
           </clipPath>
@@ -443,7 +451,7 @@ export function TrigonometryLab({
         </svg>
       </div>
 
-      <div className="trigLab__readouts" aria-live="polite">
+      <div className="trigLab__readouts" aria-live={isPlaying ? "off" : "polite"}>
         <article>
           <span>输入角 x</span>
           <strong>{round(motionAngle, 1)}°</strong>

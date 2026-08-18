@@ -188,6 +188,47 @@ export const knowledgeUnits: KnowledgeUnitMeta[] = [
     "migrationSource": "legacy/prototype-v1/modules/unit-transform-review.html"
   },
   {
+    "id": "math-composite-functions",
+    "subjectId": "math",
+    "moduleId": "math-functions",
+    "slug": "composite-functions",
+    "title": "常见复合与组合函数",
+    "titleEn": null,
+    "summary": "用函数加工流水线理解对勾函数、绝对值折叠、分式、根式与对数平移的定义域和图像变化。",
+    "order": 7,
+    "difficulty": "中等",
+    "status": "available",
+    "learningGoals": [
+      "能按定义域、基本函数、平移伸缩、关键点的顺序分析复杂函数",
+      "能完整掌握对勾函数 x+1/x 的图像、值域、极值与渐近线",
+      "能理解绝对值对图像的翻折作用，并区分端点、断点和渐近线",
+      "能通过探针代入检查分式、根式和对数函数的定义域限制"
+    ],
+    "coreTakeaways": [
+      "复杂函数先拆成输入加工、基本函数和输出加工三层",
+      "定义域必须在所有图像变换和代数运算之前检查",
+      "对勾函数的两段值域来自正负两支各自的极值边界",
+      "绝对值是翻折，平移是位置变化，伸缩与翻转由括号外系数控制"
+    ],
+    "keywords": [
+      "对勾函数",
+      "复合函数",
+      "组合函数",
+      "绝对值函数",
+      "函数变换",
+      "functions"
+    ],
+    "relatedUnits": [
+      "math-transform-review",
+      "math-reciprocal",
+      "math-exp-log"
+    ],
+    "demoIds": [
+      "常见复合与组合函数实验室"
+    ],
+    "migrationSource": "content/units/math/functions/composite-functions.mdx"
+  },
+  {
     "id": "math-sin-basic",
     "subjectId": "math",
     "moduleId": "math-trigonometry",

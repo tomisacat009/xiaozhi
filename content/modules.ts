@@ -12,7 +12,8 @@ export const modules: Module[] = [
       "二次函数",
       "反比例函数",
       "幂函数",
-      "函数变换"
+      "函数变换",
+      "复合与组合函数"
     ],
     "order": 1,
     "status": "available"

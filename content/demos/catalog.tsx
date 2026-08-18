@@ -5,6 +5,7 @@ import { english3500WordBank } from "@/content/english-3500-word-bank";
 import { sampleQuadratic } from "@/engine/core/math";
 import type { DemoDefinition, DemoParams } from "@/engine/core/types";
 import { EnglishSentenceDiagram } from "@/engine/renderers/english-sentence-diagram";
+import { CompositeFunctionLab } from "@/engine/renderers/composite-function-lab";
 import { ExponentialLogarithmLab } from "@/engine/renderers/exponential-logarithm-lab";
 import { FlowDiagram } from "@/engine/renderers/flow-diagram";
 import { NetworkDiagram } from "@/engine/renderers/network-diagram";
@@ -205,6 +206,102 @@ const expLogDemo: NumericDemo = {
       key: `exp-log-${base}-${inputX}`,
       base,
       inputX,
+    });
+  },
+};
+
+const compositeFunctionsDemo: MixedDemo = {
+  id: "composite-functions",
+  title: "常见复合与组合函数实验室",
+  description: "从基本函数出发，统一观察定义域、平移、伸缩、翻转、渐近线和关键点，重点掌握对勾函数 y=x+1/x。",
+  defaultParams: {
+    family: "hook",
+    amplitude: 1,
+    horizontalShift: 0,
+    verticalShift: 0,
+    probeX: 1,
+  },
+  presets: [
+    { id: "hook", label: "对勾函数 y=x+1/x", params: { family: "hook", amplitude: 1, horizontalShift: 0, verticalShift: 0, probeX: 1 } },
+    { id: "hook-shift", label: "对勾函数平移", params: { family: "hook", amplitude: 1, horizontalShift: 1, verticalShift: -1, probeX: 2 } },
+    { id: "absolute", label: "绝对值折叠", params: { family: "absolute", amplitude: 1, horizontalShift: -1, verticalShift: 0, probeX: 1 } },
+    { id: "absolute-quadratic", label: "抛物线向上翻折", params: { family: "absolute-quadratic", amplitude: 1, horizontalShift: 0, verticalShift: 0, probeX: 0 } },
+    { id: "reciprocal", label: "分式双平移", params: { family: "reciprocal", amplitude: 2, horizontalShift: 1, verticalShift: -1, probeX: 2 } },
+    { id: "square-root", label: "根式端点平移", params: { family: "square-root", amplitude: 1.5, horizontalShift: -1, verticalShift: -1, probeX: 0 } },
+    { id: "logarithm", label: "对数真数限制", params: { family: "logarithm", amplitude: 1, horizontalShift: 1, verticalShift: 0, probeX: 2 } },
+  ],
+  controls: {
+    family: {
+      kind: "select",
+      label: "函数类型",
+      options: [
+        { label: "对勾函数 x + 1/x", value: "hook" },
+        { label: "绝对值一次函数 |x|", value: "absolute" },
+        { label: "二次函数的绝对值 |x²−1|", value: "absolute-quadratic" },
+        { label: "分式平移 1/x", value: "reciprocal" },
+        { label: "根式复合 √x", value: "square-root" },
+        { label: "对数平移 log₂x", value: "logarithm" },
+      ],
+    },
+    amplitude: { label: "纵向伸缩与翻转 A", min: -2.5, max: 2.5, step: 0.25 },
+    horizontalShift: { label: "水平平移 h", min: -2.5, max: 2.5, step: 0.5 },
+    verticalShift: { label: "竖直平移 d", min: -3, max: 3, step: 0.5 },
+    probeX: { label: "观察输入 x", min: -5, max: 5, step: 0.25 },
+  },
+  explanation({ family, amplitude, horizontalShift, verticalShift, probeX }) {
+    const selected = String(family);
+    const a = Number(amplitude);
+    const h = Number(horizontalShift);
+    const d = Number(verticalShift);
+    const x = Number(probeX);
+    const input = round(x - h);
+    const common = [
+      `先做括号内：当前 x−h=${input}；再进入基本函数，最后乘 A=${round(a)}、加 d=${round(d)}。`,
+      a < 0 ? "A<0 会把图像关于水平基准线翻转；|A| 同时控制纵向伸缩。" : "A≥0 时不发生上下翻转；|A| 越大，纵向变化越明显。",
+    ];
+
+    if (selected === "hook") {
+      return [
+        `对勾函数在 x=${round(h)} 处无定义，两支曲线会靠近这条竖直渐近线，但永远不能穿过断点。`,
+        `标准函数 x+1/x 在 x>0 时最小值为 2，在 x<0 时最大值为 −2；极值横坐标是 h±1。`,
+        `变换后的值域为 y≤${round(d - 2 * Math.abs(a))} 或 y≥${round(d + 2 * Math.abs(a))}（A≠0）。`,
+        ...common,
+      ];
+    }
+    if (selected === "absolute" || selected === "absolute-quadratic") {
+      return [
+        "绝对值的图像规则是：x 轴上方保持不动，x 轴下方沿 x 轴向上翻折。",
+        selected === "absolute" ? `顶点随 h、d 移到 (${round(h)}, ${round(d)})。` : `原抛物线低于 x 轴的中间部分被翻到上方，零点仍在 x=${round(h - 1)}、${round(h + 1)}。`,
+        ...common,
+      ];
+    }
+    if (selected === "reciprocal") {
+      return [
+        `分母不能为 0，所以定义域排除 x=${round(h)}；竖直渐近线也随 h 移到这里。`,
+        `图像中心是 (${round(h)}, ${round(d)})，水平渐近线是 y=${round(d)}。`,
+        ...common,
+      ];
+    }
+    if (selected === "square-root") {
+      return [
+        `被开方数必须非负，因此 x−h≥0，也就是 x≥${round(h)}。`,
+        `图像端点是 (${round(h)}, ${round(d)})，它不是渐近线上的点，而是真正能够取到的起点。`,
+        ...common,
+      ];
+    }
+    return [
+      `对数真数必须大于 0，因此 x−h>0，也就是 x>${round(h)}。`,
+      `x=${round(h)} 是竖直渐近线；当 x−h=1 时对数值为 0，所以图像经过 (${round(h + 1)}, ${round(d)})。`,
+      ...common,
+    ];
+  },
+  renderStage({ family, amplitude, horizontalShift, verticalShift, probeX }) {
+    return createElement(CompositeFunctionLab, {
+      family: String(family),
+      amplitude: Number(amplitude),
+      horizontalShift: Number(horizontalShift),
+      verticalShift: Number(verticalShift),
+      probeX: Number(probeX),
     });
   },
 };
@@ -4699,6 +4796,7 @@ export const demoRegistry = {
   "math/functions/linear": linearDemo,
   "math/functions/reciprocal": reciprocalDemo,
   "math/functions/exp-log": expLogDemo,
+  "math/functions/composite-functions": compositeFunctionsDemo,
   "math/functions/power": powerDemo,
   "math/functions/quadratic-function": quadraticReferenceDemo,
   "math/functions/transform-review": transformReviewDemo,

@@ -17,6 +17,7 @@ const GRAPH = { left: 72, right: 566, top: 42, bottom: 536 };
 const BOUNDS = { min: -3, max: 7 };
 const INPUT_MIN = -1.5;
 const INPUT_MAX = 1.5;
+const ANIMATION_FRAME_INTERVAL = 1000 / 30;
 
 function round(value: number, digits = 3) {
   const rounded = Number(value.toFixed(digits));
@@ -70,11 +71,25 @@ export function ExponentialLogarithmLab({ base, inputX }: ExponentialLogarithmLa
     }
 
     function animate(time: number) {
-      const previous = previousTimeRef.current ?? time;
-      const elapsed = Math.min(time - previous, 40);
-      previousTimeRef.current = time;
+      if (previousTimeRef.current === null) {
+        previousTimeRef.current = time;
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const previous = previousTimeRef.current;
+      const elapsed = time - previous;
+
+      if (document.hidden || elapsed < ANIMATION_FRAME_INTERVAL) {
+        if (document.hidden) previousTimeRef.current = time;
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      previousTimeRef.current = time - (elapsed % ANIMATION_FRAME_INTERVAL);
+      const stepSeconds = Math.min(elapsed, 100) / 1000;
       setMotionX((current) => {
-        const next = current + (elapsed / 1000) * 0.55 * speed;
+        const next = current + stepSeconds * 0.55 * speed;
         return next > INPUT_MAX ? INPUT_MIN : next;
       });
       frameRef.current = requestAnimationFrame(animate);
@@ -162,13 +177,6 @@ export function ExponentialLogarithmLab({ base, inputX }: ExponentialLogarithmLa
             <clipPath id="exp-log-graph-clip">
               <rect x={GRAPH.left} y={GRAPH.top} width={GRAPH.right - GRAPH.left} height={GRAPH.bottom - GRAPH.top} rx="20" />
             </clipPath>
-            <filter id="exp-log-glow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
 
           <rect x="28" y="18" width="568" height="554" rx="30" className="expLogLab__paper" />
@@ -217,7 +225,7 @@ export function ExponentialLogarithmLab({ base, inputX }: ExponentialLogarithmLa
         </svg>
       </div>
 
-      <div className="expLogLab__readouts" aria-live="polite">
+      <div className="expLogLab__readouts" aria-live={isPlaying ? "off" : "polite"}>
         <article className="expLogLab__readout--exp">
           <span>指数函数做什么</span>
           <strong>{round(base)}<sup>{round(motionX)}</sup> = {round(output)}</strong>

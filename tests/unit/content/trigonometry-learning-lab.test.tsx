@@ -1,13 +1,19 @@
 // @vitest-environment jsdom
 
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getDemoDefinition } from "@/content/demos/catalog";
 
+beforeEach(() => {
+  vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+});
+
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 describe("trigonometry learning lab", () => {
@@ -56,5 +62,38 @@ describe("trigonometry learning lab", () => {
     expect(screen.getByText("ω 管横向")).toBeInTheDocument();
     expect(screen.getByText("φ 管起点")).toBeInTheDocument();
     expect(screen.getByText("d 管中线")).toBeInTheDocument();
+  });
+
+  it("keeps rapidly changing values out of the live region while animation is running", () => {
+    const definition = getDemoDefinition("math", "trigonometry", "sin-basic");
+    expect(definition).not.toBeNull();
+
+    const { container } = render(<>{definition!.renderStage?.(definition!.defaultParams)}</>);
+    const readouts = container.querySelector(".trigLab__readouts");
+    expect(readouts).toHaveAttribute("aria-live", "polite");
+
+    fireEvent.click(screen.getByRole("button", { name: "播放一圈" }));
+
+    expect(screen.getByRole("button", { name: "暂停运动" })).toBeInTheDocument();
+    expect(readouts).toHaveAttribute("aria-live", "off");
+  });
+
+  it("caps visual updates and advances after the 30fps frame interval", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", vi.fn((callback: FrameRequestCallback) => {
+      callbacks.push(callback);
+      return callbacks.length;
+    }));
+    const definition = getDemoDefinition("math", "trigonometry", "sin-basic");
+    const { container } = render(<>{definition!.renderStage?.(definition!.defaultParams)}</>);
+
+    fireEvent.click(screen.getByRole("button", { name: "播放一圈" }));
+
+    act(() => callbacks.shift()?.(0));
+    act(() => callbacks.shift()?.(16));
+    expect(container.querySelector(".trigLab__readouts strong")).toHaveTextContent("30°");
+
+    act(() => callbacks.shift()?.(34));
+    expect(container.querySelector(".trigLab__readouts strong")).toHaveTextContent("31.6°");
   });
 });

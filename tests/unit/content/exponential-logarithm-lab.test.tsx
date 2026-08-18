@@ -4,13 +4,19 @@ import "@testing-library/jest-dom/vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getDemoDefinition } from "@/content/demos/catalog";
 
+beforeEach(() => {
+  vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+});
+
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 describe("exponential and logarithm learning lab", () => {
@@ -56,5 +62,19 @@ describe("exponential and logarithm learning lab", () => {
     expect(source).toContain("log_a N=b ⇔ a^b=N");
     expect(source).toContain("## 最容易犯的六个错误");
     expect(source).toContain("### 图像关于 `y=x` 对称是否意味着两函数相等");
+  });
+
+  it("stabilizes live announcements while the inverse animation is running", () => {
+    const definition = getDemoDefinition("math", "functions", "exp-log");
+    expect(definition).not.toBeNull();
+
+    const { container } = render(<>{definition!.renderStage?.(definition!.defaultParams)}</>);
+    const readouts = container.querySelector(".expLogLab__readouts");
+    expect(readouts).toHaveAttribute("aria-live", "polite");
+
+    fireEvent.click(screen.getByRole("button", { name: "播放输入变化" }));
+
+    expect(screen.getByRole("button", { name: "暂停追踪" })).toBeInTheDocument();
+    expect(readouts).toHaveAttribute("aria-live", "off");
   });
 });

@@ -14,13 +14,13 @@ afterEach(() => {
 
 describe("expanded content routes", () => {
   it("generates static unit entries for the full migrated skeleton", () => {
-    expect(getAllUnits()).toHaveLength(82);
-    expect(getAllUnitEntries()).toHaveLength(82);
+    expect(getAllUnits()).toHaveLength(83);
+    expect(getAllUnitEntries()).toHaveLength(83);
   });
 
   it("lists full module unit entries for migrated modules", async () => {
     const mathUnits = getUnitsByModuleRoute("math", "functions");
-    expect(mathUnits).toHaveLength(6);
+    expect(mathUnits).toHaveLength(7);
 
     const view = await ModulePage({
       params: Promise.resolve({
