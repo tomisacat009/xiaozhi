@@ -15,6 +15,7 @@ import { SetRelationDiagram } from "@/engine/renderers/set-relation-diagram";
 import { CartesianPlot, ConceptBoard } from "@/engine/renderers/cartesian-plot";
 import { TimelineDiagram } from "@/engine/renderers/timeline-diagram";
 import { TrigonometryLab } from "@/engine/renderers/trigonometry-lab";
+import { UniformlyAcceleratedMotionLab } from "@/engine/renderers/uniformly-accelerated-motion-lab";
 import { VennDiagram } from "@/engine/renderers/venn-diagram";
 import { QuadraticSvg } from "@/engine/renderers/quadratic-svg";
 
@@ -1253,57 +1254,47 @@ const uniformMotionDemo: NumericDemo = {
 
 const acceleratedMotionDemo: NumericDemo = {
   id: "physics-accelerated-motion",
-  title: "匀变速直线运动",
-  description: "同时看位置曲线和速度变化，避免把匀变速误看成匀速。",
-  defaultParams: { s0: 0, v0: 1, a: 1, t: 3 },
+  title: "匀变速直线运动同步实验室",
+  description: "让打点纸带、等时位移、x-t、v-t、a-t 图像和五条核心公式在同一时刻同步变化。",
+  defaultParams: { s0: 0, v0: 1, a: 1, t: 3, interval: 1 },
   presets: [
-    { id: "basic", label: "基础加速", params: { s0: 0, v0: 1, a: 1, t: 3 } },
-    { id: "decelerate", label: "减速模型", params: { s0: 0, v0: 4, a: -1, t: 2 } },
+    { id: "basic", label: "正向匀加速", params: { s0: 0, v0: 1, a: 1, t: 3, interval: 1 } },
+    { id: "from-rest", label: "从静止开始 1:3:5", params: { s0: 0, v0: 0, a: 2, t: 3, interval: 1 } },
+    { id: "decelerate", label: "正向匀减速", params: { s0: 0, v0: 6, a: -1, t: 3, interval: 1 } },
+    { id: "turn-around", label: "先减速再反向", params: { s0: 0, v0: 4, a: -2, t: 3, interval: 1 } },
+    { id: "reverse-speed-up", label: "负方向越跑越快", params: { s0: 2, v0: -1, a: -1, t: 3, interval: 1 } },
+    { id: "uniform", label: "退化为匀速", params: { s0: -2, v0: 2, a: 0, t: 3, interval: 1 } },
+    { id: "half-second", label: "每 0.5 秒打点", params: { s0: 0, v0: 1, a: 2, t: 2.5, interval: 0.5 } },
   ],
   controls: {
-    s0: { label: "初始位置 s0", min: -4, max: 4, step: 0.5 },
-    v0: { label: "初速度 v0", min: -4, max: 6, step: 0.2 },
+    s0: { label: "初始位置 x₀（s₀）", min: -4, max: 4, step: 0.5 },
+    v0: { label: "初速度 v₀", min: -4, max: 6, step: 0.2 },
     a: { label: "加速度 a", min: -3, max: 3, step: 0.2 },
     t: { label: "观察时刻 t", min: 0, max: 6, step: 0.2 },
+    interval: { label: "等时间隔 Δt", min: 0.5, max: 1.5, step: 0.5 },
   },
-  explanation({ s0, v0, a, t }) {
-    const s = s0 + v0 * t + 0.5 * a * t * t;
+  explanation({ s0, v0, a, t, interval }) {
+    const displacement = v0 * t + 0.5 * a * t * t;
+    const position = s0 + displacement;
     const v = v0 + a * t;
+    const averageVelocity = t > 0 ? displacement / t : v0;
+    const intervalDifference = a * interval * interval;
 
     return [
-      `当前速度 v = ${round(v)}，所以“快慢”本身正在变化。`,
-      `位置约为 ${round(s)}，这也是图像不再是直线而是弯曲的原因。`,
-      a > 0 ? "加速度为正，速度整体增加。" : a < 0 ? "加速度为负，速度整体减小。" : "a = 0 时会退化成匀速运动。",
+      `t=${round(t)} s 时，位置 x=${round(position)} m，位移 Δx=${round(displacement)} m，速度 v=${round(v)} m/s。位置和位移只在 x₀=0 时数值相同。`,
+      `v-t 图斜率等于 a=${round(a)} m/s²，0 到当前时刻的有向面积等于位移 ${round(displacement)} m；平均速度为 ${round(averageVelocity)} m/s。`,
+      `每隔 ${round(interval)} s 取一段，相邻两段位移的差恒为 a(Δt)²=${round(intervalDifference)} m。这是打点纸带判断匀变速运动的核心规律。`,
+      Math.abs(a) < 0.001
+        ? "a=0 时，v-t 图变为水平线、x-t 图变为直线，模型退化成匀速直线运动。"
+        : v * a > 0
+          ? "当前速度与加速度同向，物体正在加速；判断加速或减速必须比较方向，不能只看 a 的正负。"
+          : Math.abs(v) < 0.05
+            ? "当前速度约为 0，物体正处于停止或转向的临界时刻，但加速度仍可能不为 0。"
+            : "当前速度与加速度反向，物体正在减速；若速度减到 0 后加速度仍保持，物体会反向运动。",
     ];
   },
-  renderStage({ s0, v0, a, t }) {
-    const sLine = sampleCurve(
-      (time) => s0 + v0 * time + 0.5 * a * time * time,
-      { xMin: 0, xMax: 6 },
-      0.1,
-    );
-    const vLine = sampleCurve((time) => v0 + a * time, { xMin: 0, xMax: 6 }, 0.1);
-
-    return createElement("div", { className: "stackedPlots" }, [
-      createElement(CartesianPlot, {
-        key: "st",
-        ariaLabel: "匀变速直线运动 s-t 图像",
-        bounds: { xMin: 0, xMax: 6, yMin: -10, yMax: 30 },
-        xLabel: "t（时间）",
-        yLabel: "s（位移）",
-        series: [makeSeries("accelerated-st", "s-t 曲线", "#0f766e", sLine)],
-        markers: [{ id: "current-st", x: t, y: s0 + v0 * t + 0.5 * a * t * t, label: "当前点", color: "#ea580c" }],
-      }),
-      createElement(CartesianPlot, {
-        key: "vt",
-        ariaLabel: "匀变速直线运动 v-t 图像",
-        bounds: { xMin: 0, xMax: 6, yMin: -8, yMax: 10 },
-        xLabel: "t（时间）",
-        yLabel: "v（速度）",
-        series: [makeSeries("accelerated-vt", "v-t 直线", "#2563eb", vLine)],
-        markers: [{ id: "current-vt", x: t, y: v0 + a * t, label: "当前点", color: "#ea580c" }],
-      }),
-    ]);
+  renderStage({ s0, v0, a, t, interval }) {
+    return createElement(UniformlyAcceleratedMotionLab, { s0, v0, a, t, interval });
   },
 };
 

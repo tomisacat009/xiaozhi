@@ -3063,3 +3063,606 @@ h3 {
     transition: none !important;
   }
 }
+
+.acceleratedLab {
+  --motion-ink: #172554;
+  --motion-muted: #64748b;
+  --motion-position: #0f766e;
+  --motion-velocity: #2563eb;
+  --motion-acceleration: #d97706;
+  --motion-live: #ea580c;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  color: var(--motion-ink);
+  contain: layout paint;
+}
+
+.acceleratedLab__toolbar,
+.acceleratedLab__playback,
+.acceleratedLab__sectionHead,
+.acceleratedLab__graphHead,
+.acceleratedLab__caption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.acceleratedLab__toolbar {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.acceleratedLab__toolbar > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.acceleratedLab__kicker {
+  color: #b45309;
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.acceleratedLab__toolbar strong {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.acceleratedLab__playback {
+  flex-wrap: wrap;
+}
+
+.acceleratedLab__playback button,
+.acceleratedLab__playback label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 11px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.acceleratedLab__playback button {
+  cursor: pointer;
+}
+
+.acceleratedLab__playback select {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 850;
+}
+
+.acceleratedLab__ghostButton {
+  border-color: rgba(100, 116, 139, 0.22) !important;
+  background: #fff !important;
+  color: #475569 !important;
+}
+
+.acceleratedLab__stateStrip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.acceleratedLab__stateStrip article {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  height: 78px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(30, 64, 175, 0.11);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.88);
+  contain: layout paint;
+  overflow: hidden;
+}
+
+.acceleratedLab__stateStrip article:nth-child(2),
+.acceleratedLab__stateStrip article:nth-child(3) {
+  border-top: 3px solid var(--motion-position);
+}
+
+.acceleratedLab__stateStrip article:nth-child(4),
+.acceleratedLab__stateStrip article:nth-child(5) {
+  border-top: 3px solid var(--motion-velocity);
+}
+
+.acceleratedLab__stateStrip article:nth-child(6) {
+  border-top: 3px solid var(--motion-acceleration);
+}
+
+.acceleratedLab__stateStrip span,
+.acceleratedLab__sectionHead span,
+.acceleratedLab__formulaChain span {
+  color: var(--motion-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.acceleratedLab__stateStrip strong {
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.acceleratedLab__trackPanel,
+.acceleratedLab__intervalPanel {
+  display: grid;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 17px;
+  background: #f8fbfb;
+}
+
+.acceleratedLab__sectionHead {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.acceleratedLab__sectionHead > div {
+  display: grid;
+  gap: 3px;
+}
+
+.acceleratedLab__sectionHead strong {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.acceleratedLab__sectionHead small {
+  max-width: 240px;
+  color: var(--motion-muted);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.acceleratedLab__mobileHint {
+  display: none;
+  margin: 0;
+  color: var(--motion-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.acceleratedLab__trackViewport {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border-radius: 15px;
+  contain: layout paint;
+}
+
+.acceleratedLab__trackSvg {
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  height: auto;
+}
+
+.acceleratedLab__trackPaper {
+  fill: #fffef9;
+  stroke: rgba(15, 118, 110, 0.14);
+  stroke-width: 1.5;
+}
+
+.acceleratedLab__trackAxis {
+  stroke: #64748b;
+  stroke-width: 2;
+}
+
+.acceleratedLab__trackSegment {
+  stroke: #94a3b8;
+  stroke-width: 2;
+  opacity: 0.48;
+  vector-effect: non-scaling-stroke;
+}
+
+.acceleratedLab__trackSegment[data-complete="true"] {
+  stroke: var(--motion-live);
+  opacity: 0.85;
+}
+
+.acceleratedLab__arrowHead {
+  fill: var(--motion-live);
+}
+
+.acceleratedLab__sampleTick {
+  stroke: #cbd5e1;
+  stroke-width: 1;
+}
+
+.acceleratedLab__sampleDot {
+  fill: #94a3b8;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.acceleratedLab__sampleDot[data-complete="true"] {
+  fill: var(--motion-live);
+}
+
+.acceleratedLab__sampleLabel,
+.acceleratedLab__vehicleLabel {
+  fill: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__vehicle {
+  color: #2563eb;
+  will-change: transform;
+}
+
+.acceleratedLab__vehicle rect,
+.acceleratedLab__vehicle path {
+  fill: currentColor;
+}
+
+.acceleratedLab__vehicle circle {
+  fill: #172554;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+.acceleratedLab__vehicle[data-reverse="true"] {
+  color: #7c3aed;
+}
+
+.acceleratedLab__notice {
+  display: grid;
+  gap: 4px;
+  padding: 11px 14px;
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  border-radius: 13px;
+  background: #f7f5ff;
+  color: #5b21b6;
+  font-size: 0.78rem;
+}
+
+.acceleratedLab__notice span {
+  color: #6d28d9;
+  line-height: 1.5;
+}
+
+.acceleratedLab__graphs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.acceleratedLab__graphWide {
+  grid-column: 1 / -1;
+}
+
+.acceleratedLab__graphCard {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid rgba(30, 64, 175, 0.11);
+  border-radius: 15px;
+  background: #fff;
+  contain: layout paint;
+}
+
+.acceleratedLab__graphHead {
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 42px;
+}
+
+.acceleratedLab__graphHead strong {
+  font-size: 0.8rem;
+}
+
+.acceleratedLab__graphHead span {
+  min-width: 0;
+  max-width: 58%;
+  overflow-wrap: anywhere;
+  color: var(--motion-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__graphs > .acceleratedLab__graphCard .acceleratedLab__graphHead {
+  align-items: flex-start;
+  flex-direction: column;
+  min-height: 58px;
+}
+
+.acceleratedLab__graphs > .acceleratedLab__graphCard .acceleratedLab__graphHead span {
+  max-width: none;
+  text-align: left;
+}
+
+.acceleratedLab__graphSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.acceleratedLab__graphPaper {
+  fill: #fbfdff;
+  stroke: rgba(30, 64, 175, 0.1);
+}
+
+.acceleratedLab__gridLine {
+  stroke: #e8edf5;
+  stroke-width: 1;
+}
+
+.acceleratedLab__axisLine {
+  stroke: #64748b;
+  stroke-width: 1.25;
+}
+
+.acceleratedLab__curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.acceleratedLab__area {
+  fill: currentColor;
+  opacity: 0.13;
+}
+
+.acceleratedLab__tangent {
+  stroke: var(--motion-live);
+  stroke-width: 1.8;
+  stroke-dasharray: 5 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.acceleratedLab__timeGuide {
+  stroke: #0284c7;
+  stroke-width: 1.2;
+  stroke-dasharray: 3 4;
+  opacity: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.acceleratedLab__pointHalo {
+  fill: rgba(2, 132, 199, 0.14);
+}
+
+.acceleratedLab__point {
+  fill: #0284c7;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.acceleratedLab__tick,
+.acceleratedLab__axisTitle,
+.acceleratedLab__areaLabel {
+  fill: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__axisTitle {
+  fill: #334155;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.acceleratedLab__areaLabel {
+  fill: #1d4ed8;
+  font-size: 9px;
+}
+
+.acceleratedLab__graphCard figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  min-height: 30px;
+  color: var(--motion-muted);
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.acceleratedLab__intervalPanel {
+  border-color: rgba(217, 119, 6, 0.16);
+  background: #fffbeb;
+}
+
+.acceleratedLab__intervalScroller {
+  display: grid;
+  grid-auto-columns: 132px;
+  grid-auto-flow: column;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding-bottom: 4px;
+}
+
+.acceleratedLab__intervalScroller article {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  height: 105px;
+  padding: 10px;
+  border: 1px solid rgba(217, 119, 6, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  contain: layout paint;
+  overflow: hidden;
+}
+
+.acceleratedLab__intervalScroller article[data-complete="true"] {
+  border-color: rgba(234, 88, 12, 0.34);
+  background: #fff7ed;
+}
+
+.acceleratedLab__intervalScroller span,
+.acceleratedLab__intervalScroller small {
+  color: var(--motion-muted);
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.acceleratedLab__intervalScroller strong {
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__intervalRule {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #92400e;
+}
+
+.acceleratedLab__intervalRule strong {
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__intervalRule span {
+  max-width: 54%;
+  color: #a16207;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.acceleratedLab__formulaChain {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto minmax(130px, 1fr) auto minmax(140px, 1fr) auto minmax(150px, 1fr) auto minmax(160px, 1fr);
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.acceleratedLab__formulaChain article {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  height: 104px;
+  min-width: 120px;
+  padding: 10px 11px;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 13px;
+  background: linear-gradient(145deg, #fff, #f8fbff);
+  contain: layout paint;
+  overflow: hidden;
+}
+
+.acceleratedLab__formulaChain strong {
+  overflow-wrap: anywhere;
+  color: #1e3a8a;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.acceleratedLab__formulaChain small {
+  color: var(--motion-muted);
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.acceleratedLab__formulaChain > i {
+  color: #94a3b8;
+  font-style: normal;
+}
+
+.acceleratedLab__caption {
+  flex-wrap: wrap;
+  color: var(--motion-muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .acceleratedLab__stateStrip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .acceleratedLab__playback,
+  .acceleratedLab__sectionHead,
+  .acceleratedLab__intervalRule {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .acceleratedLab__playback button,
+  .acceleratedLab__playback label {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .acceleratedLab__sectionHead small,
+  .acceleratedLab__intervalRule span {
+    max-width: none;
+    text-align: left;
+  }
+
+  .acceleratedLab__mobileHint {
+    display: block;
+  }
+
+  .acceleratedLab__trackSvg {
+    width: 720px;
+    min-width: 720px;
+  }
+
+  .acceleratedLab__graphs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .acceleratedLab__graphWide {
+    grid-column: auto;
+  }
+
+  .acceleratedLab__graphHead {
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: 58px;
+  }
+
+  .acceleratedLab__graphHead span {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acceleratedLab__vehicle,
+  .acceleratedLab__point,
+  .acceleratedLab__timeGuide {
+    transition: none !important;
+  }
+}

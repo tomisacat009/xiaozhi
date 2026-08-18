@@ -104,6 +104,7 @@ export const modules: Module[] = [
     "highlights": [
       "位移-时间图像",
       "速度-时间图像",
+      "匀变速与等时位移",
       "追及问题",
       "自由落体",
       "平抛运动"
