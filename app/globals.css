@@ -1538,6 +1538,893 @@ h3 {
   font-size: 1rem;
 }
 
+.trigLab {
+  --trig-ink: #10233f;
+  --trig-muted: #5b6b82;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  color: var(--trig-ink);
+}
+
+.trigLab__toolbar,
+.trigLab__playback,
+.trigLab__formulaStrip,
+.trigLab__caption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trigLab__toolbar {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.trigLab__toolbar > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.trigLab__toolbar strong {
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+}
+
+.trigLab__kicker {
+  color: var(--trig-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.trigLab__playback {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.trigLab__playback button,
+.trigLab__playback label {
+  min-height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(30, 64, 175, 0.16);
+  background: #fff;
+  color: var(--trig-ink);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.trigLab__playback button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.trigLab__playback button:first-child {
+  border-color: rgba(15, 118, 110, 0.24);
+  background: #ecfdf5;
+  color: #115e59;
+}
+
+.trigLab__playback button:hover,
+.trigLab__playback button:focus-visible,
+.trigLab__playback label:focus-within {
+  border-color: rgba(15, 118, 110, 0.5);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
+  outline: none;
+}
+
+.trigLab__playback label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 10px;
+}
+
+.trigLab__playback select {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+}
+
+.trigLab__ghostButton {
+  color: var(--trig-muted) !important;
+}
+
+.trigLab__formulaStrip {
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-left: 4px solid #0f766e;
+  background: #f0fdfa;
+  color: #134e4a;
+  font-size: 0.84rem;
+}
+
+.trigLab__formulaStrip span:first-child {
+  font-family: "JetBrains Mono", "SFMono-Regular", "Menlo", monospace;
+  font-weight: 850;
+}
+
+.trigLab__formulaStrip span + span::before {
+  content: "·";
+  margin-right: 12px;
+  color: #5eead4;
+}
+
+.trigLab__viewport {
+  overflow-x: auto;
+  border-radius: 20px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(37, 99, 235, 0.08) 23px 24px),
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(37, 99, 235, 0.08) 23px 24px);
+  scrollbar-width: thin;
+}
+
+.trigLab__svg {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+}
+
+.trigLab__mobileHint {
+  display: none;
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.trigLab__panelSurface {
+  fill: rgba(255, 255, 255, 0.68);
+  stroke: rgba(59, 130, 246, 0.13);
+  stroke-width: 1.5;
+}
+
+.trigLab__sectionLabel,
+.trigLab__circleReadout,
+.trigLab__pointLabel,
+.trigLab__tickLabel,
+.trigLab__axisLabel {
+  fill: var(--trig-ink);
+  font-family: "Noto Sans SC", "PingFang SC", sans-serif;
+}
+
+.trigLab__sectionLabel {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.trigLab__circleReadout {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.trigLab__pointLabel,
+.trigLab__tickLabel,
+.trigLab__axisLabel {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.trigLab__tickLabel,
+.trigLab__axisLabel {
+  fill: var(--trig-muted);
+}
+
+.trigLab__axis {
+  stroke: rgba(30, 64, 175, 0.34);
+  stroke-width: 1.5;
+}
+
+.trigLab__unitCircle {
+  fill: rgba(239, 246, 255, 0.44);
+  stroke: #1d4ed8;
+  stroke-width: 2.5;
+}
+
+.trigLab__angleArc,
+.trigLab__radius,
+.trigLab__projection,
+.trigLab__tangentAxis,
+.trigLab__tangentRay,
+.trigLab__tangentLength,
+.trigLab__curve,
+.trigLab__generatedCurve,
+.trigLab__referenceCurve,
+.trigLab__midline,
+.trigLab__asymptote,
+.trigLab__currentGuide,
+.trigLab__bridge {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trigLab__angleArc {
+  stroke-width: 3;
+}
+
+.trigLab__radius {
+  stroke-width: 2.5;
+}
+
+.trigLab__projection {
+  stroke-width: 4;
+  stroke-dasharray: 5 5;
+}
+
+.trigLab__projection--sin {
+  stroke: #f97316;
+}
+
+.trigLab__projection--cos {
+  stroke: #2563eb;
+}
+
+.trigLab__tangentAxis {
+  stroke: rgba(124, 58, 237, 0.42);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+
+.trigLab__tangentRay {
+  stroke: rgba(124, 58, 237, 0.58);
+  stroke-width: 2;
+}
+
+.trigLab__tangentLength {
+  stroke: #7c3aed;
+  stroke-width: 5;
+}
+
+.trigLab__tangentPoint {
+  fill: #7c3aed;
+}
+
+.trigLab__orbitPoint,
+.trigLab__graphPoint {
+  stroke: #fff;
+  stroke-width: 3;
+  filter: url(#trig-glow-sin);
+}
+
+.trigLab[data-mode="cos"] .trigLab__orbitPoint,
+.trigLab[data-mode="cos"] .trigLab__graphPoint {
+  filter: url(#trig-glow-cos);
+}
+
+.trigLab[data-mode="tan"] .trigLab__orbitPoint,
+.trigLab[data-mode="tan"] .trigLab__graphPoint {
+  filter: url(#trig-glow-tan);
+}
+
+.trigLab[data-mode="transform"] .trigLab__orbitPoint,
+.trigLab[data-mode="transform"] .trigLab__graphPoint {
+  filter: url(#trig-glow-transform);
+}
+
+.trigLab__markerHalo {
+  opacity: 0.12;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.trigLab[data-playing="true"] .trigLab__markerHalo {
+  animation: trigMarkerPulse 1.1s ease-out infinite;
+}
+
+.trigLab__gridLine {
+  stroke: rgba(59, 130, 246, 0.12);
+  stroke-width: 1;
+}
+
+.trigLab__curve {
+  stroke-width: 3.2;
+}
+
+.trigLab__generatedCurve {
+  stroke-width: 6;
+  opacity: 0.26;
+}
+
+.trigLab__referenceCurve {
+  stroke: #94a3b8;
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+}
+
+.trigLab__midline {
+  stroke: #0f766e;
+  stroke-width: 1.5;
+  stroke-dasharray: 9 6;
+  opacity: 0.7;
+}
+
+.trigLab__amplitudeBand {
+  fill: rgba(20, 184, 166, 0.08);
+}
+
+.trigLab__asymptote {
+  stroke: #dc2626;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+  opacity: 0.7;
+}
+
+.trigLab__currentGuide {
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  opacity: 0.72;
+}
+
+.trigLab__bridge {
+  stroke-width: 1.5;
+  stroke-dasharray: 5 7;
+  opacity: 0.46;
+  pointer-events: none;
+}
+
+.trigLab[data-playing="true"] .trigLab__bridge {
+  animation: trigBridgeFlow 0.9s linear infinite;
+}
+
+.trigLab__readouts,
+.trigLab__parameterMap {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trigLab__readouts article,
+.trigLab__parameterMap article {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(30, 64, 175, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.trigLab__readouts span,
+.trigLab__parameterMap span {
+  color: var(--trig-muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.trigLab__readouts strong,
+.trigLab__parameterMap strong {
+  overflow-wrap: anywhere;
+  font-size: 0.98rem;
+}
+
+.trigLab__readouts small,
+.trigLab__parameterMap small {
+  color: var(--trig-muted);
+  line-height: 1.45;
+}
+
+.trigLab__parameterMap article:nth-child(1) {
+  border-top: 3px solid #f97316;
+}
+
+.trigLab__parameterMap article:nth-child(2) {
+  border-top: 3px solid #2563eb;
+}
+
+.trigLab__parameterMap article:nth-child(3) {
+  border-top: 3px solid #7c3aed;
+}
+
+.trigLab__parameterMap article:nth-child(4) {
+  border-top: 3px solid #0f766e;
+}
+
+.trigLab__readout--warning {
+  border-color: rgba(220, 38, 38, 0.32) !important;
+  background: #fef2f2 !important;
+  color: #991b1b;
+}
+
+.trigLab__notice {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+  color: #7f1d1d;
+  line-height: 1.55;
+}
+
+.trigLab__notice span {
+  font-size: 0.86rem;
+}
+
+.trigLab__caption {
+  flex-wrap: wrap;
+  color: var(--trig-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.trigLab__caption span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trigLab__legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.trigLab__legendDot--sin {
+  background: #f97316;
+}
+
+.trigLab__legendDot--cos {
+  background: #2563eb;
+}
+
+.trigLab__legendDot--tan {
+  background: #7c3aed;
+}
+
+@keyframes trigMarkerPulse {
+  from {
+    opacity: 0.22;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes trigBridgeFlow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.expLogLab {
+  --exp-color: #f97316;
+  --log-color: #2563eb;
+  --mirror-color: #7c3aed;
+  --exp-log-ink: #10233f;
+  --exp-log-muted: #5b6b82;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  color: var(--exp-log-ink);
+}
+
+.expLogLab__toolbar,
+.expLogLab__playback,
+.expLogLab__equationRail,
+.expLogLab__caption,
+.expLogLab__ladderHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expLogLab__toolbar {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.expLogLab__toolbar > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.expLogLab__toolbar strong {
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+}
+
+.expLogLab__kicker {
+  color: var(--exp-log-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.expLogLab__playback {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.expLogLab__playback button,
+.expLogLab__playback label {
+  min-height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  background: #fff;
+  color: var(--exp-log-ink);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.expLogLab__playback button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.expLogLab__playback button:first-child {
+  border-color: rgba(124, 58, 237, 0.22);
+  background: #f5f3ff;
+  color: #5b21b6;
+}
+
+.expLogLab__playback button:hover,
+.expLogLab__playback button:focus-visible,
+.expLogLab__playback label:focus-within {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.16);
+  outline: none;
+}
+
+.expLogLab__playback label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 10px;
+}
+
+.expLogLab__playback select {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+}
+
+.expLogLab__ghostButton {
+  color: var(--exp-log-muted) !important;
+}
+
+.expLogLab__equationRail {
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 11px 12px;
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  background: #faf8ff;
+  color: var(--exp-log-muted);
+  font-family: "JetBrains Mono", "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.expLogLab__equationRailExp {
+  color: #c2410c;
+}
+
+.expLogLab__equationRailLog {
+  color: #1d4ed8;
+}
+
+.expLogLab__notice {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+  color: #7f1d1d;
+  line-height: 1.55;
+}
+
+.expLogLab__notice span {
+  font-size: 0.86rem;
+}
+
+.expLogLab__viewport {
+  overflow-x: auto;
+  border-radius: 20px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    repeating-linear-gradient(0deg, transparent 0 24px, rgba(124, 58, 237, 0.07) 24px 25px),
+    repeating-linear-gradient(90deg, transparent 0 24px, rgba(124, 58, 237, 0.07) 24px 25px);
+  scrollbar-width: thin;
+}
+
+.expLogLab__mobileHint {
+  display: none;
+  margin: 0;
+  color: #5b21b6;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.expLogLab__svg {
+  display: block;
+  width: min(100%, 680px);
+  min-width: 0;
+  height: auto;
+  margin: 0 auto;
+}
+
+.expLogLab__paper {
+  fill: rgba(255, 255, 255, 0.72);
+  stroke: rgba(124, 58, 237, 0.13);
+  stroke-width: 1.5;
+}
+
+.expLogLab__grid {
+  stroke: rgba(124, 58, 237, 0.1);
+  stroke-width: 1;
+}
+
+.expLogLab__axis,
+.expLogLab__mirror,
+.expLogLab__curve,
+.expLogLab__reflectionLink {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.expLogLab__axis {
+  stroke: rgba(30, 41, 59, 0.36);
+  stroke-width: 1.5;
+}
+
+.expLogLab__axis--exp {
+  stroke: rgba(249, 115, 22, 0.42);
+}
+
+.expLogLab__axis--log {
+  stroke: rgba(37, 99, 235, 0.42);
+}
+
+.expLogLab__mirror {
+  stroke: var(--mirror-color);
+  stroke-width: 2;
+  stroke-dasharray: 8 7;
+  opacity: 0.62;
+}
+
+.expLogLab__curve {
+  stroke-width: 4;
+}
+
+.expLogLab__curve--exp {
+  stroke: var(--exp-color);
+}
+
+.expLogLab__curve--log {
+  stroke: var(--log-color);
+}
+
+.expLogLab__curve--invalid {
+  stroke: #dc2626;
+  stroke-dasharray: 8 6;
+}
+
+.expLogLab__reflectionLink {
+  stroke: var(--mirror-color);
+  stroke-width: 2;
+  stroke-dasharray: 5 7;
+  opacity: 0.66;
+}
+
+.expLogLab[data-playing="true"] .expLogLab__reflectionLink {
+  animation: expLogReflectionFlow 0.85s linear infinite;
+}
+
+.expLogLab__point {
+  stroke: #fff;
+  stroke-width: 3;
+  filter: url(#exp-log-glow);
+}
+
+.expLogLab__point--exp,
+.expLogLab__anchor--exp {
+  fill: var(--exp-color);
+}
+
+.expLogLab__point--log,
+.expLogLab__anchor--log {
+  fill: var(--log-color);
+}
+
+.expLogLab__pointHalo {
+  opacity: 0.13;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.expLogLab__pointHalo--exp {
+  fill: var(--exp-color);
+}
+
+.expLogLab__pointHalo--log {
+  fill: var(--log-color);
+}
+
+.expLogLab[data-playing="true"] .expLogLab__pointHalo {
+  animation: expLogPointPulse 1.1s ease-out infinite;
+}
+
+.expLogLab__pointLabel,
+.expLogLab__tick,
+.expLogLab__axisLabel,
+.expLogLab__mirrorLabel,
+.expLogLab__anchorLabel {
+  font-family: "Noto Sans SC", "PingFang SC", sans-serif;
+}
+
+.expLogLab__pointLabel {
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.expLogLab__pointLabel--exp {
+  fill: #c2410c;
+}
+
+.expLogLab__pointLabel--log {
+  fill: #1d4ed8;
+}
+
+.expLogLab__tick,
+.expLogLab__axisLabel,
+.expLogLab__anchorLabel {
+  fill: var(--exp-log-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.expLogLab__mirrorLabel {
+  fill: #6d28d9;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.expLogLab__readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.expLogLab__readouts article {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(30, 64, 175, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.expLogLab__readout--exp {
+  border-top: 3px solid var(--exp-color) !important;
+}
+
+.expLogLab__readout--log {
+  border-top: 3px solid var(--log-color) !important;
+}
+
+.expLogLab__readouts span,
+.expLogLab__ladder span {
+  color: var(--exp-log-muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.expLogLab__readouts strong {
+  overflow-wrap: anywhere;
+  font-size: 0.96rem;
+}
+
+.expLogLab__readouts small,
+.expLogLab__ladder small {
+  color: var(--exp-log-muted);
+  line-height: 1.45;
+}
+
+.expLogLab__ladder {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(249, 115, 22, 0.14);
+  border-radius: 16px;
+  background: #fffaf5;
+}
+
+.expLogLab__ladderHead {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.expLogLab__ladderHead span {
+  text-align: right;
+}
+
+.expLogLab__ladderSteps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.expLogLab__ladderSteps article {
+  display: grid;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(249, 115, 22, 0.14);
+  background: #fff;
+  text-align: center;
+}
+
+.expLogLab__ladderSteps strong {
+  overflow-wrap: anywhere;
+  color: #c2410c;
+}
+
+.expLogLab__caption {
+  flex-wrap: wrap;
+  color: var(--exp-log-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.expLogLab__caption span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.expLogLab__legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.expLogLab__legendDot--exp {
+  background: var(--exp-color);
+}
+
+.expLogLab__legendDot--log {
+  background: var(--log-color);
+}
+
+.expLogLab__legendLine {
+  width: 18px;
+  border-top: 2px dashed var(--mirror-color);
+}
+
+@keyframes expLogPointPulse {
+  from {
+    opacity: 0.22;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes expLogReflectionFlow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
 @media (min-width: 768px) {
   .siteHeader {
     padding-top: 28px;
@@ -1628,6 +2515,15 @@ h3 {
     position: sticky;
     top: 20px;
   }
+
+  .trigLab__readouts,
+  .trigLab__parameterMap {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .expLogLab__readouts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
@@ -1694,5 +2590,82 @@ h3 {
   .setRelationDiagram__header,
   .vennDiagram__header {
     flex-direction: column;
+  }
+
+  .trigLab__toolbar,
+  .trigLab__playback {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .trigLab__playback button,
+  .trigLab__playback label {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .trigLab__formulaStrip span {
+    width: 100%;
+  }
+
+  .trigLab__formulaStrip span + span::before {
+    content: none;
+  }
+
+  .trigLab__mobileHint {
+    display: block;
+  }
+
+  .trigLab__svg {
+    min-width: 720px;
+  }
+
+  .trigLab__readouts,
+  .trigLab__parameterMap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .expLogLab__toolbar,
+  .expLogLab__playback,
+  .expLogLab__ladderHead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .expLogLab__playback button,
+  .expLogLab__playback label {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .expLogLab__mobileHint {
+    display: block;
+  }
+
+  .expLogLab__svg {
+    width: 560px;
+    min-width: 560px;
+  }
+
+  .expLogLab__readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .expLogLab__ladderHead span {
+    text-align: left;
+  }
+
+  .expLogLab__ladderSteps {
+    grid-template-columns: repeat(5, minmax(82px, 1fr));
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigLab__markerHalo,
+  .trigLab__bridge,
+  .expLogLab__pointHalo,
+  .expLogLab__reflectionLink {
+    animation: none !important;
   }
 }

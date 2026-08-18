@@ -5,6 +5,7 @@ import { english3500WordBank } from "@/content/english-3500-word-bank";
 import { sampleQuadratic } from "@/engine/core/math";
 import type { DemoDefinition, DemoParams } from "@/engine/core/types";
 import { EnglishSentenceDiagram } from "@/engine/renderers/english-sentence-diagram";
+import { ExponentialLogarithmLab } from "@/engine/renderers/exponential-logarithm-lab";
 import { FlowDiagram } from "@/engine/renderers/flow-diagram";
 import { NetworkDiagram } from "@/engine/renderers/network-diagram";
 import { ReadingLayerDiagram } from "@/engine/renderers/reading-layer-diagram";
@@ -12,6 +13,7 @@ import { SemanticAxisDiagram } from "@/engine/renderers/semantic-axis-diagram";
 import { SetRelationDiagram } from "@/engine/renderers/set-relation-diagram";
 import { CartesianPlot, ConceptBoard } from "@/engine/renderers/cartesian-plot";
 import { TimelineDiagram } from "@/engine/renderers/timeline-diagram";
+import { TrigonometryLab } from "@/engine/renderers/trigonometry-lab";
 import { VennDiagram } from "@/engine/renderers/venn-diagram";
 import { QuadraticSvg } from "@/engine/renderers/quadratic-svg";
 
@@ -162,41 +164,47 @@ const reciprocalDemo: NumericDemo = {
 
 const expLogDemo: NumericDemo = {
   id: "exp-log",
-  title: "指数与对数对比",
-  description: "把互逆关系与底数变化放在同一坐标系里观察。",
-  defaultParams: { base: 2 },
+  title: "指数与对数互逆实验室",
+  description: "控制底数与输入，让指数点和对数点交换坐标，直观看见增长、衰减、定义域和反函数镜像。",
+  defaultParams: { base: 2, inputX: 1 },
   presets: [
-    { id: "grow", label: "底数 2", params: { base: 2 } },
-    { id: "fast", label: "底数 3", params: { base: 3 } },
-    { id: "decay", label: "底数 0.5", params: { base: 0.5 } },
+    { id: "grow", label: "底数 2：典型增长", params: { base: 2, inputX: 1 } },
+    { id: "fast", label: "底数 3：增长更快", params: { base: 3, inputX: 1 } },
+    { id: "natural", label: "接近 e：自然增长", params: { base: 2.7, inputX: 0.5 } },
+    { id: "decay", label: "底数 0.5：指数衰减", params: { base: 0.5, inputX: 1 } },
+    { id: "fraction", label: "负指数：得到倒数", params: { base: 2, inputX: -1 } },
+    { id: "invalid", label: "错误场景：a = 1", params: { base: 1, inputX: 1 } },
   ],
   controls: {
-    base: { label: "底数 a", min: 0.3, max: 3, step: 0.1 },
+    base: { label: "底数 a（须 a > 0 且 a ≠ 1）", min: 0.2, max: 3, step: 0.1 },
+    inputX: { label: "指数函数输入 x", min: -1.5, max: 1.5, step: 0.1 },
   },
-  explanation({ base }) {
+  explanation({ base, inputX }) {
+    const isInvalid = Math.abs(base - 1) < 0.001;
+    const output = base ** inputX;
+
+    if (isInvalid) {
+      return [
+        "a = 1 时，1^x 永远等于 1，指数图像退化为水平线 y = 1。",
+        "不同的 x 都对应同一个函数值，输入无法从输出唯一找回，所以这个函数没有反函数。",
+        "因此对数底数必须满足 a > 0 且 a ≠ 1；log₁x 没有定义。",
+      ];
+    }
+
     return [
-      base > 1 ? "a > 1 时，指数函数递增，对数函数也递增。" : "0 < a < 1 时，两条曲线都改成递减趋势。",
-      "指数函数一定经过 (0, 1)，对数函数一定经过 (1, 0)。",
-      "互逆关系的核心不是背定义，而是看到两条曲线围绕 y = x 互为镜像。",
+      base > 1
+        ? `a = ${round(base)} > 1，指数函数和对数函数都递增；指数不断加 1，相当于函数值再乘一次 ${round(base)}。`
+        : `0 < a = ${round(base)} < 1，两条函数都递减；指数增加时，函数值持续乘一个小于 1 的数。`,
+      `指数输入 x = ${round(inputX)} 得到 a^x = ${round(output)}；对数把问题反过来，log_a(${round(output)}) = ${round(inputX)}。`,
+      `点 P(${round(inputX)}, ${round(output)}) 与 Q(${round(output)}, ${round(inputX)}) 交换横纵坐标，因此关于 y = x 对称。`,
+      "指数函数的值始终大于 0，所以不碰 x 轴；对数函数只接收正数输入，所以不碰 y 轴。",
     ];
   },
-  renderStage({ base }) {
-    const expPoints = sampleCurve((x) => base ** x, { xMin: -3, xMax: 3 }, 0.05);
-    const logPoints = sampleCurve((x) => Math.log(x) / Math.log(base), { xMin: 0.2, xMax: 8 }, 0.05);
-    const mirror = sampleCurve((x) => x, { xMin: -3, xMax: 6 }, 0.25);
-
-    return createElement(CartesianPlot, {
-      ariaLabel: "指数函数和对数函数对比",
-      bounds: { xMin: -3, xMax: 8, yMin: -4, yMax: 8 },
-      series: [
-        makeSeries("exp", "y = a^x", "#ea580c", expPoints),
-        makeSeries("log", "y = log_a x", "#2563eb", logPoints),
-        { ...makeSeries("mirror", "y = x", "#64748b", mirror), strokeDasharray: "6 6" },
-      ],
-      markers: [
-        { id: "exp-anchor", x: 0, y: 1, label: "(0,1)" },
-        { id: "log-anchor", x: 1, y: 0, label: "(1,0)", color: "#2563eb" },
-      ],
+  renderStage({ base, inputX }) {
+    return createElement(ExponentialLogarithmLab, {
+      key: `exp-log-${base}-${inputX}`,
+      base,
+      inputX,
     });
   },
 };
@@ -270,115 +278,149 @@ const quadraticReferenceDemo = {
 const sinTransformDemo: NumericDemo = {
   id: "sin-transform",
   title: "三角函数参数变化",
-  description: "把振幅、周期、相位和平移的影响拆开看。",
-  defaultParams: { amplitude: 1, omega: 1, phase: 0, offset: 0 },
+  description: "让 A、ω、φ、d 与观察位置 x 同时可控，对照单位圆、标准波形和变化后波形。",
+  defaultParams: { amplitude: 1, omega: 1, phase: 0, offset: 0, angleDeg: 45 },
   presets: [
-    { id: "base", label: "标准波形", params: { amplitude: 1, omega: 1, phase: 0, offset: 0 } },
+    { id: "base", label: "标准波形", params: { amplitude: 1, omega: 1, phase: 0, offset: 0, angleDeg: 45 } },
     { id: "amplitude", label: "振幅放大", params: { amplitude: 2, omega: 1, phase: 0, offset: 0 } },
+    { id: "reflection", label: "关于中线翻转", params: { amplitude: -1, omega: 1, phase: 0, offset: 0 } },
     { id: "period", label: "周期压缩", params: { amplitude: 1, omega: 2, phase: 0, offset: 0 } },
+    { id: "phase", label: "向左平移", params: { amplitude: 1, omega: 1, phase: 1.57, offset: 0 } },
+    { id: "offset", label: "中线上移", params: { amplitude: 1, omega: 1, phase: 0, offset: 1.5 } },
   ],
   controls: {
-    amplitude: { label: "振幅 A", min: 0.5, max: 3, step: 0.1 },
-    omega: { label: "角速度 w", min: 0.5, max: 3, step: 0.1 },
-    phase: { label: "相位 p", min: -3.14, max: 3.14, step: 0.1 },
-    offset: { label: "平移 d", min: -3, max: 3, step: 0.1 },
+    amplitude: { label: "系数 A（振幅与翻转）", min: -3, max: 3, step: 0.1 },
+    omega: { label: "角频率 ω（周期）", min: 0.25, max: 3, step: 0.05 },
+    phase: { label: "初相 φ（左右位置）", min: -3.14, max: 3.14, step: 0.1 },
+    offset: { label: "中线 d（上下平移）", min: -3, max: 3, step: 0.1 },
+    angleDeg: { label: "观察位置 x（角度制）", min: -180, max: 540, step: 1 },
   },
-  explanation({ amplitude, omega, phase, offset }) {
-    const period = (2 * Math.PI) / omega;
+  explanation({ amplitude, omega, phase, offset, angleDeg }) {
+    const period = (2 * Math.PI) / Math.abs(omega);
+    const horizontalShift = -phase / omega;
+    const x = angleDeg * Math.PI / 180;
+    const currentValue = amplitude * Math.sin(omega * x + phase) + offset;
 
     return [
-      `振幅是 ${round(amplitude)}，所以波峰与中线的距离固定为它。`,
-      `周期约为 ${round(period)}，w 越大，一个周期越短。`,
-      `相位约为 ${round(phase)}，它会和上下平移一起决定首个波峰出现的位置；当前中线是 y = ${round(offset)}。`,
+      amplitude === 0
+        ? "A = 0 时，正弦波退化为中线 y = d；此时不再有波峰和波谷。"
+        : `振幅是 |A| = ${round(Math.abs(amplitude))}；${amplitude < 0 ? "A < 0 还会让图像关于中线翻转。" : "A > 0 保持标准正弦的上下方向。"}`,
+      `周期 T = 2π/|ω| ≈ ${round(period)}。ω 从 1 增大到 2，不是“变快一点”，而是同样宽度里会出现两倍的周期数。`,
+      `水平平移量是 -φ/ω ≈ ${round(horizontalShift)}，中线是 y = ${round(offset)}。注意：φ 为正时，图像通常向左移。`,
+      `在 x = ${round(x)} rad 处，当前函数值约为 ${round(currentValue)}；图中运动点会同步标出这个位置。`,
     ];
   },
-  renderStage({ amplitude, omega, phase, offset }) {
-    const points = sampleCurve(
-      (x) => amplitude * Math.sin(omega * x + phase) + offset,
-      { xMin: 0, xMax: Math.PI * 4 },
-      0.05,
-    );
-
-    return createElement(CartesianPlot, {
-      ariaLabel: "三角函数参数变化图像",
-      bounds: { xMin: 0, xMax: Math.PI * 4, yMin: -4, yMax: 4 },
-      series: [makeSeries("sin-transform", "y = A sin(wx + p) + d", "#0f766e", points)],
+  renderStage({ amplitude, omega, phase, offset, angleDeg }) {
+    return createElement(TrigonometryLab, {
+      key: `transform-${angleDeg}`,
+      mode: "transform",
+      amplitude,
+      omega,
+      phase,
+      offset,
+      angleDeg,
     });
   },
 };
 
 const sinBasicDemo: NumericDemo = {
-  ...sinTransformDemo,
   id: "sin-basic",
   title: "sin(x) 基础图像",
-  defaultParams: { amplitude: 1, omega: 1, phase: 0, offset: 0 },
+  description: "转动单位圆上的点，让角度、弧度、纵坐标、正弦值和波形上的位置同时对应起来。",
+  defaultParams: { angleDeg: 30 },
   presets: [
-    { id: "base", label: "标准 sin(x)", params: { amplitude: 1, omega: 1, phase: 0, offset: 0 } },
-    { id: "half", label: "只看半周期", params: { amplitude: 1, omega: 1, phase: 0, offset: 0 } },
+    { id: "start", label: "起点 0°", params: { angleDeg: 0 } },
+    { id: "first", label: "第一象限 30°", params: { angleDeg: 30 } },
+    { id: "peak", label: "最大值 90°", params: { angleDeg: 90 } },
+    { id: "negative", label: "负值 240°", params: { angleDeg: 240 } },
+    { id: "cycle", label: "转满一圈 360°", params: { angleDeg: 360 } },
   ],
+  controls: {
+    angleDeg: { label: "角度 θ（可跨多个周期）", min: -360, max: 720, step: 1 },
+  },
+  explanation({ angleDeg }) {
+    const radians = angleDeg * Math.PI / 180;
+    const value = Math.sin(radians);
+    const normalized = ((angleDeg % 360) + 360) % 360;
+
+    return [
+      `θ = ${round(angleDeg)}° = ${round(radians)} rad。角度制和弧度制只是同一个转角的两种写法，代入函数时要先确认单位。`,
+      `单位圆上 P 的纵坐标约为 ${round(value)}，所以 sin θ = ${round(value)}；图像上的当前点记录的就是这段高度。`,
+      normalized < 180 ? "终边位于上半圆，正弦为正或等于 0。" : "终边位于下半圆，正弦为负或等于 0。",
+      "θ 每增加 360°（2π），圆上点回到原位，因此 sin(θ + 2kπ) = sin θ。",
+    ];
+  },
+  renderStage({ angleDeg }) {
+    return createElement(TrigonometryLab, { key: `sin-${angleDeg}`, mode: "sin", angleDeg });
+  },
 };
 
 const cosBasicDemo: NumericDemo = {
-  ...sinTransformDemo,
   id: "cos-basic",
   title: "余弦函数基础图像",
-  explanation({ amplitude, omega, phase, offset }) {
-    const period = (2 * Math.PI) / omega;
+  description: "用同一个单位圆改看横坐标，理解余弦为何从 1 出发，以及它与正弦的相位关系。",
+  defaultParams: { angleDeg: 60 },
+  presets: [
+    { id: "start", label: "最大值 0°", params: { angleDeg: 0 } },
+    { id: "first", label: "第一象限 60°", params: { angleDeg: 60 } },
+    { id: "zero", label: "过零点 90°", params: { angleDeg: 90 } },
+    { id: "minimum", label: "最小值 180°", params: { angleDeg: 180 } },
+    { id: "positive", label: "第四象限 315°", params: { angleDeg: 315 } },
+  ],
+  controls: {
+    angleDeg: { label: "角度 θ（可跨多个周期）", min: -360, max: 720, step: 1 },
+  },
+  explanation({ angleDeg }) {
+    const radians = angleDeg * Math.PI / 180;
+    const value = Math.cos(radians);
+    const normalized = ((angleDeg % 360) + 360) % 360;
 
     return [
-      "余弦函数在 x = 0 时先从最高点出发，这是它和正弦函数最直观的区别。",
-      `当前周期约为 ${round(period)}，中线是 y = ${round(offset)}。`,
-      `波峰高度由振幅 ${round(amplitude)} 决定，相位 ${round(phase)} 会整体推动图像左右平移。`,
+      `θ = ${round(angleDeg)}° = ${round(radians)} rad，单位圆上 P 的横坐标约为 ${round(value)}，所以 cos θ = ${round(value)}。`,
+      normalized < 90 || normalized > 270 ? "终边位于右半圆，余弦为正。" : normalized === 90 || normalized === 270 ? "终边落在 y 轴上，横坐标为 0。" : "终边位于左半圆，余弦为负。",
+      "x = 0 时圆上点位于最右端，横坐标是 1，所以余弦图像从最高点出发，而正弦从 0 出发。",
+      "把余弦图像向右平移 π/2，会得到正弦图像：sin x = cos(x - π/2)。",
     ];
   },
-  renderStage({ amplitude, omega, phase, offset }) {
-    const points = sampleCurve(
-      (x) => amplitude * Math.cos(omega * x + phase) + offset,
-      { xMin: 0, xMax: Math.PI * 4 },
-      0.05,
-    );
-
-    return createElement(CartesianPlot, {
-      ariaLabel: "余弦函数图像",
-      bounds: { xMin: 0, xMax: Math.PI * 4, yMin: -4, yMax: 4 },
-      series: [makeSeries("cos", "y = A cos(wx + p) + d", "#2563eb", points)],
-    });
+  renderStage({ angleDeg }) {
+    return createElement(TrigonometryLab, { key: `cos-${angleDeg}`, mode: "cos", angleDeg });
   },
 };
 
 const tanBasicDemo: NumericDemo = {
   id: "tan-basic",
   title: "正切函数与间断感知",
-  description: "看见渐近线和断点后，正切函数才不会被误看成连续波形。",
-  defaultParams: { omega: 1 },
+  description: "同时观察 sin/cos 比值、单位圆切线段、渐近线和分段曲线，理解正切为什么会断开。",
+  defaultParams: { angleDeg: 45, omega: 1 },
   presets: [
-    { id: "base", label: "标准 tan(x)", params: { omega: 1 } },
-    { id: "tight", label: "周期变短", params: { omega: 2 } },
+    { id: "base", label: "tan 45° = 1", params: { angleDeg: 45, omega: 1 } },
+    { id: "near", label: "逼近断点 89°", params: { angleDeg: 89, omega: 1 } },
+    { id: "undefined", label: "断点 90°", params: { angleDeg: 90, omega: 1 } },
+    { id: "negative", label: "负值 135°", params: { angleDeg: 135, omega: 1 } },
+    { id: "tight", label: "ω = 2 周期减半", params: { angleDeg: 30, omega: 2 } },
   ],
   controls: {
-    omega: { label: "角速度 w", min: 0.5, max: 2.5, step: 0.1 },
+    angleDeg: { label: "观察位置 x（角度制）", min: -180, max: 360, step: 1 },
+    omega: { label: "角频率 ω（周期）", min: 0.5, max: 2.5, step: 0.1 },
   },
-  explanation({ omega }) {
+  explanation({ angleDeg, omega }) {
+    const x = angleDeg * Math.PI / 180;
+    const innerAngle = omega * x;
+    const sinValue = Math.sin(innerAngle);
+    const cosValue = Math.cos(innerAngle);
+    const isUndefined = Math.abs(cosValue) < 0.015;
+
     return [
       `当前周期约为 ${round(Math.PI / omega)}。`,
-      "每遇到 x = pi/2 + kpi 这一类位置，图像会断开并靠近渐近线。",
-      "看正切函数时，最容易犯的错是把断点两边硬连起来。",
+      isUndefined
+        ? `此时 cos(ωx) ≈ 0，tan(ωx) = sin(ωx) / cos(ωx) 没有定义，不应写成“无穷大”。`
+        : `当前 sin(ωx) ≈ ${round(sinValue)}，cos(ωx) ≈ ${round(cosValue)}，所以 tan(ωx) ≈ ${round(sinValue / cosValue)}。`,
+      `渐近线满足 ωx = π/2 + kπ，也就是 x = (π/2 + kπ)/ω；ω 改变时，渐近线位置和周期会一起移动。`,
+      "虚线两侧属于不同的连续分支，不能跨过定义域缺口把它们连成一条线。",
     ];
   },
-  renderStage({ omega }) {
-    const segments = [
-      sampleCurve((x) => Math.tan(omega * x), { xMin: -1.3, xMax: -0.2 }, 0.02),
-      sampleCurve((x) => Math.tan(omega * x), { xMin: 0.2, xMax: 1.3 }, 0.02),
-      sampleCurve((x) => Math.tan(omega * x), { xMin: 1.8, xMax: 2.9 }, 0.02),
-    ];
-
-    return createElement(CartesianPlot, {
-      ariaLabel: "正切函数图像",
-      bounds: { xMin: -1.5, xMax: 3.2, yMin: -5, yMax: 5 },
-      series: segments.map((points, index) =>
-        makeSeries(`tan-${index}`, `分段 ${index + 1}`, index % 2 === 0 ? "#ea580c" : "#0f766e", points),
-      ),
-    });
+  renderStage({ angleDeg, omega }) {
+    return createElement(TrigonometryLab, { key: `tan-${angleDeg}`, mode: "tan", angleDeg, omega });
   },
 };
 
